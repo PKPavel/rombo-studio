@@ -97,7 +97,7 @@ const PROJECTS: Project[] = [
   {
     num: '10',
     slug: 'spbgmtu',
-    title: 'СПбГМТУ (Корабелка)',
+    title: 'Санкт-Петербургский государственный морской технический университет (Корабелка)',
     info: 'Коммерческий · Санкт-Петербург',
     cat: 'Коммерческий',
     character: 'loft',
@@ -171,8 +171,8 @@ function ProjectModal({ project, onClose }: ModalProps) {
             Пока здесь будет краткое резюме концепции, список решённых задач и
             ключевые решения дизайнера.
           </p>
-          <a href={`/projects/${project.slug}`} className="btn btn-ghost pm-link">
-            Открыть проект
+          <a href="#contact" className="btn btn-ghost pm-link" onClick={() => setModal(null)}>
+            Обсудить проект
           </a>
         </div>
       </div>

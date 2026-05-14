@@ -1562,3 +1562,46 @@ a.contact-info-value:hover { color: var(--accent); }
   color: currentColor;
 }
 .btn-ghost:hover { background: currentColor; color: var(--bg); }
+/* ============================================================
+   FIXES — добавить в конец globals.css
+   ============================================================ */
+
+/* Логотип — размер и пропорции */
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+}
+.logo-svg {
+  height: 32px;
+  width: auto;
+}
+
+/* Кнопка «Обсудить проект» в модалке — не исчезает при ховере */
+.pm-link {
+  border: 1px solid var(--ink) !important;
+  color: var(--ink) !important;
+  background: transparent !important;
+  transition: background .2s, color .2s !important;
+}
+.pm-link:hover {
+  background: var(--ink) !important;
+  color: var(--bg) !important;
+}
+
+/* Пробел между ROMBO и текстом в founder-lead */
+.founder-lead strong {
+  margin-right: 0.25em;
+}
+
+/* Популярная карточка тарифа — не выпирает выше других */
+.tier.is-popular {
+  margin-top: 0;
+}
+
+/* Карточка команды — заголовок не сливается */
+.team-card h4 {
+  margin-top: 0;
+}

@@ -44,7 +44,7 @@ export default function Team() {
         {/* Header */}
         <div className="team-header reveal">
           <span className="eyebrow">— Наша команда</span>
-          <h2 className="h-section">Девять рук и&nbsp;глаз</h2>
+          <h2 className="h-section">Люди, которые делают проект</h2>
           <p className="team-subtitle">
             Команда, которая ведёт ваш проект на&nbsp;всех этапах: от&nbsp;планировки
             до&nbsp;последней детали комплектации.
