@@ -2121,3 +2121,52 @@ a.contact-info-value:hover { color: var(--accent); }
   padding: 0 0 24px;
   max-width: 720px;
 }
+/* ============================================================
+   ПАТЧ — добавить в конец globals.css
+   ============================================================ */
+
+/* Хедер на тёмном фоне (hero) — текст белый */
+.header:not(.scrolled) {
+  color: #F4EDE0;
+}
+.header:not(.scrolled) .logo { color: #F4EDE0; }
+.header:not(.scrolled) .nav a { color: #F4EDE0; }
+.header:not(.scrolled) .header-cta {
+  border-color: rgba(244,237,224,.5);
+  color: #F4EDE0;
+}
+.header:not(.scrolled) .header-cta:hover {
+  background: #F4EDE0;
+  color: var(--ink);
+}
+.header:not(.scrolled) .burger span { background: #F4EDE0; }
+
+/* После скролла — тёмный на светлом */
+.header.scrolled {
+  color: var(--ink);
+}
+.header.scrolled .logo { color: var(--ink); }
+.header.scrolled .nav a { color: var(--ink); }
+.header.scrolled .header-cta {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* Marquee — убедимся что виден */
+.marquee {
+  display: block;
+  overflow: hidden;
+  background: var(--ink);
+  padding: 14px 0;
+}
+
+/* Archive фильтр Характер — скрыть если остался */
+.arch-filters-character { display: none !important; }
+
+/* СПбГМТУ — название не должно быть слишком длинным */
+.arch-tile-title {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
