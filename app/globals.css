@@ -1,26 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@300;400;500;600&display=swap');
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F4EDE0;
+  --bg-paper: #ECE3D2;
+  --bg-deep: #E1D5BD;
+  --ink: #1A1614;
+  --ink-soft: #4A3F36;
+  --soft: #76685A;
+  --line: rgba(26, 22, 20, 0.12);
+  --line-2: rgba(26, 22, 20, 0.22);
+  --accent: #C8593F;
+  --accent-deep: #9E3F2A;
+  --bronze: #8B6F47;
+  --bronze-light: #B89968;
+  --dark: #1A1614;
+  --dark-deep: #0F0C0A;
+  --on-dark: #F4EDE0;
+  --on-dark-soft: rgba(244, 237, 224, 0.7);
+  --on-dark-mute: rgba(244, 237, 224, 0.4);
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, sans-serif;
+  --max: 1480px;
+  --pad: clamp(20px, 4vw, 60px);
+  --header-h: 76px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.55;
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; border: none; background: none; color: inherit; cursor: pointer; }
+input, textarea, select { font-family: inherit; }
+
+/* Типографика */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.h-hero {
+  font-size: clamp(44px, 7.5vw, 120px);
+  line-height: 1.05;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+}
+.h-hero em { font-style: italic; font-weight: 300; }
+
+.h-section {
+  font-size: clamp(40px, 7vw, 112px);
+  line-height: 0.95;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 144;
+}
+
+.h-medium {
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* Layout */
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+  position: relative;
+  z-index: 2;
+}
+section { position: relative; }
