@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback } from 'react'
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type Category = 'all' | 'Квартира' | 'Загородный дом' | 'Коммерческий'
-type Character = 'all' | 'modern-classic' | 'minimalism' | 'eclectic' | 'natural' | 'loft'
 
 interface Project {
   num: string
@@ -112,14 +111,6 @@ const CAT_LABELS: { value: Category; label: string }[] = [
   { value: 'Коммерческий', label: 'Коммерческий' },
 ]
 
-const CHAR_LABELS: { value: Character; label: string }[] = [
-  { value: 'all', label: 'Любой' },
-  { value: 'modern-classic', label: 'Современная классика' },
-  { value: 'minimalism', label: 'Минимализм' },
-  { value: 'eclectic', label: 'Эклектика' },
-  { value: 'natural', label: 'Природный' },
-  { value: 'loft', label: 'Лофт' },
-]
 
 // ─── Placeholder tile svg (no photo yet) ─────────────────────────────────────
 
@@ -193,20 +184,17 @@ function ProjectModal({ project, onClose }: ModalProps) {
 
 export default function Archive() {
   const [cat, setCat] = useState<Category>('all')
-  const [character, setCharacter] = useState<Character>('all')
   const [modal, setModal] = useState<Project | null>(null)
 
   const filtered = PROJECTS.filter(p => {
     const catOk = cat === 'all' || p.cat === cat
-    const charOk = character === 'all' || p.character.includes(character)
-    return catOk && charOk
+    return catOk
   })
 
   const isEmpty = filtered.length === 0
 
   const reset = useCallback(() => {
     setCat('all')
-    setCharacter('all')
   }, [])
 
   const openModal = (p: Project) => {
@@ -235,21 +223,6 @@ export default function Archive() {
                   className={`arch-filter${cat === value ? ' active' : ''}`}
                   onClick={() => setCat(value)}
                   aria-pressed={cat === value}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            {/* Character filter */}
-            <div className="arch-filters arch-filters-character" role="group" aria-label="Характер">
-              <span className="arch-filter-label">Характер</span>
-              {CHAR_LABELS.map(({ value, label }) => (
-                <button
-                  key={value}
-                  className={`arch-filter${character === value ? ' active' : ''}`}
-                  onClick={() => setCharacter(value)}
-                  aria-pressed={character === value}
                 >
                   {label}
                 </button>
