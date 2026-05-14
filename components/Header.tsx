@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 
-// Полный SVG логотип ROMBO из оригинала
 function RomboLogo() {
   return (
     <svg
@@ -30,13 +29,13 @@ function RomboLogo() {
   )
 }
 
-const NAV_ITEMS = [
-  { label: '01 Главная',  href: '#hero' },
-  { label: '02 Проекты', href: '#archive' },
-  { label: '03 Студия',  href: '#founder' },
-  { label: '04 Услуги',  href: '#services' },
-  { label: '05 Цены',    href: '#pricing' },
-  { label: '06 Контакты', href: '#contact' },
+const NAV = [
+  { label: 'Главная',  href: '#hero' },
+  { label: 'Проекты', href: '#projects' },
+  { label: 'Студия',  href: '#founder' },
+  { label: 'Услуги',  href: '#services' },
+  { label: 'Цены',    href: '#pricing' },
+  { label: 'Контакты', href: '#contact' },
 ]
 
 export default function Header() {
@@ -49,8 +48,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Закрывать меню при клике на ссылку
-  const closeMenu = () => setMenuOpen(false)
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
   return (
     <>
@@ -58,17 +59,14 @@ export default function Header() {
         <a href="#hero" className="logo" aria-label="ROMBO — на главную">
           <RomboLogo />
         </a>
-
         <nav className="nav">
-          {NAV_ITEMS.map(item => (
+          {NAV.map(item => (
             <a key={item.href} href={item.href}>{item.label}</a>
           ))}
         </nav>
-
         <a href="#contact" className="header-cta">Оставить заявку</a>
-
         <button
-          className={`burger${menuOpen ? ' open' : ''}`}
+          className={`burger${menuOpen ? ' active' : ''}`}
           aria-label="Меню"
           onClick={() => setMenuOpen(v => !v)}
         >
@@ -76,14 +74,16 @@ export default function Header() {
         </button>
       </header>
 
-      {/* Мобильное меню */}
       <nav className={`mobile-nav${menuOpen ? ' open' : ''}`}>
-        {NAV_ITEMS.map(item => (
-          <a key={item.href} href={item.href} onClick={closeMenu}>{item.label}</a>
+        {NAV.map(item => (
+          <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
+            {item.label}
+          </a>
         ))}
-        <a href="#contact" className="mobile-nav-cta" onClick={closeMenu}>
-          Оставить заявку
-        </a>
+        <div className="mobile-nav-bot">
+          <a href="tel:+79045581631">+7 (904) 558-16-31</a>
+          <a href="mailto:info@rombostudio.ru">info@rombostudio.ru</a>
+        </div>
       </nav>
     </>
   )
