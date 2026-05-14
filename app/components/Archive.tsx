@@ -171,7 +171,7 @@ function ProjectModal({ project, onClose }: ModalProps) {
             Пока здесь будет краткое резюме концепции, список решённых задач и
             ключевые решения дизайнера.
           </p>
-          <a href="#contact" className="btn btn-ghost pm-link" onClick={() => setModal(null)}>
+          <a href="#contact" className="btn btn-ghost pm-link" onClick={onClose}>
             Обсудить проект
           </a>
         </div>
