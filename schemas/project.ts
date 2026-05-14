@@ -1,3 +1,6 @@
+// schemas/project.ts
+// Расширенная схема — добавлены поля cat и character для фильтрации в архиве
+
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
@@ -13,11 +16,49 @@ export default defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'URL-адрес',
+      title: 'URL (slug)',
       type: 'slug',
-      options: { source: 'title' },
+      options: { source: 'title', maxLength: 96 },
       validation: Rule => Rule.required(),
     }),
+    defineField({
+      name: 'num',
+      title: 'Номер в архиве (01, 02 …)',
+      type: 'string',
+    }),
+    // ── Категория для фильтра ───────────────────────────────
+    defineField({
+      name: 'cat',
+      title: 'Тип объекта',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Квартира', value: 'Квартира' },
+          { title: 'Загородный дом', value: 'Загородный дом' },
+          { title: 'Коммерческий', value: 'Коммерческий' },
+        ],
+        layout: 'radio',
+      },
+      validation: Rule => Rule.required(),
+    }),
+    // ── Характер для фильтра ────────────────────────────────
+    defineField({
+      name: 'character',
+      title: 'Характер (стиль)',
+      description: 'Можно выбрать несколько',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Современная классика', value: 'modern-classic' },
+          { title: 'Минимализм', value: 'minimalism' },
+          { title: 'Эклектика', value: 'eclectic' },
+          { title: 'Природный', value: 'natural' },
+          { title: 'Лофт', value: 'loft' },
+        ],
+      },
+    }),
+    // ── Основные параметры ──────────────────────────────────
     defineField({
       name: 'area',
       title: 'Площадь, м²',
@@ -33,6 +74,7 @@ export default defineType({
       title: 'Год',
       type: 'number',
     }),
+    // ── Медиа ───────────────────────────────────────────────
     defineField({
       name: 'coverImage',
       title: 'Обложка',
@@ -41,10 +83,11 @@ export default defineType({
     }),
     defineField({
       name: 'images',
-      title: 'Фотографии',
+      title: 'Галерея',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
     }),
+    // ── Тексты ──────────────────────────────────────────────
     defineField({
       name: 'description',
       title: 'Описание',
@@ -52,22 +95,23 @@ export default defineType({
       rows: 4,
     }),
     defineField({
-      name: 'style',
-      title: 'Стиль',
-      type: 'string',
-    }),
-    defineField({
       name: 'featured',
       title: 'Показывать в карусели',
       type: 'boolean',
       initialValue: false,
     }),
+    defineField({
+      name: 'disabled',
+      title: 'Фото ещё не загружены (показывать заглушку)',
+      type: 'boolean',
+      initialValue: false,
+    }),
   ],
-  orderings: [
-    {
-      title: 'Год, новые сначала',
-      name: 'yearDesc',
-      by: [{ field: 'year', direction: 'desc' }],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'city',
+      media: 'coverImage',
     },
-  ],
+  },
 })
