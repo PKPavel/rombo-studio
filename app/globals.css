@@ -3044,3 +3044,217 @@ body::before {
 }
 .float-bar .fb-call { background: var(--accent); color: #F4EDE0; border-color: var(--accent); }
 @media (max-width: 800px) { .float-bar { display: flex; } }
+/* ============================================================
+   ПАТЧ — Deliverables светлый, Process горизонт, QR, год 2016
+   Добавить в конец globals.css
+   ============================================================ */
+
+/* ── Deliverables — СВЕТЛЫЙ вариант (переопределяем тёмный) ── */
+.deliverables {
+  background: var(--bg) !important;
+  padding: clamp(80px, 11vh, 140px) 0;
+}
+.deliverables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(48px, 6vw, 96px);
+  align-items: center;
+}
+.deliverables-text .eyebrow {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.deliverables-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.deliverables-lead {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+  opacity: .65;
+  margin-bottom: 28px;
+}
+.deliverables-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-bottom: 32px;
+}
+.deliverables-list li {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  opacity: .65;
+  padding: 10px 0 10px 20px;
+  border-bottom: 1px solid rgba(26,22,20,.08);
+  position: relative;
+  line-height: 1.45;
+}
+.deliverables-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 11px;
+}
+.deliverables-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.deliv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: var(--bg);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background .25s, color .25s, transform .25s;
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: .02em;
+  border-radius: 2px;
+}
+.deliv-btn-icon { width: 18px; height: 22px; flex-shrink: 0; color: var(--accent); }
+.deliv-btn-icon svg { width: 100%; height: 100%; display: block; }
+.deliv-btn:hover { background: var(--ink); color: #F4EDE0; transform: translateY(-1px); }
+.deliv-btn:hover .deliv-btn-icon { color: #F4EDE0; }
+.deliv-btn-meta { color: var(--ink); opacity: .5; font-size: 12px; }
+.deliv-btn:hover .deliv-btn-meta { color: rgba(244,237,224,.65); opacity: 1; }
+.deliverables-hint {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  opacity: .5;
+  font-style: italic;
+  line-height: 1.5;
+}
+.deliverables-hint a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+/* Стопка чертежей */
+.deliverables-visual {
+  position: relative;
+  aspect-ratio: 4 / 3.4;
+}
+.doc-preview {
+  position: absolute;
+  width: 78%;
+  background: #fff;
+  box-shadow: 0 30px 60px -28px rgba(26,22,20,.45), 0 8px 20px -10px rgba(26,22,20,.25);
+  overflow: hidden;
+  transition: transform .55s cubic-bezier(.2,.7,.2,1);
+  border-radius: 2px;
+}
+.doc-preview img, .doc-preview svg { width: 100%; height: auto; display: block; }
+.doc-preview.p1 { top: 0%;  left: 0%;  transform: rotate(-6deg); z-index: 1; }
+.doc-preview.p2 { top: 14%; left: 14%; transform: rotate(2deg);  z-index: 2; }
+.doc-preview.p3 { top: 32%; left: 8%;  transform: rotate(-2deg); z-index: 3; }
+.deliverables-visual:hover .doc-preview.p1 { transform: rotate(-9deg) translateX(-12px); }
+.deliverables-visual:hover .doc-preview.p2 { transform: rotate(4deg) translateX(8px); }
+.deliverables-visual:hover .doc-preview.p3 { transform: rotate(-3deg) translateY(8px); }
+
+/* Тёмная docs-strip секция (убрать у нас не используется) */
+.docs-type-card { display: none !important; }
+.docs-types-grid { display: none !important; }
+
+@media (max-width: 860px) {
+  .deliverables-grid { grid-template-columns: 1fr; }
+  .deliverables-visual { max-width: 440px; margin: 0 auto; width: 100%; }
+  .deliverables-list { grid-template-columns: 1fr; }
+}
+
+/* ── Process — горизонтальная шкала с прокруткой ── */
+.proc-scroll-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  padding-bottom: 16px;
+}
+.proc-scroll-wrap::-webkit-scrollbar { display: none; }
+.proc-scroll-wrap:active { cursor: grabbing; }
+
+.proc-timeline {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0;
+  min-width: max-content;
+  position: relative;
+}
+.proc-timeline::before {
+  content: '';
+  position: absolute;
+  top: 108px;
+  left: calc(100% / (var(--steps, 6) * 2));
+  right: calc(100% / (var(--steps, 6) * 2));
+  height: 1px;
+  background: rgba(26,22,20,.15);
+  z-index: 1;
+}
+
+.proc-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 clamp(20px, 3vw, 40px);
+  position: relative;
+  width: clamp(220px, 25vw, 300px);
+  flex-shrink: 0;
+}
+
+/* Убираем meta (время и оплата) */
+.proc-step-meta { display: none !important; }
+
+/* ── QR-коды в Founder ── */
+.founder-qr {
+  display: flex;
+  gap: 24px;
+  margin-top: 28px;
+  justify-content: center;
+}
+.qr-block { display: flex; flex-direction: column; align-items: center; }
+.qr-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.qr-code {
+  width: 120px; height: 120px;
+  background: var(--bg);
+  border: 1px solid rgba(26,22,20,.12);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qr-code img { width: 100% !important; height: 100% !important; display: block; }
+.qr-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink);
+}
+.qr-link:hover .qr-label { color: var(--accent); }

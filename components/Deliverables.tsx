@@ -1,83 +1,117 @@
 'use client'
 
-const DOC_TYPES = [
-  {
-    name: 'Обмерный план',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="3" y="3" width="26" height="26" rx="1"/><path d="M3 11h26M11 11v18M8 7h.1M12 7h.1M16 7h.1"/></svg>,
-  },
-  {
-    name: 'Демонтаж и монтаж стен',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M4 28V8l14-4 10 3v21"/><path d="M14 28V14H4M14 14l4-2M22 28V12"/><path d="M8 18h4M8 22h4M18 18h6M18 22h6"/></svg>,
-  },
-  {
-    name: 'Расстановка мебели',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M4 28h24V8H4v20z"/><rect x="8" y="14" width="7" height="10" rx="0.5"/><rect x="18" y="14" width="6" height="5" rx="0.5"/><path d="M4 8V6a1 1 0 0 1 1-1h22a1 1 0 0 1 1 1v2"/></svg>,
-  },
-  {
-    name: 'Сантехника',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><circle cx="16" cy="12" r="5"/><path d="M16 17v11M11 22h10M8 8c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="M4 24h24v4H4v-4z"/></svg>,
-  },
-  {
-    name: 'Тёплые полы',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M4 28h24V8H4v20z"/><path d="M8 20c2-3 4-3 6 0s4 3 6 0 4-3 6 0" strokeDasharray="2 2"/><path d="M8 24h16"/><circle cx="28" cy="6" r="2" fill="currentColor" stroke="none"/></svg>,
-  },
-  {
-    name: 'Потолок с нишами',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M4 28h24V4H4v24z"/><path d="M4 10h24M10 10v18"/><path d="M16 4v6M22 4v6"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/></svg>,
-  },
-  {
-    name: 'Схема освещения',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><circle cx="16" cy="13" r="5"/><path d="M16 4V2M16 24v-6M26 13h2M4 13H6M23 6l-1.5 1.5M10.5 18.5 9 20M23 20l-1.5-1.5M10.5 7.5 9 6"/></svg>,
-  },
-  {
-    name: 'Розетки и выключатели',
-    icon: <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="5" y="8" width="22" height="16" rx="2"/><path d="M10 16h3M10 20h3M19 14v8M24 14v8"/><circle cx="16" cy="16" r="1.5" fill="currentColor" stroke="none"/></svg>,
-  },
-]
+// Deliverables — светлая версия со стопкой чертежей как в v22
+
+const PDF_ICON = (
+  <svg viewBox="0 0 22 28" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <path d="M3 1h11l6 6v20H3V1z"/>
+    <path d="M14 1v6h6"/>
+    <text x="11" y="19" textAnchor="middle" fontFamily="Inter Tight, sans-serif" fontSize="5" fontWeight="700" fill="currentColor" stroke="none">PDF</text>
+  </svg>
+)
 
 export default function Deliverables() {
   return (
-    <section className="deliverables reveal">
+    <section id="deliverables" className="deliverables">
       <div className="container">
-        <div className="deliverables-grid">
+        <div className="deliverables-grid reveal">
 
-          {/* Левая колонка — текст */}
+          {/* Левая — текст + кнопки */}
           <div className="deliverables-text">
             <span className="eyebrow">— Что вы получаете на руки</span>
             <h2 className="deliverables-title">
               Папка, по&nbsp;которой<br />можно строить
             </h2>
             <p className="deliverables-lead">
-              Не только красивые рендеры. На выходе вы получаете полный
-              альбом рабочей документации — со всеми планами, размерами,
-              развёртками и спецификациями. Прораб открывает альбом, читает
-              чертёж, делает — без догадок и переспросов.
+              Не&nbsp;только красивые рендеры. На&nbsp;выходе вы получаете полный
+              альбом рабочей документации — со&nbsp;всеми планами, размерами,
+              развёртками и&nbsp;спецификациями. Прораб открывает альбом, читает
+              чертёж, делает — без догадок и&nbsp;переспросов.
             </p>
 
             <ul className="deliverables-list">
-              <li>Обмерный план с уточнёнными размерами</li>
-              <li>Расстановка мебели и сантехники</li>
-              <li>План потолка с уровнями и нишами</li>
-              <li>Розетки и выключатели по точкам</li>
-              <li>Планы демонтажа и возводимых стен</li>
-              <li>Раскладка пола и тёплые контуры</li>
-              <li>Схема освещения с привязками</li>
-              <li>Спецификации материалов и дверей</li>
+              <li>Обмерный план с&nbsp;уточнёнными размерами</li>
+              <li>Планы демонтажа и&nbsp;возводимых стен</li>
+              <li>Расстановка мебели и&nbsp;сантехники</li>
+              <li>Раскладка пола и&nbsp;тёплые контуры</li>
+              <li>План потолка с&nbsp;уровнями и&nbsp;нишами</li>
+              <li>Схема освещения с&nbsp;привязками</li>
+              <li>Розетки и&nbsp;выключатели по&nbsp;точкам</li>
+              <li>Спецификации материалов и&nbsp;дверей</li>
             </ul>
 
-            <a href="#contact" className="btn btn-ghost" style={{ marginTop: '32px' }}>
-              Запросить пример альбома
-            </a>
+            <div className="deliverables-actions">
+              <a href="#contact" className="deliv-btn">
+                <span className="deliv-btn-icon">{PDF_ICON}</span>
+                <span>ЖК «Ботаника», 56&nbsp;м² <span className="deliv-btn-meta">· 33 листа</span></span>
+              </a>
+              <a href="#contact" className="deliv-btn">
+                <span className="deliv-btn-icon">{PDF_ICON}</span>
+                <span>Скачать альбом&nbsp;чертежей <span className="deliv-btn-meta">· 15 листов, 2,1&nbsp;МБ</span></span>
+              </a>
+              <a href="#contact" className="deliv-btn">
+                <span className="deliv-btn-icon">{PDF_ICON}</span>
+                <span>Скачать планировку <span className="deliv-btn-meta">· 1 лист, 260&nbsp;КБ</span></span>
+              </a>
+            </div>
+
+            <p className="deliverables-hint">
+              Пример рабочей документации из одного из реализованных проектов.{' '}
+              <a href="#archive">ЖК «Чёрная&nbsp;речка»</a>.
+              У&nbsp;каждого проекта — свой альбом такого&nbsp;же объёма.
+            </p>
           </div>
 
-          {/* Правая колонка — типы документов */}
-          <div className="docs-types-grid">
-            {DOC_TYPES.map(d => (
-              <div key={d.name} className="docs-type-card">
-                <div className="docs-type-icon">{d.icon}</div>
-                <span className="docs-type-name">{d.name}</span>
-              </div>
-            ))}
+          {/* Правая — стопка чертежей */}
+          <div className="deliverables-visual" aria-hidden="true">
+            <div className="doc-preview p1">
+              <svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="400" height="560" fill="#fff"/>
+                <rect x="20" y="20" width="360" height="520" stroke="#E0D8CC" strokeWidth="1"/>
+                <text x="200" y="60" textAnchor="middle" fontFamily="Inter Tight" fontSize="14" fill="#8B7355">Дизайн-студия Александры Серовой</text>
+                <text x="200" y="90" textAnchor="middle" fontFamily="Inter Tight" fontSize="12" fill="#666">тел. +7 904 558 16 31</text>
+                <line x1="20" y1="110" x2="380" y2="110" stroke="#E0D8CC"/>
+                <text x="200" y="145" textAnchor="middle" fontFamily="Inter Tight" fontSize="16" fontWeight="600" fill="#333">Дизайн-проект двухкомнатной квартиры</text>
+                <text x="200" y="170" textAnchor="middle" fontFamily="Inter Tight" fontSize="14" fill="#666">ЖК "Чёрная речка"</text>
+                <rect x="40" y="200" width="320" height="300" fill="#F5F0E8" stroke="#CCC" strokeWidth="0.5"/>
+                {/* Floor plan lines */}
+                <rect x="60" y="220" width="280" height="260" fill="none" stroke="#555" strokeWidth="1.5"/>
+                <line x1="60" y1="340" x2="180" y2="340" stroke="#555" strokeWidth="1.5"/>
+                <line x1="180" y1="220" x2="180" y2="480" stroke="#555" strokeWidth="1.5"/>
+                <line x1="180" y1="380" x2="340" y2="380" stroke="#555" strokeWidth="1.5"/>
+                <rect x="85" y="250" width="70" height="60" fill="#E8DDD0" stroke="#888" strokeWidth="0.5"/>
+                <rect x="200" y="235" width="110" height="80" fill="#E8DDD0" stroke="#888" strokeWidth="0.5"/>
+                <line x1="60" y1="460" x2="100" y2="460" stroke="#555" strokeWidth="2"/>
+                <line x1="60" y1="460" x2="60" y2="480" stroke="#555" strokeWidth="1"/>
+                <line x1="100" y1="460" x2="100" y2="480" stroke="#555" strokeWidth="1"/>
+              </svg>
+            </div>
+            <div className="doc-preview p2">
+              <svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="400" height="560" fill="#fff"/>
+                <rect x="20" y="20" width="360" height="520" stroke="#E0D8CC" strokeWidth="1"/>
+                <text x="200" y="60" textAnchor="middle" fontFamily="Inter Tight" fontSize="13" fill="#8B7355">Схема электрики и освещения</text>
+                <rect x="40" y="80" width="320" height="420" fill="#F8F4EE" stroke="#CCC" strokeWidth="0.5"/>
+                <circle cx="120" cy="160" r="8" stroke="#C8593F" strokeWidth="1.5" fill="none"/>
+                <circle cx="200" cy="140" r="8" stroke="#C8593F" strokeWidth="1.5" fill="none"/>
+                <circle cx="280" cy="160" r="8" stroke="#C8593F" strokeWidth="1.5" fill="none"/>
+                <circle cx="150" cy="280" r="5" fill="#C8593F"/>
+                <circle cx="250" cy="280" r="5" fill="#C8593F"/>
+                <line x1="120" y1="160" x2="200" y2="140" stroke="#AAA" strokeWidth="0.8" strokeDasharray="4 2"/>
+                <line x1="200" y1="140" x2="280" y2="160" stroke="#AAA" strokeWidth="0.8" strokeDasharray="4 2"/>
+              </svg>
+            </div>
+            <div className="doc-preview p3">
+              <svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="400" height="560" fill="#fff"/>
+                <rect x="20" y="20" width="360" height="520" stroke="#E0D8CC" strokeWidth="1"/>
+                <text x="200" y="60" textAnchor="middle" fontFamily="Inter Tight" fontSize="13" fill="#8B7355">Развёртки стен · Гостиная</text>
+                <rect x="40" y="90" width="320" height="380" fill="#F8F4EE" stroke="#CCC" strokeWidth="0.5"/>
+                <rect x="60" y="110" width="280" height="200" fill="none" stroke="#555" strokeWidth="1"/>
+                <rect x="140" y="110" width="80" height="200" fill="#EDE8E0" stroke="#888" strokeWidth="0.5"/>
+                <line x1="60" y1="170" x2="340" y2="170" stroke="#AAA" strokeWidth="0.5" strokeDasharray="4 2"/>
+              </svg>
+            </div>
           </div>
 
         </div>

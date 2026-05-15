@@ -1,145 +1,101 @@
 'use client'
 
-// SVG-иконки для каждого шага
-const icons = {
-  pencil: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 52L52 12"/><path d="M12 52l8-2 24-24 2-8"/><path d="M14 50l-4-4"/><path d="M44 14h6v6"/>
-    </svg>
-  ),
-  doc: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="16" y="10" width="32" height="44" rx="2"/><path d="M24 22h16M24 30h16M24 38h12"/>
-    </svg>
-  ),
-  chat: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 22h28a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H22l-12 8V26a4 4 0 0 1 4-4z"/>
-      <path d="M42 28h12a4 4 0 0 1 4 4v18l-8-6h-6a4 4 0 0 1-4-4"/>
-    </svg>
-  ),
-  grid: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="10" y="10" width="44" height="44" rx="1"/><path d="M10 26h44M28 10v44"/>
-    </svg>
-  ),
-  box: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M32 6L8 18v24l24 12 24-12V18z"/><path d="M32 30l24-12M32 30L8 18M32 30v24"/>
-    </svg>
-  ),
-  triangle: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 12h48l-24 40z"/><path d="M8 12l10 16M56 12L46 28"/>
-    </svg>
-  ),
-  lock: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 48h48"/><path d="M10 48a22 22 0 0 1 44 0"/><path d="M24 30V16a8 8 0 0 1 16 0v14"/>
-    </svg>
-  ),
-  home: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 28l20-16 20 16v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2z"/><path d="M26 52V36h12v16"/>
-    </svg>
-  ),
-  check: (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 14h32v36H16z"/><path d="M22 22h20M22 30h20M22 38h12"/>
-      <circle cx="32" cy="4" r="2" fill="currentColor"/>
-    </svg>
-  ),
-}
+// Process — переработан по пожеланию Александры:
+// 2 главы, горизонтальная шкала, без меток времени и оплаты
 
-interface Step {
-  icon: keyof typeof icons
-  title: string
-  desc: string
-  meta: string
-  isActive?: boolean
-  isOptional?: boolean
-}
-
-interface Stage {
-  eyebrow: string
-  title: string
-  steps: Step[]
-}
-
-const STAGES: Stage[] = [
+const STAGES = [
   {
     eyebrow: '— Глава первая',
     title: 'Дизайн-проект',
     steps: [
       {
-        icon: 'pencil',
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 52L52 12"/><path d="M12 52l8-2 24-24 2-8"/><path d="M14 50l-4-4"/><path d="M44 14h6v6"/>
+          </svg>
+        ),
         title: 'Знакомство',
-        desc: 'Переписка, созвон или встреча в студии. Рассказываем, как устроен процесс. Без обязательств.',
-        meta: '~1 неделя · бесплатно',
+        desc: 'Переписка, созвон или встреча в студии. Рассказываем как устроен процесс. Без обязательств.',
       },
       {
-        icon: 'doc',
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="16" y="10" width="32" height="44" rx="2"/><path d="M24 22h16M24 30h16M24 38h12"/>
+          </svg>
+        ),
         title: 'Договор',
         desc: 'Фиксируем объём работ, состав проекта, сроки и стоимость. Всё на бумаге.',
-        meta: '3–5 дней · по договору',
       },
       {
-        icon: 'chat',
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 22h28a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H22l-12 8V26a4 4 0 0 1 4-4z"/>
+            <path d="M42 28h12a4 4 0 0 1 4 4v18l-8-6h-6a4 4 0 0 1-4-4"/>
+          </svg>
+        ),
         title: 'Брифинг',
         desc: 'Разбираем образ жизни, привычки, сценарии. Здесь рождается ДНК будущего интерьера.',
-        meta: '~1 неделя · входит в этап 04',
+      },
+      {
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="10" y="10" width="44" height="44" rx="1"/><path d="M10 26h44M28 10v44"/>
+          </svg>
+        ),
+        title: 'Концепция и 3D',
+        desc: 'Обмеры, планировки, утверждение концепции и 3D первого помещения. Лицо проекта.',
+      },
+      {
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M32 6L8 18v24l24 12 24-12V18z"/><path d="M32 30l24-12M32 30L8 18M32 30v24"/>
+          </svg>
+        ),
+        title: 'Полный пакет 3D',
+        desc: '3D всех помещений в согласованной концепции. Доводим до фотореалистичности.',
+      },
+      {
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 12h48l-24 40z"/><path d="M8 12l10 16M56 12L46 28"/>
+          </svg>
+        ),
+        title: 'Чертежи и подбор',
+        desc: 'Подробные чертежи для строителей и файл подбора с артикулами поставщиков.',
       },
     ],
   },
   {
     eyebrow: '— Глава вторая',
-    title: 'Визуализация и чертежи',
+    title: 'Реализация',
     steps: [
       {
-        icon: 'grid',
-        title: 'Концепция и первое 3D',
-        desc: 'Обмеры, планировки, утверждение концепции и 3D первого помещения. Лицо проекта.',
-        meta: '3–5 недель · предоплата 30%',
-        isActive: true,
-      },
-      {
-        icon: 'box',
-        title: 'Полный пакет 3D',
-        desc: '3D всех остальных помещений в согласованной концепции. Доводим до фотореалистичности.',
-        meta: '3–4 недели · предоплата 30%',
-      },
-      {
-        icon: 'triangle',
-        title: 'Чертежи и подбор',
-        desc: 'Подробные чертежи для строителей и файл подбора с артикулами поставщиков.',
-        meta: '4–6 недель · 30% + финал 10%',
-      },
-    ],
-  },
-  {
-    eyebrow: '— Глава третья · опционально',
-    title: 'Авторский надзор',
-    steps: [
-      {
-        icon: 'lock',
-        title: 'Сопровождение стройки',
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 48h48"/><path d="M10 48a22 22 0 0 1 44 0"/><path d="M24 30V16a8 8 0 0 1 16 0v14"/>
+          </svg>
+        ),
+        title: 'Авторский надзор',
         desc: 'Контроль, чтобы стройка не превратила проект в «как-то так». Отдельный договор.',
-        meta: 'на стройке · от 30 000 ₽/мес',
-        isOptional: true,
       },
       {
-        icon: 'home',
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 28l20-16 20 16v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2z"/><path d="M26 52V36h12v16"/>
+          </svg>
+        ),
         title: 'Выезды на объект',
         desc: '4 выезда в месяц, проверка качества, оперативные корректировки на месте.',
-        meta: 'регулярно · включено',
-        isOptional: true,
       },
       {
-        icon: 'check',
+        icon: (
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 14h32v36H16z"/><path d="M22 22h20M22 30h20M22 38h12"/>
+            <circle cx="32" cy="4" r="2" fill="currentColor"/>
+          </svg>
+        ),
         title: 'Финальный акт',
-        desc: 'Сдача объекта по чек-листу. Интерьер, в точности соответствующий проекту.',
-        meta: 'по окончании работ',
-        isOptional: true,
+        desc: 'Сдача объекта по чек-листу. Интерьер в точности соответствующий проекту.',
       },
     ],
   },
@@ -157,8 +113,7 @@ export default function Process() {
           </div>
           <div className="section-head-right">
             Прозрачная и предсказуемая методика. Каждый этап имеет результат,
-            который вы согласовываете до перехода к следующему. Общая длительность
-            полного дизайн-проекта — <strong>3–5 месяцев</strong>.
+            который вы согласовываете до перехода к следующему.
           </div>
         </div>
 
@@ -166,23 +121,19 @@ export default function Process() {
           <div key={stage.title} className="proc-stage reveal">
             <span className="proc-stage-eyebrow">{stage.eyebrow}</span>
             <h3 className="proc-stage-title">{stage.title}</h3>
-            <div className="proc-timeline">
-              {stage.steps.map((step) => (
-                <div
-                  key={step.title}
-                  className={[
-                    'proc-step',
-                    step.isActive ? 'is-active' : '',
-                    step.isOptional ? 'is-optional' : '',
-                  ].filter(Boolean).join(' ')}
-                >
-                  <div className="proc-step-icon">{icons[step.icon]}</div>
-                  <div className="proc-step-dot" />
-                  <h4 className="proc-step-title">{step.title}</h4>
-                  <p className="proc-step-desc">{step.desc}</p>
-                  <span className="proc-step-meta">{step.meta}</span>
-                </div>
-              ))}
+
+            {/* Горизонтальная шкала с прокруткой */}
+            <div className="proc-scroll-wrap">
+              <div className="proc-timeline">
+                {stage.steps.map((step, i) => (
+                  <div key={i} className="proc-step">
+                    <div className="proc-step-icon">{step.icon}</div>
+                    <div className="proc-step-dot" />
+                    <h4 className="proc-step-title">{step.title}</h4>
+                    <p className="proc-step-desc">{step.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
