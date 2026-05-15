@@ -26,21 +26,20 @@ export const PROJECT_BY_SLUG_QUERY = `
   }
 `
 
-// Авто-подсчёт страниц PDF без внешних библиотек:
-// читаем первые 200 КБ файла и ищем /Count N — это поле Pages-словаря в PDF
+// Авто-подсчёт страниц PDF: читаем первый мегабайт, ищем /Count N
 async function extractPdfPages(url: string): Promise<number | null> {
   try {
+    // Пробуем Range-запрос (экономит трафик)
     const res = await fetch(url, {
-      headers: { Range: 'bytes=0-204799' }, // первые 200 КБ
+      headers: { Range: 'bytes=0-1048575' }, // первый МБ
     })
     const buffer = await res.arrayBuffer()
     const text = Buffer.from(buffer).toString('latin1')
 
-    // /Count <число> — количество страниц в дереве страниц PDF
+    // /Count N — суммарное количество страниц в Pages-дереве PDF
     const matches = [...text.matchAll(/\/Count\s+(\d+)/g)]
     if (!matches.length) return null
 
-    // Берём максимальное значение — это корневой Pages-объект
     const counts = matches.map(m => parseInt(m[1]))
     return Math.max(...counts)
   } catch {

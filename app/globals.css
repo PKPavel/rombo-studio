@@ -3501,9 +3501,10 @@ body::before {
   text-align: center;
 }
 .proj-docs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+  justify-content: center;
 }
 .proj-doc-card {
   display: flex;
@@ -3516,6 +3517,8 @@ body::before {
   color: var(--ink);
   border-radius: 2px;
   transition: border-color .2s, transform .2s;
+  flex: 0 1 460px;   /* карточка растягивается до 460px, две влезают рядом */
+  min-width: 280px;
 }
 .proj-doc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .pm-docs-icon { width: 40px; height: 48px; flex-shrink: 0; }
