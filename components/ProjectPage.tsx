@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface ProjectData {
   num?: string
@@ -13,12 +13,82 @@ interface ProjectData {
   description?: string
   coverUrl: string | null
   imageUrls: string[]
-  palette?: string[]
+  palette?: string[]        // если заданы вручную в Sanity — используем их
   notes?: { text: string; imageUrl: string | null }[]
   pdfs?: { title: string; description: string; url: string | null }[]
 }
 
-// ── Lightbox ───────────────────────────────────────────────────────────────
+// ── Автоматическая палитра из фото ───────────────────────────────────────
+function AutoPalette({ imageUrl }: { imageUrl: string }) {
+  const [colors, setColors] = useState<string[]>([])
+  const [copied, setCopied] = useState<string | null>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    if (!imageUrl) return
+
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    // Добавляем параметр для обхода кеша CORS
+    img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 'auto=format'
+
+    img.onload = async () => {
+      try {
+        // Динамический импорт ColorThief
+        const ColorThief = (await import('colorthief')).default
+        const ct = new ColorThief()
+        const palette = ct.getPalette(img, 6)
+        const hexColors = palette.map(([r, g, b]: number[]) =>
+          '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')
+        )
+        setColors(hexColors)
+      } catch (e) {
+        console.error('ColorThief error:', e)
+        // Fallback — нейтральные тона
+        setColors(['#F4EDE0', '#D9D0C1', '#A89880', '#7A6A58', '#3A3028', '#C8593F'])
+      }
+    }
+
+    img.onerror = () => {
+      setColors(['#F4EDE0', '#D9D0C1', '#A89880', '#7A6A58', '#3A3028', '#C8593F'])
+    }
+  }, [imageUrl])
+
+  const copyColor = (hex: string) => {
+    navigator.clipboard?.writeText(hex)
+    setCopied(hex)
+    setTimeout(() => setCopied(null), 1500)
+  }
+
+  if (colors.length === 0) return (
+    <div className="proj-palette-bar proj-palette-loading">
+      <div className="proj-palette-skeleton" />
+    </div>
+  )
+
+  return (
+    <>
+      <div className="proj-palette-bar">
+        {colors.map((color, i) => (
+          <div
+            key={i}
+            className="proj-palette-swatch"
+            style={{ background: color }}
+            onClick={() => copyColor(color)}
+            title={`${color} — нажмите чтобы скопировать`}
+          >
+            {copied === color && (
+              <span className="proj-palette-copied">Скопировано</span>
+            )}
+          </div>
+        ))}
+      </div>
+      <p className="proj-palette-hint">Кликните по цвету — HEX скопируется</p>
+    </>
+  )
+}
+
+// ── Lightbox ─────────────────────────────────────────────────────────────
 function Lightbox({ images, index, onClose }: {
   images: string[]
   index: number
@@ -26,25 +96,24 @@ function Lightbox({ images, index, onClose }: {
 }) {
   const [current, setCurrent] = useState(index)
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') setCurrent(i => (i - 1 + images.length) % images.length)
+      if (e.key === 'ArrowRight') setCurrent(i => (i + 1) % images.length)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [images.length, onClose])
+
   return (
     <div className="lightbox-overlay" onClick={onClose}>
-      <button className="lightbox-close" onClick={onClose} aria-label="Закрыть">×</button>
-      <button
-        className="lightbox-prev"
-        onClick={e => { e.stopPropagation(); setCurrent(i => (i - 1 + images.length) % images.length) }}
-        aria-label="Предыдущее"
-      >←</button>
-
+      <button className="lightbox-close" onClick={onClose}>×</button>
+      <button className="lightbox-prev" onClick={e => { e.stopPropagation(); setCurrent(i => (i - 1 + images.length) % images.length) }}>←</button>
       <div className="lightbox-img-wrap" onClick={e => e.stopPropagation()}>
         <img src={images[current]} alt="" className="lightbox-img" />
       </div>
-
-      <button
-        className="lightbox-next"
-        onClick={e => { e.stopPropagation(); setCurrent(i => (i + 1) % images.length) }}
-        aria-label="Следующее"
-      >→</button>
-
+      <button className="lightbox-next" onClick={e => { e.stopPropagation(); setCurrent(i => (i + 1) % images.length) }}>→</button>
       <div className="lightbox-counter">{current + 1} / {images.length}</div>
     </div>
   )
@@ -65,12 +134,15 @@ function PdfIcon() {
 export default function ProjectPage({ project }: { project: ProjectData }) {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
 
-  // Вставляем заметки между фотографиями
   const allImages = project.imageUrls || []
   const notes = project.notes || []
 
-  // Чередуем: каждые ~3 фото — заметка
-  const galleryItems: Array<{ type: 'image'; url: string; idx: number } | { type: 'note'; text: string; imageUrl: string | null }> = []
+  // Чередуем фото и заметки: каждые 3 фото — 1 заметка
+  const galleryItems: Array<
+    { type: 'image'; url: string; idx: number } |
+    { type: 'note'; text: string; imageUrl: string | null }
+  > = []
+
   let noteIdx = 0
   allImages.forEach((url, i) => {
     galleryItems.push({ type: 'image', url, idx: i })
@@ -79,6 +151,11 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
       noteIdx++
     }
   })
+  // Оставшиеся заметки добавляем в конец
+  while (noteIdx < notes.length) {
+    galleryItems.push({ type: 'note', ...notes[noteIdx] })
+    noteIdx++
+  }
 
   return (
     <>
@@ -93,7 +170,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
         </div>
       </header>
 
-      {/* Hero фото */}
+      {/* Hero */}
       {project.coverUrl && (
         <div className="proj-page-hero">
           <img src={project.coverUrl} alt={project.title} />
@@ -109,23 +186,33 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
         </section>
       )}
 
-      {/* Цветовая палитра */}
-      {project.palette && project.palette.length > 0 && (
+      {/* Цветовая палитра — авто из обложки или ручная из Sanity */}
+      {project.coverUrl && (
         <section className="proj-page-section proj-palette-section">
           <div className="proj-page-container">
             <span className="proj-palette-eyebrow">— Цветовая палитра проекта</span>
             <h2 className="proj-palette-title">Тона и материалы</h2>
-            <div className="proj-palette-bar">
-              {project.palette.map((color, i) => (
-                <div
-                  key={i}
-                  className="proj-palette-swatch"
-                  style={{ background: color }}
-                  title={color}
-                  onClick={() => navigator.clipboard?.writeText(color)}
-                />
-              ))}
-            </div>
+
+            {project.palette && project.palette.length > 0 ? (
+              // Ручная палитра из Sanity
+              <>
+                <div className="proj-palette-bar">
+                  {project.palette.map((color, i) => (
+                    <div
+                      key={i}
+                      className="proj-palette-swatch"
+                      style={{ background: color }}
+                      onClick={() => navigator.clipboard?.writeText(color)}
+                      title={color}
+                    />
+                  ))}
+                </div>
+                <p className="proj-palette-hint">Кликните по цвету — HEX скопируется</p>
+              </>
+            ) : (
+              // Авто-генерация из обложки
+              <AutoPalette imageUrl={project.coverUrl} />
+            )}
           </div>
         </section>
       )}
@@ -149,8 +236,12 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               return (
                 <div key={i} className="proj-gallery-note">
                   {item.imageUrl && (
-                    <img src={item.imageUrl} alt="" loading="lazy"
-                      onClick={() => setLightboxIdx(allImages.indexOf(item.imageUrl!))}
+                    <img
+                      src={item.imageUrl} alt="" loading="lazy"
+                      onClick={() => {
+                        const idx = allImages.indexOf(item.imageUrl!)
+                        if (idx >= 0) setLightboxIdx(idx)
+                      }}
                     />
                   )}
                   <blockquote className="proj-note-text">
@@ -165,17 +256,16 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
         </section>
       )}
 
-      {/* PDF-документы */}
+      {/* PDF */}
       {project.pdfs && project.pdfs.length > 0 && (
         <section className="proj-page-section proj-docs-section">
           <div className="proj-page-container">
             <span className="proj-docs-eyebrow">— Пример проектной документации</span>
             <h2 className="proj-docs-title">Что получает заказчик</h2>
             <p className="proj-docs-intro">
-              После согласования концепции мы передаём полный альбом рабочей
-              документации: поэтажные планы, развёртки, спецификации материалов
-              и оборудования, схемы освещения и розеток — всё, что нужно прорабу
-              для точной реализации. Ниже — пример из этого проекта.
+              После согласования концепции мы передаём полный альбом рабочей документации:
+              поэтажные планы, развёртки, спецификации материалов и оборудования, схемы
+              освещения и розеток — всё, что нужно прорабу для точной реализации.
             </p>
             <div className="proj-docs-grid">
               {project.pdfs.map((pdf, i) => (
@@ -188,9 +278,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                   <PdfIcon />
                   <div className="proj-doc-info">
                     <div className="proj-doc-title">{pdf.title}</div>
-                    {pdf.description && (
-                      <div className="proj-doc-meta">{pdf.description}</div>
-                    )}
+                    {pdf.description && <div className="proj-doc-meta">{pdf.description}</div>}
                   </div>
                   <svg className="proj-doc-arrow" viewBox="0 0 20 20" fill="none">
                     <path d="M10 3v10M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -213,11 +301,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
       {/* Lightbox */}
       {lightboxIdx !== null && (
-        <Lightbox
-          images={allImages}
-          index={lightboxIdx}
-          onClose={() => setLightboxIdx(null)}
-        />
+        <Lightbox images={allImages} index={lightboxIdx} onClose={() => setLightboxIdx(null)} />
       )}
     </>
   )

@@ -3604,3 +3604,32 @@ body::before {
   color: rgba(244,237,224,.4);
   letter-spacing: .1em;
 }
+/* Palette loading skeleton */
+.proj-palette-loading {
+  background: rgba(26,22,20,.06);
+  border-radius: 3px;
+}
+.proj-palette-skeleton {
+  width: 100%;
+  height: 80px;
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg, #ede8e0 25%, #f4ede0 50%, #ede8e0 75%);
+  background-size: 200% 100%;
+}
+.proj-palette-copied {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,.7);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
