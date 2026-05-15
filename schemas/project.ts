@@ -1,6 +1,4 @@
 // schemas/project.ts
-// Расширенная схема — добавлены поля cat и character для фильтрации в архиве
-
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
@@ -8,6 +6,11 @@ export default defineType({
   title: 'Проект',
   type: 'document',
   fields: [
+    defineField({
+      name: 'num',
+      title: 'Номер в архиве (01, 02…)',
+      type: 'string',
+    }),
     defineField({
       name: 'title',
       title: 'Название',
@@ -22,12 +25,6 @@ export default defineType({
       validation: Rule => Rule.required(),
     }),
     defineField({
-      name: 'num',
-      title: 'Номер в архиве (01, 02 …)',
-      type: 'string',
-    }),
-    // ── Категория для фильтра ───────────────────────────────
-    defineField({
       name: 'cat',
       title: 'Тип объекта',
       type: 'string',
@@ -41,24 +38,6 @@ export default defineType({
       },
       validation: Rule => Rule.required(),
     }),
-    // ── Характер для фильтра ────────────────────────────────
-    defineField({
-      name: 'character',
-      title: 'Характер (стиль)',
-      description: 'Можно выбрать несколько',
-      type: 'array',
-      of: [{ type: 'string' }],
-      options: {
-        list: [
-          { title: 'Современная классика', value: 'modern-classic' },
-          { title: 'Минимализм', value: 'minimalism' },
-          { title: 'Эклектика', value: 'eclectic' },
-          { title: 'Природный', value: 'natural' },
-          { title: 'Лофт', value: 'loft' },
-        ],
-      },
-    }),
-    // ── Основные параметры ──────────────────────────────────
     defineField({
       name: 'area',
       title: 'Площадь, м²',
@@ -71,23 +50,22 @@ export default defineType({
     }),
     defineField({
       name: 'year',
-      title: 'Год',
+      title: 'Год реализации',
       type: 'number',
     }),
-    // ── Медиа ───────────────────────────────────────────────
     defineField({
       name: 'coverImage',
-      title: 'Обложка',
+      title: 'Обложка (главное фото)',
       type: 'image',
       options: { hotspot: true },
+      description: 'Горизонтальное, минимум 1200×800px',
     }),
     defineField({
       name: 'images',
-      title: 'Галерея',
+      title: 'Галерея проекта',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
     }),
-    // ── Тексты ──────────────────────────────────────────────
     defineField({
       name: 'description',
       title: 'Описание',
@@ -96,22 +74,21 @@ export default defineType({
     }),
     defineField({
       name: 'featured',
-      title: 'Показывать в карусели',
+      title: 'Показывать в карусели на главной',
       type: 'boolean',
       initialValue: false,
     }),
     defineField({
       name: 'disabled',
-      title: 'Фото ещё не загружены (показывать заглушку)',
+      title: 'Заглушка (фото ещё не загружены)',
       type: 'boolean',
       initialValue: false,
     }),
   ],
+  orderings: [
+    { title: 'По номеру', name: 'numAsc', by: [{ field: 'num', direction: 'asc' }] },
+  ],
   preview: {
-    select: {
-      title: 'title',
-      subtitle: 'city',
-      media: 'coverImage',
-    },
+    select: { title: 'title', subtitle: 'city', media: 'coverImage' },
   },
 })
