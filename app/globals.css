@@ -1030,10 +1030,8 @@ section { position: relative; }
 
 .tier.is-popular {
   background: #fff;
-  outline: 2px solid var(--ink);
-  box-shadow: 0 8px 40px rgba(26, 22, 20, .13);
+  box-shadow: inset 0 0 0 2px var(--ink);
   z-index: 2;
-  border-radius: 2px;
   border-right: none;
 }
 
