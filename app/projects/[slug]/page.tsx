@@ -12,16 +12,15 @@ export const PROJECT_BY_SLUG_QUERY = `
     "coverUrl": coverImage.asset->url,
     "imageUrls": images[].asset->url,
     palette,
-    "autoPalette": coverImage.asset->metadata.palette {
-      "colors": [
-        dominant.background,
-        vibrant.background,
-        muted.background,
-        darkVibrant.background,
-        lightMuted.background,
-        darkMuted.background
-      ]
-    },
+    // Собираем палитру с обложки + первых фото галереи для разнообразия цветов
+    "autoPalette": [
+      coverImage.asset->metadata.palette.dominant.background,
+      coverImage.asset->metadata.palette.vibrant.background,
+      images[0].asset->metadata.palette.dominant.background,
+      images[0].asset->metadata.palette.vibrant.background,
+      images[1].asset->metadata.palette.dominant.background,
+      images[2].asset->metadata.palette.vibrant.background,
+    ],
     notes[] {
       text,
       "imageUrl": image.asset->url
@@ -78,13 +77,14 @@ export default async function Page({
   const coverUrl: string | null = project.coverUrl || null
   const imageUrls: string[] = project.imageUrls || []
 
-  // Палитра: 1) ручная из Studio 2) авто из Sanity metadata 3) ColorThief на клиенте
-  const sanityAutoPalette: string[] = (project.autoPalette?.colors || [])
-    .filter(Boolean) as string[]
+  // Палитра: 1) ручная из Studio 2) авто из Sanity (обложка + галерея) 3) ColorThief
+  const sanityAutoPalette: string[] = [...new Set(
+    (project.autoPalette || []).filter(Boolean) as string[]
+  )].slice(0, 6)
   const palette: string[] | undefined =
     (project.palette?.length > 0) ? project.palette :
     (sanityAutoPalette.length > 0) ? sanityAutoPalette :
-    undefined // undefined = клиентский ColorThief как крайний случай
+    undefined
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const notes = (project.notes || []).map((n: any) => ({
