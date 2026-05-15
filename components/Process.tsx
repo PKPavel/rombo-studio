@@ -126,33 +126,31 @@ export default function Process() {
   return (
     <section id="process" className="process">
       <div className="container">
-        <div className="section-head reveal">
-          <div className="section-head-left">
-            <span className="eyebrow">— Этапы взаимодействия</span>
-            <h2 className="h-section">Как мы работаем</h2>
-          </div>
-          <div className="section-head-right">
+
+        {/* ── Заголовок секции — центр ── */}
+        <div className="proc-header reveal">
+          <span className="proc-eyebrow">— Этапы взаимодействия</span>
+          <h2 className="proc-h2">Как мы работаем</h2>
+          <p className="proc-lead">
             Прозрачная и предсказуемая методика. Каждый этап имеет результат,
             который вы согласовываете до перехода к следующему.
-          </div>
+          </p>
         </div>
-      </div>
 
-      {STAGES.map((stage, si) => (
-        <div key={si} className="proc-stage reveal">
-          <div className="container">
+        {/* ── Главы ── */}
+        {STAGES.map((stage, si) => (
+          <div key={si} className="proc-stage reveal">
             <span className="proc-stage-eyebrow">{stage.eyebrow}</span>
             <h3 className="proc-stage-title">{stage.title}</h3>
+            <StageTimeline steps={stage.steps} />
           </div>
-          <StageTimeline steps={stage.steps} />
-        </div>
-      ))}
+        ))}
 
-      <div className="container">
         <p className="proc-note reveal">
           Каждый этап закрывается актом выполненных работ. До перехода к следующему
           всё согласовывается с вами — без неожиданностей и скрытых правок.
         </p>
+
       </div>
     </section>
   )
