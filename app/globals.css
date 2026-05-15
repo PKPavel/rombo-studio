@@ -3633,3 +3633,210 @@ body::before {
   0%   { background-position: -200% 0; }
   100% { background-position:  200% 0; }
 }
+/* ============================================================
+   PROCESS — горизонтальный скролл, стрелки, анимации
+   Добавить в конец globals.css
+   ============================================================ */
+
+.process {
+  padding: clamp(80px, 11vh, 140px) 0;
+  background: var(--bg);
+  overflow: hidden;
+}
+.proc-stage { margin-top: 56px; }
+.proc-stage-eyebrow {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.proc-stage-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 300;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin-bottom: 40px;
+  line-height: 1.05;
+}
+
+/* ── Обёртка трека ── */
+.proc-wrap {
+  position: relative;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+/* ── Стрелки ── */
+.proc-arrow {
+  position: absolute;
+  top: 90px;
+  z-index: 10;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid rgba(26,22,20,.18);
+  font-size: 24px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s, background .2s, transform .2s;
+  box-shadow: 0 4px 16px rgba(26,22,20,.1);
+}
+.proc-arrow.visible { opacity: 1; pointer-events: auto; }
+.proc-arrow:hover { background: var(--ink); color: var(--bg); transform: scale(1.05); }
+.proc-arrow-l { left: clamp(20px,4vw,60px); }
+.proc-arrow-r { right: clamp(20px,4vw,60px); }
+
+/* ── Fade edges ── */
+.proc-fade {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  pointer-events: none;
+  z-index: 5;
+}
+.proc-fade-l {
+  left: clamp(20px,4vw,60px);
+  background: linear-gradient(90deg, var(--bg), transparent);
+}
+.proc-fade-r {
+  right: clamp(20px,4vw,60px);
+  background: linear-gradient(-90deg, var(--bg), transparent);
+}
+
+/* ── Трек ── */
+.proc-track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  position: relative;
+}
+.proc-track:active { cursor: grabbing; }
+.proc-track::-webkit-scrollbar { display: none; }
+
+/* Горизонтальная линия под всеми шагами */
+.proc-track::before {
+  content: '';
+  position: absolute;
+  top: 108px;
+  left: 0; right: 0;
+  height: 1px;
+  background: rgba(26,22,20,.1);
+  pointer-events: none;
+}
+
+/* ── Шаг ── */
+.proc-step {
+  flex: 0 0 clamp(200px, 22vw, 280px);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px 32px;
+  /* Анимация появления с задержкой */
+  opacity: 0;
+  transform: translateY(24px);
+  animation: procStepIn .5s ease forwards;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+@keyframes procStepIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Иконка */
+.proc-step-icon {
+  width: 56px; height: 56px;
+  color: var(--ink);
+  opacity: .6;
+  transition: opacity .3s, transform .3s;
+  margin-bottom: 12px;
+}
+.proc-step-icon svg { width: 100%; height: 100%; }
+.proc-step:hover .proc-step-icon { opacity: 1; transform: translateY(-4px); }
+
+/* Коннектор (линия + точка + линия) */
+.proc-step-connector {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+  height: 12px;
+}
+.proc-step-line { flex: 1; height: 1px; background: rgba(26,22,20,.12); }
+.proc-step:first-child .proc-step-line:first-child { background: transparent; }
+.proc-step:last-child .proc-step-line:last-child { background: transparent; }
+.proc-step-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid rgba(26,22,20,.3);
+  flex-shrink: 0;
+  transition: background .3s, border-color .3s, transform .3s;
+}
+.proc-step:hover .proc-step-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.3);
+}
+
+/* Название шага */
+.proc-step-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+/* Описание */
+.proc-step-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink);
+  opacity: .55;
+}
+
+/* Сноска */
+.proc-note {
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  opacity: .4;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 48px auto 0;
+  padding: 0 clamp(20px,4vw,60px);
+}
+
+/* ── Анимация reveal для остальных секций ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* delay утилиты */
+.delay-1 { transition-delay: .1s; }
+.delay-2 { transition-delay: .2s; }
+.delay-3 { transition-delay: .3s; }

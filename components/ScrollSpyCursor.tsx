@@ -109,3 +109,27 @@ export function FloatingBar() {
     </div>
   )
 }
+
+// ── Reveal-анимации при скролле ───────────────────────────────────────────
+export function RevealObserver() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view')
+          observer.unobserve(e.target)
+        }
+      }),
+      { threshold: 0.12 }
+    )
+    const observe = () =>
+      document.querySelectorAll('.reveal:not(.in-view)').forEach(el => observer.observe(el))
+
+    observe()
+    // Повторно наблюдаем при динамической загрузке
+    const mo = new MutationObserver(observe)
+    mo.observe(document.body, { childList: true, subtree: true })
+    return () => { observer.disconnect(); mo.disconnect() }
+  }, [])
+  return null
+}

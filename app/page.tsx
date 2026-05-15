@@ -14,8 +14,7 @@ import Blog from '../components/Blog'
 import FeaturedIn from '../components/FeaturedIn'
 import FAQ from '../components/FAQ'
 import Contact from '../components/Contact'
-import { ScrollSpy, CustomCursor, FloatingBar } from '../components/ScrollSpyCursor'
-
+import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver } from '../components/ScrollSpyCursor'
 export default function Home() {
   return (
     <>
@@ -39,6 +38,7 @@ export default function Home() {
       <FAQ />
       <Contact />
       <FloatingBar />
+      <RevealObserver />
     </>
   )
 }
