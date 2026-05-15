@@ -34,7 +34,7 @@ export default async function Page({
 
   let project: any = null
   try {
-    project = await client.fetch(PROJECT_QUERY, { slug })
+    project = await client.fetch(PROJECT_BY_SLUG_QUERY, { slug })
   } catch (e) {
     console.error('Fetch error:', e)
   }
@@ -56,7 +56,9 @@ export default async function Page({
 
   const pdfs = (project.pdfs || []).map((p: any) => ({
     title: p.title || 'Документ',
-    description: p.description || '',
+    pages: p.pages || null,
+    tags: p.tags || [],
+    size: p.size || null,
     url: p.url || null,
   }))
 
