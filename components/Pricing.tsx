@@ -193,16 +193,14 @@ export default function Pricing() {
     <section id="pricing" className="pricing">
       <div className="container">
 
-        <div className="section-head reveal">
-          <div className="section-head-left">
-            <span className="eyebrow">— Стоимость услуг</span>
-            <h2 className="h-section">Прозрачные цены</h2>
-          </div>
-          <div className="section-head-right">
+        <div className="pricing-header reveal">
+          <span className="pricing-eyebrow">— Стоимость услуг</span>
+          <h2 className="pricing-h2">Прозрачные цены</h2>
+          <p className="pricing-lead">
             Четыре формата сотрудничества — от планировочного решения до полного
             цикла «под ключ». Для объектов более 150 м² и загородных домов —
             индивидуальные условия со скидкой.
-          </div>
+          </p>
         </div>
 
         {/* Тарифные карточки */}
