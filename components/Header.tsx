@@ -18,12 +18,12 @@ function RomboLogo() {
 }
 
 const NAV = [
-  { label: 'Главная',  href: '#hero' },
-  { label: 'Проекты', href: '#projects' },
-  { label: 'Студия',  href: '#founder' },
-  { label: 'Услуги',  href: '#services' },
-  { label: 'Цены',    href: '#pricing' },
-  { label: 'Контакты', href: '#contact' },
+  { label: 'Главная',  href: '/#hero' },
+  { label: 'Проекты', href: '/#projects' },
+  { label: 'Студия',  href: '/#founder' },
+  { label: 'Услуги',  href: '/#services' },
+  { label: 'Цены',    href: '/#pricing' },
+  { label: 'Контакты', href: '/#contact' },
 ]
 
 export default function Header() {
@@ -44,7 +44,7 @@ export default function Header() {
   return (
     <>
       <header className={`header${scrolled ? ' scrolled' : ''}`}>
-        <a href="#hero" className="logo" aria-label="ROMBO — на главную">
+        <a href="/#hero" className="logo" aria-label="ROMBO — на главную">
           <RomboLogo />
         </a>
         <nav className="nav">
@@ -52,7 +52,7 @@ export default function Header() {
             <a key={item.href} href={item.href}>{item.label}</a>
           ))}
         </nav>
-        <a href="#contact" className="header-cta">Оставить заявку</a>
+        <a href="/#contact" className="header-cta">Оставить заявку</a>
         <button
           className={`burger${menuOpen ? ' active' : ''}`}
           aria-label="Меню"
