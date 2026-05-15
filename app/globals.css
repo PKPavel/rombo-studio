@@ -3658,6 +3658,7 @@ body::before {
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 8px;
+  text-align: center;
 }
 .proc-stage-title {
   font-family: var(--serif);
@@ -3667,6 +3668,7 @@ body::before {
   color: var(--ink);
   margin-bottom: 40px;
   line-height: 1.05;
+  text-align: center;
 }
 
 /* ── Обёртка трека ── */
@@ -3728,6 +3730,7 @@ body::before {
   -webkit-overflow-scrolling: touch;
   cursor: grab;
   position: relative;
+  padding: 0 clamp(20px,4vw,60px);
 }
 .proc-track:active { cursor: grabbing; }
 .proc-track::-webkit-scrollbar { display: none; }
