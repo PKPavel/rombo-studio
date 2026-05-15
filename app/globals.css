@@ -2427,7 +2427,7 @@ a.contact-info-value:hover { color: var(--accent); }
    ============================================================ */
 
 /* ── Курсор — скрыть системный ── */
-html { cursor: none; }
+html:not(.studio-page) { cursor: none; }
 @media (hover: none), (max-width: 1024px) {
   html, button, a, input, textarea { cursor: auto; }
 }
@@ -2647,7 +2647,7 @@ html { cursor: none; }
    ============================================================ */
 
 /* ── Курсор html ── */
-html { cursor: none; }
+html:not(.studio-page) { cursor: none; }
 @media (hover: none), (max-width: 1024px) {
   html, button, a, input, textarea, select { cursor: auto; }
 }
