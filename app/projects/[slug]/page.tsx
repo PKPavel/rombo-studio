@@ -24,14 +24,36 @@ export const PROJECT_BY_SLUG_QUERY = `
   }
 `
 
-// Next.js 15+ — params это Promise
+// Авто-подсчёт страниц PDF без внешних библиотек:
+// читаем первые 200 КБ файла и ищем /Count N — это поле Pages-словаря в PDF
+async function extractPdfPages(url: string): Promise<number | null> {
+  try {
+    const res = await fetch(url, {
+      headers: { Range: 'bytes=0-204799' }, // первые 200 КБ
+    })
+    const buffer = await res.arrayBuffer()
+    const text = Buffer.from(buffer).toString('latin1')
+
+    // /Count <число> — количество страниц в дереве страниц PDF
+    const matches = [...text.matchAll(/\/Count\s+(\d+)/g)]
+    if (!matches.length) return null
+
+    // Берём максимальное значение — это корневой Pages-объект
+    const counts = matches.map(m => parseInt(m[1]))
+    return Math.max(...counts)
+  } catch {
+    return null
+  }
+}
+
 export default async function Page({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params   // ← ключевой await
+  const { slug } = await params
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let project: any = null
   try {
     project = await client.fetch(PROJECT_BY_SLUG_QUERY, { slug })
@@ -45,22 +67,34 @@ export default async function Page({
     ? urlFor(project.coverImage).width(1600).height(900).fit('crop').auto('format').url()
     : null
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const imageUrls: string[] = (project.images || []).map((img: any) =>
     urlFor(img).width(1200).height(900).fit('crop').auto('format').url()
   )
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const notes = (project.notes || []).map((n: any) => ({
     text: n.text || '',
     imageUrl: n.image ? urlFor(n.image).width(1200).auto('format').url() : null,
   }))
 
-  const pdfs = (project.pdfs || []).map((p: any) => ({
-    title: p.title || 'Документ',
-    pages: p.pages || null,
-    tags: p.tags || [],
-    size: p.size || null,
-    url: p.url || null,
-  }))
+  // Для каждого PDF: берём pages из Sanity, иначе — авто-извлекаем из файла
+  const pdfs = await Promise.all(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (project.pdfs || []).map(async (p: any) => {
+      const url = p.url || null
+      const pagesFromSanity: number | null = p.pages || null
+      const pagesAuto = (!pagesFromSanity && url) ? await extractPdfPages(url) : null
+
+      return {
+        title: p.title || 'Документ',
+        pages: pagesFromSanity ?? pagesAuto,
+        tags: p.tags || [],
+        size: p.size || null,
+        url,
+      }
+    })
+  )
 
   return (
     <ProjectPage project={{ ...project, coverUrl, imageUrls, notes, pdfs }} />
