@@ -1,5 +1,5 @@
 // app/projects/[slug]/page.tsx
-import { client, urlFor } from '../../../sanity.client'
+import { client } from '../../../sanity.client'
 import { notFound } from 'next/navigation'
 import ProjectPage from '../../../components/ProjectPage'
 
@@ -65,19 +65,14 @@ export default async function Page({
 
   if (!project) notFound()
 
-  const coverUrl = project.coverImage
-    ? urlFor(project.coverImage).width(1600).height(900).fit('crop').auto('format').url()
-    : null
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const imageUrls: string[] = (project.images || []).map((img: any) =>
-    urlFor(img).width(1200).height(900).fit('crop').auto('format').url()
-  )
+  // GROQ уже вернул готовые URL — project.coverImage/images нет в проекции
+  const coverUrl: string | null = project.coverUrl || null
+  const imageUrls: string[] = project.imageUrls || []
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const notes = (project.notes || []).map((n: any) => ({
     text: n.text || '',
-    imageUrl: n.image ? urlFor(n.image).width(1200).auto('format').url() : null,
+    imageUrl: n.imageUrl || null,
   }))
 
   // Для каждого PDF: берём pages из Sanity, иначе — авто-извлекаем из файла
