@@ -1,14 +1,13 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 // ─── Кастомный курсор ─────────────────────────────────────────────────────────
 export function CustomCursor() {
-  const ref = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
+    const el = document.createElement('div')
+    el.className = 'cursor'
+    document.body.appendChild(el)
 
     const move = (e: MouseEvent) => {
       el.style.left = e.clientX + 'px'
@@ -19,24 +18,22 @@ export function CustomCursor() {
     const removeHover = () => el.classList.remove('hover')
 
     document.addEventListener('mousemove', move)
-
-    // Hover на интерактивных элементах
-    const targets = document.querySelectorAll('a, button, [role="button"]')
-    targets.forEach(t => {
-      t.addEventListener('mouseenter', addHover)
-      t.addEventListener('mouseleave', removeHover)
+    document.addEventListener('mouseover', (e) => {
+      const t = e.target as HTMLElement
+      if (t.closest('a, button, [role="button"], input, select, textarea')) {
+        addHover()
+      } else {
+        removeHover()
+      }
     })
 
     return () => {
       document.removeEventListener('mousemove', move)
-      targets.forEach(t => {
-        t.removeEventListener('mouseenter', addHover)
-        t.removeEventListener('mouseleave', removeHover)
-      })
+      el.remove()
     }
   }, [])
 
-  return <div ref={ref} className="cursor" aria-hidden="true" />
+  return null
 }
 
 // ─── Scroll-spy ───────────────────────────────────────────────────────────────
@@ -49,31 +46,29 @@ const SECTIONS = [
   { id: 'contact',  num: '06', label: 'Контакты' },
 ]
 
+const DARK_SECTIONS = new Set(['hero', 'services', 'contact'])
+
 export function ScrollSpy() {
   const [active, setActive] = useState('hero')
   const [onLight, setOnLight] = useState(false)
 
   useEffect(() => {
-    const darkSections = new Set(['hero', 'services', 'contact'])
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const id = entry.target.id
             setActive(id)
-            setOnLight(!darkSections.has(id))
+            setOnLight(!DARK_SECTIONS.has(id))
           }
         })
       },
-      { threshold: 0.4 }
+      { rootMargin: '-40% 0px -40% 0px', threshold: 0 }
     )
-
     SECTIONS.forEach(s => {
       const el = document.getElementById(s.id)
       if (el) observer.observe(el)
     })
-
     return () => observer.disconnect()
   }, [])
 
@@ -94,5 +89,23 @@ export function ScrollSpy() {
         </a>
       ))}
     </nav>
+  )
+}
+
+// ─── Floating bar (мобильный) ─────────────────────────────────────────────────
+export function FloatingBar() {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 400)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <div className={`float-bar${show ? ' show' : ''}`}>
+      <a href="tel:+79045581631" className="fb-call">Позвонить</a>
+      <a href="https://t.me/+79045581631" target="_blank" rel="noopener">Telegram</a>
+    </div>
   )
 }
