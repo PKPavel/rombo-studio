@@ -119,6 +119,13 @@ export default defineType({
             type: 'file',
             options: { accept: '.pdf' },
           },
+          {
+            // Устаревшее поле — оставлено для совместимости со старыми документами
+            name: 'description',
+            title: 'Описание (устарело)',
+            type: 'string',
+            hidden: true,
+          },
         ],
         preview: {
           select: { title: 'title', pages: 'pages' },
