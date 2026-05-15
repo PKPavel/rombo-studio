@@ -55,20 +55,20 @@ export default function Blog() {
   return (
     <section id="blog" className="blog">
       <div className="container">
-        <div className="section-head reveal">
-          <div className="section-head-left">
-            <span className="eyebrow">— Журнал ROMBO</span>
-            <h2 className="h-section">Статьи<br />и идеи</h2>
-          </div>
-          <div className="section-head-right">
+
+        {/* ── Заголовок — по центру ── */}
+        <div className="blog-header reveal">
+          <span className="blog-eyebrow">— Журнал ROMBO</span>
+          <h2 className="blog-h2">Статьи и идеи</h2>
+          <p className="blog-lead">
             Делимся опытом, разбираем тренды, рассказываем о наших проектах.
             Полезные материалы для тех, кто планирует ремонт или просто любит интерьерный дизайн.
-          </div>
+          </p>
         </div>
 
         <div className="blog-grid reveal">
           {POSTS.map(p => (
-            <div key={p.slug} className="blog-tile">
+            <div key={p.slug} className="blog-tile blog-tile--soon">
               <div className="blog-tile-img">
                 <img src={p.img} alt={p.title} loading="lazy" />
                 <span className="blog-tile-tag">{p.tag}</span>
@@ -80,6 +80,9 @@ export default function Blog() {
             </div>
           ))}
         </div>
+
+        <p className="blog-soon-note">Статьи скоро будут доступны — следите за обновлениями</p>
+
       </div>
     </section>
   )
