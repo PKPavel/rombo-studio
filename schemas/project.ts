@@ -78,12 +78,57 @@ export default defineType({
       of: [{
         type: 'object',
         fields: [
-          { name: 'title', title: 'Название файла', type: 'string' },
-          { name: 'description', title: 'Описание (листов, размер)', type: 'string' },
-          { name: 'file', title: 'PDF-файл', type: 'file', options: { accept: '.pdf' } },
+          {
+            name: 'title',
+            title: 'Название файла',
+            type: 'string',
+            description: 'Например: Альбом рабочих чертежей',
+          },
+          {
+            name: 'pages',
+            title: 'Количество листов',
+            type: 'number',
+            description: 'Смотрите в свойствах PDF-файла',
+          },
+          {
+            name: 'tags',
+            title: 'Содержимое (теги)',
+            type: 'array',
+            of: [{ type: 'string' }],
+            description: 'Выберите что входит в документ',
+            options: {
+              list: [
+                { title: 'Обмеры', value: 'обмеры' },
+                { title: 'Демонтаж', value: 'демонтаж' },
+                { title: 'Монтаж', value: 'монтаж' },
+                { title: 'Мебель', value: 'мебель' },
+                { title: 'Сантехника', value: 'сантехника' },
+                { title: 'Электрика', value: 'электрика' },
+                { title: 'Освещение', value: 'освещение' },
+                { title: 'Полы', value: 'полы' },
+                { title: 'Потолок', value: 'потолок' },
+                { title: 'Отделка', value: 'отделка' },
+                { title: 'Итоговая планировка', value: 'итоговая планировка' },
+                { title: 'Планировка', value: 'планировка' },
+              ],
+            },
+          },
+          {
+            name: 'file',
+            title: 'PDF-файл',
+            type: 'file',
+            options: { accept: '.pdf' },
+          },
         ],
         preview: {
-          select: { title: 'title', subtitle: 'description' },
+          select: { title: 'title', pages: 'pages' },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          prepare({ title, pages }: any) {
+            return {
+              title: title || 'Без названия',
+              subtitle: pages ? `${pages} листов` : 'листы не указаны',
+            }
+          },
         },
       }],
     }),

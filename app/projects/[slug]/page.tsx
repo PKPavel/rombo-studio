@@ -3,13 +3,24 @@ import { client, urlFor } from '../../../sanity.client'
 import { notFound } from 'next/navigation'
 import ProjectPage from '../../../components/ProjectPage'
 
-const PROJECT_QUERY = `
+export const PROJECT_BY_SLUG_QUERY = `
   *[_type == "project" && slug.current == $slug][0] {
     _id, num, title, "slug": slug.current,
-    cat, area, city, year, description, featured,
-    coverImage, images, palette,
-    notes[] { text, image },
-    pdfs[] { title, description, "url": file.asset->url }
+    cat, area, city, year, description,
+    "coverUrl": coverImage.asset->url,
+    "imageUrls": images[].asset->url,
+    palette,
+    notes[] {
+      text,
+      "imageUrl": image.asset->url
+    },
+    pdfs[] {
+      title,
+      pages,
+      tags,
+      "url": file.asset->url,
+      "size": file.asset->size
+    }
   }
 `
 

@@ -15,7 +15,39 @@ interface ProjectData {
   imageUrls: string[]
   palette?: string[]
   notes?: { text: string; imageUrl: string | null }[]
-  pdfs?: { title: string; description: string; url: string | null }[]
+  pdfs?: {
+    title: string
+    pages?: number
+    tags?: string[]
+    size?: number   // байты из asset->size
+    url: string | null
+  }[]
+}
+
+// ── Хелперы для метаданных PDF ────────────────────────────────────────────
+
+function pluralSheets(n: number): string {
+  const mod10 = n % 10
+  const mod100 = n % 100
+  if (mod100 >= 11 && mod100 <= 19) return `${n} листов`
+  if (mod10 === 1) return `${n} лист`
+  if (mod10 >= 2 && mod10 <= 4) return `${n} листа`
+  return `${n} листов`
+}
+
+function formatSize(bytes: number): string {
+  if (!bytes) return ''
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} КБ`
+  return `${(bytes / 1024 / 1024).toFixed(1).replace('.', ',')} МБ`
+}
+
+function buildPdfMeta(pdf: { pages?: number; tags?: string[]; size?: number }): string {
+  const parts: string[] = []
+  if (pdf.pages) parts.push(pluralSheets(pdf.pages))
+  if (pdf.tags && pdf.tags.length > 0) parts.push(pdf.tags.join(', '))
+  parts.push('PDF')
+  if (pdf.size) parts.push(formatSize(pdf.size))
+  return parts.join(' · ')
 }
 
 // ── Авто-палитра через ColorThief ─────────────────────────────────────────
@@ -201,26 +233,38 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
       {project.pdfs && project.pdfs.length > 0 && (
         <section className="proj-page-section proj-docs-section">
           <div className="proj-page-container">
-            <span className="proj-docs-eyebrow">— Пример проектной документации</span>
-            <h2 className="proj-docs-title">Что получает заказчик</h2>
-            <p className="proj-docs-intro">
-              После согласования концепции мы передаём полный альбом рабочей документации:
-              поэтажные планы, развёртки, спецификации и схемы — всё, что нужно прорабу для точной реализации.
-            </p>
-            <div className="proj-docs-grid">
-              {project.pdfs.map((pdf, i) => (
-                <a key={i} href={pdf.url || '#contact'} download={!!pdf.url} className="proj-doc-card">
-                  <PdfIcon />
-                  <div className="proj-doc-info">
-                    <div className="proj-doc-title">{pdf.title}</div>
-                    {pdf.description && <div className="proj-doc-meta">{pdf.description}</div>}
-                  </div>
-                  <svg className="proj-doc-arrow" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 3v10M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </a>
-              ))}
+
+            {/* ── Шапка секции — по центру ── */}
+            <div className="proj-docs-header">
+              <span className="proj-docs-eyebrow">— Пример проектной документации</span>
+              <h2 className="proj-docs-title">Что получает заказчик</h2>
+              <p className="proj-docs-intro">
+                После согласования концепции мы передаём полный альбом рабочей документации:
+                поэтажные планы, развёртки, спецификации материалов и оборудования, схемы
+                освещения и розеток — всё, что нужно прорабу для точной реализации. Ниже —
+                пример из этого проекта.
+              </p>
             </div>
+
+            {/* ── PDF-карточки ── */}
+            <div className="proj-docs-grid">
+              {project.pdfs.map((pdf, i) => {
+                const meta = buildPdfMeta(pdf)
+                return (
+                  <a key={i} href={pdf.url || '#contact'} download={!!pdf.url} className="proj-doc-card">
+                    <PdfIcon />
+                    <div className="proj-doc-info">
+                      <div className="proj-doc-title">{pdf.title}</div>
+                      {meta && <div className="proj-doc-meta">{meta}</div>}
+                    </div>
+                    <svg className="proj-doc-arrow" viewBox="0 0 20 20" fill="none">
+                      <path d="M10 3v10M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  </a>
+                )
+              })}
+            </div>
+
           </div>
         </section>
       )}
