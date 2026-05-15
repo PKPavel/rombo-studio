@@ -1,8 +1,8 @@
-// Archive.tsx — серверный компонент с ревалидацией каждые 60 сек
+// Archive.tsx — ISR: данные обновляются каждые 60 сек без пересборки
 import { client, urlFor, PROJECTS_QUERY } from '../sanity.client'
 import ArchiveClient from './ArchiveClient'
 
-export const revalidate = 60 // Next.js ISR — обновлять каждые 60 секунд
+export const revalidate = 60
 
 export type SanityProject = {
   _id: string
@@ -23,13 +23,7 @@ export default async function Archive() {
   let projects: SanityProject[] = []
 
   try {
-    projects = await client.fetch(
-      PROJECTS_QUERY,
-      {},
-      {
-        cache: 'no-store', // всегда свежие данные
-      }
-    )
+    projects = await client.fetch(PROJECTS_QUERY)
   } catch (e) {
     console.error('Sanity fetch error:', e)
   }
