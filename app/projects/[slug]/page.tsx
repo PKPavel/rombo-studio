@@ -3,6 +3,8 @@ import { client, urlFor } from '../../../sanity.client'
 import { notFound } from 'next/navigation'
 import ProjectPage from '../../../components/ProjectPage'
 
+export const revalidate = 60 // ISR — обновление каждые 60 сек
+
 export const PROJECT_BY_SLUG_QUERY = `
   *[_type == "project" && slug.current == $slug][0] {
     _id, num, title, "slug": slug.current,
