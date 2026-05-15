@@ -59,7 +59,7 @@ function AutoPalette({ imageUrl }: { imageUrl: string }) {
     if (!imageUrl) return
     const img = new Image()
     img.crossOrigin = 'anonymous'
-    img.src = imageUrl
+    img.src = `/api/img-proxy?url=${encodeURIComponent(imageUrl)}`
 
     img.onload = async () => {
       try {
