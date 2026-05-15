@@ -3674,20 +3674,21 @@ body::before {
 /* ── Обёртка трека ── */
 .proc-wrap {
   position: relative;
-  padding: 0;
-  margin: 0 -clamp(20px,4vw,60px);
 }
 
-/* ── Стрелки ── */
+/* ── Строка со стрелками — над треком, справа ── */
+.proc-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 20px;
+}
 .proc-arrow {
-  position: absolute;
-  top: 90px;
-  z-index: 10;
-  width: 48px; height: 48px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   background: var(--bg);
   border: 1px solid rgba(26,22,20,.18);
-  font-size: 24px;
+  font-size: 22px;
   color: var(--ink);
   display: flex;
   align-items: center;
@@ -3696,12 +3697,10 @@ body::before {
   opacity: 0;
   pointer-events: none;
   transition: opacity .3s, background .2s, transform .2s;
-  box-shadow: 0 4px 16px rgba(26,22,20,.1);
+  box-shadow: 0 2px 8px rgba(26,22,20,.08);
 }
 .proc-arrow.visible { opacity: 1; pointer-events: auto; }
 .proc-arrow:hover { background: var(--ink); color: var(--bg); transform: scale(1.05); }
-.proc-arrow-l { left: clamp(20px,4vw,60px); }
-.proc-arrow-r { right: clamp(20px,4vw,60px); }
 
 /* ── Fade edges ── */
 .proc-fade {
@@ -3730,7 +3729,17 @@ body::before {
   -webkit-overflow-scrolling: touch;
   cursor: grab;
   position: relative;
-  padding: 0 clamp(20px,4vw,60px);
+}
+/* Центрирование когда карточек мало и скролл не нужен */
+.proc-track--centered {
+  overflow-x: visible;
+  cursor: default;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.proc-track--centered .proc-step {
+  flex: 0 0 clamp(200px, 30%, 320px);
 }
 .proc-track:active { cursor: grabbing; }
 .proc-track::-webkit-scrollbar { display: none; }
