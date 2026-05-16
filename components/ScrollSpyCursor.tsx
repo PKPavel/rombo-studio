@@ -97,16 +97,35 @@ export function FloatingBar() {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 400)
+    const onScroll = () => setShow(window.scrollY > 300)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <div className={`float-bar${show ? ' show' : ''}`}>
-      <a href="tel:+79045581631" className="fb-call">Позвонить</a>
-      <a href="https://t.me/+79045581631" target="_blank" rel="noopener">Telegram</a>
-    </div>
+    <>
+      {/* Мобильная полоска снизу */}
+      <div className={`float-bar${show ? ' show' : ''}`}>
+        <a href="tel:+79045581631" className="fb-call">Позвонить</a>
+        <a href="https://t.me/+79045581631" target="_blank" rel="noopener">Telegram</a>
+      </div>
+
+      {/* Floating Telegram FAB — десктоп и планшет */}
+      <a
+        href="https://t.me/+79045581631"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Написать в Telegram"
+        className={`tg-fab${show ? ' tg-fab--show' : ''}`}
+      >
+        <span className="tg-fab-pulse" />
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" fill="#29B6F6"/>
+          <path d="M17.64 7.22l-2.02 9.53c-.15.67-.54.83-1.08.52l-3-2.21-1.44 1.39c-.16.16-.3.29-.61.29l.22-3.07 5.59-5.05c.24-.22-.05-.33-.38-.12L7.2 13.37l-2.97-.93c-.64-.2-.66-.64.14-.95l11.6-4.47c.54-.19 1.01.13.87.94-.01.01-.01.01 0 0\.z" fill="white"/>
+        </svg>
+        <span className="tg-fab-label">Написать</span>
+      </a>
+    </>
   )
 }
 

@@ -4473,3 +4473,63 @@ body::before {
   .blog-hero-title { font-size: clamp(26px,8vw,40px); }
   .blog-related-grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════
+   FLOATING TELEGRAM FAB
+   ═══════════════════════════════════════════════ */
+.tg-fab {
+  position: fixed;
+  bottom: 32px;
+  right: 28px;
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1E96C8;
+  color: #fff;
+  text-decoration: none;
+  padding: 0 20px 0 16px;
+  height: 52px;
+  border-radius: 100px;
+  box-shadow: 0 4px 20px rgba(30,150,200,.35);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: .04em;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(16px) scale(0.92);
+  transition: opacity .4s ease, transform .4s ease, background .2s, box-shadow .2s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.tg-fab--show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.tg-fab:hover {
+  background: #1a85b3;
+  box-shadow: 0 6px 28px rgba(30,150,200,.5);
+  transform: translateY(-2px) scale(1);
+}
+.tg-fab-label { line-height: 1; }
+
+/* Пульс */
+.tg-fab-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  border: 2px solid rgba(30,150,200,.5);
+  animation: tgPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes tgPulse {
+  0%   { transform: scale(1);   opacity: .7; }
+  70%  { transform: scale(1.22); opacity: 0; }
+  100% { transform: scale(1.22); opacity: 0; }
+}
+
+/* На мобильном скрываем FAB (там есть полоска снизу) */
+@media (max-width: 800px) {
+  .tg-fab { display: none; }
+}
