@@ -1,4 +1,5 @@
 import { client } from '../../../sanity.client'
+import { BlogProgress } from '../../../components/BlogProgress'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
@@ -77,6 +78,29 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   return (
     <>
+      <BlogProgress />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: post.title,
+          description: post.excerpt || post.title,
+          author: { '@type': 'Person', name: post.author || 'Александра Серова' },
+          publisher: { '@type': 'Organization', name: 'ROMBO', url: 'https://rombo.pro' },
+          datePublished: post.publishedAt,
+          image: post.coverUrl ? `${post.coverUrl}?w=1200&auto=format` : null,
+          url: `https://rombo.pro/blog/${slug}`,
+          breadcrumb: {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://rombo.pro' },
+              { '@type': 'ListItem', position: 2, name: 'Журнал', item: 'https://rombo.pro/blog' },
+              { '@type': 'ListItem', position: 3, name: post.title },
+            ]
+          }
+        })}}
+      />
       {/* HERO — полноэкранная обложка с заголовком поверх */}
       <header className="blog-hero">
         {post.coverUrl && (

@@ -1,6 +1,30 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
+
+function ContactSuccess() {
+  const [count, setCount] = React.useState(5)
+  React.useEffect(() => {
+    const t = setInterval(() => setCount(n => {
+      if (n <= 1) { clearInterval(t); window.location.href = '/' }
+      return n - 1
+    }), 1000)
+    return () => clearInterval(t)
+  }, [])
+  return (
+    <div className="contact-success reveal">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="23" stroke="var(--accent)" strokeWidth="1.5"/>
+        <path d="M14 24l8 8 12-16" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+      <h3>Заявка отправлена!</h3>
+      <p>Перезвоним в течение часа в рабочее время.<br/>Возвращаемся на главную через <strong>{count}</strong>с.</p>
+      <a href="/" style={{ fontFamily: 'var(--sans)', fontSize: 12, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--ink)', opacity: .5, textDecoration: 'none' }}>
+        Перейти сейчас →
+      </a>
+    </div>
+  )
+}
 
 export default function Contact() {
   const [sent, setSent] = useState(false)
@@ -98,14 +122,7 @@ export default function Contact() {
 
             {/* Форма */}
             {sent ? (
-              <div className="contact-success reveal">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                  <circle cx="20" cy="20" r="19" stroke="var(--accent)" strokeWidth="1.5"/>
-                  <path d="M12 20l6 6 10-12" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <h3>Заявка отправлена</h3>
-                <p>Свяжемся в течение одного рабочего дня.</p>
-              </div>
+              <ContactSuccess />
             ) : (
               <form className="form reveal delay-1" onSubmit={handleSubmit} ref={formRef}>
                 <h3>Оставить заявку</h3>

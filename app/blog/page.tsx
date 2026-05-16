@@ -32,9 +32,17 @@ export const metadata = {
   alternates: { canonical: 'https://rombo.pro/blog' },
 }
 
-export default async function BlogIndex() {
-  const posts = await getPosts()
-  const tags = ['Все', ...Array.from(new Set(posts.map(p => p.tag).filter(Boolean)))]
+export default async function BlogIndex({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>
+}) {
+  const { tag: activeTag } = await searchParams
+  const allPosts = await getPosts()
+  const tags = ['Все', ...Array.from(new Set(allPosts.map(p => p.tag).filter(Boolean) as string[]))]
+  const posts = activeTag && activeTag !== 'Все'
+    ? allPosts.filter(p => p.tag === activeTag)
+    : allPosts
 
   return (
     <>
@@ -44,69 +52,73 @@ export default async function BlogIndex() {
         <div style={{ maxWidth: 'var(--max)', margin: '0 auto', padding: '0 clamp(20px,4vw,60px)' }}>
 
           {/* Шапка */}
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <span style={{ fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: 'var(--accent)', display: 'block', marginBottom: 16 }}>
-              — Журнал ROMBO
-            </span>
-            <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(40px,6vw,72px)', fontWeight: 300, letterSpacing: '-.025em', color: 'var(--ink)', marginBottom: 20, lineHeight: 1.05 }}>
-              Статьи и идеи
-            </h1>
-            <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink)', opacity: .55, maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
-              Делимся опытом, разбираем тренды, рассказываем о наших проектах.
-            </p>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <span style={{ fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: 'var(--accent)', display: 'block', marginBottom: 16 }}>— Журнал ROMBO</span>
+            <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(40px,6vw,72px)', fontWeight: 300, letterSpacing: '-.025em', color: 'var(--ink)', marginBottom: 20, lineHeight: 1.05 }}>Статьи и идеи</h1>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink)', opacity: .5, maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>Делимся опытом, разбираем тренды, рассказываем о наших проектах.</p>
           </div>
 
-          {/* Теги */}
+          {/* Теги — кликабельные фильтры */}
           {tags.length > 2 && (
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 48 }}>
-              {tags.map(tag => (
-                <span key={tag} style={{ fontFamily: 'var(--sans)', fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink)', opacity: .5, padding: '6px 16px', border: '1px solid rgba(26,22,20,.15)', borderRadius: 2 }}>
-                  {tag}
-                </span>
-              ))}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 52 }}>
+              {tags.map(tag => {
+                const isActive = (tag === 'Все' && !activeTag) || tag === activeTag
+                return (
+                  <Link
+                    key={tag}
+                    href={tag === 'Все' ? '/blog' : `/blog?tag=${encodeURIComponent(tag)}`}
+                    style={{
+                      fontFamily: 'var(--sans)', fontSize: 12, letterSpacing: '.08em',
+                      textTransform: 'uppercase', textDecoration: 'none',
+                      padding: '7px 18px', borderRadius: 100,
+                      border: `1px solid ${isActive ? 'var(--ink)' : 'rgba(26,22,20,.18)'}`,
+                      background: isActive ? 'var(--ink)' : 'transparent',
+                      color: isActive ? 'var(--on-dark)' : 'var(--ink)',
+                      opacity: isActive ? 1 : 0.6,
+                      transition: 'all .2s',
+                    }}
+                  >
+                    {tag}
+                  </Link>
+                )
+              })}
             </div>
+          )}
+
+          {/* Счётчик */}
+          {activeTag && activeTag !== 'Все' && (
+            <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)', opacity: .4, textAlign: 'center', marginBottom: 32, letterSpacing: '.04em' }}>
+              {posts.length} {posts.length === 1 ? 'статья' : posts.length < 5 ? 'статьи' : 'статей'} по теме «{activeTag}»
+            </p>
           )}
 
           {/* Сетка */}
           {posts.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 32, marginBottom: 96 }}>
-              {posts.map(p => (
-                <Link key={p.slug} href={`/blog/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                  <article style={{ cursor: 'pointer' }}>
-                    <div style={{ aspectRatio: '16/10', overflow: 'hidden', borderRadius: 2, background: '#E8E4DE', marginBottom: 20 }}>
-                      {p.coverUrl
-                        ? <img src={`${p.coverUrl}?w=700&auto=format`} alt={p.title} className="blog-index-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                        : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <span style={{ fontFamily: 'var(--serif)', fontSize: 32, color: 'rgba(26,22,20,.15)' }}>R</span>
-                          </div>
-                      }
-                      {p.tag && (
-                        <div style={{ position: 'absolute', top: 16, left: 16, background: 'rgba(244,237,224,.92)', fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: 'var(--ink)', padding: '4px 10px', borderRadius: 2 }}>
-                          {p.tag}
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ fontFamily: 'var(--sans)', fontSize: 12, color: 'var(--ink)', opacity: .4, letterSpacing: '.05em', marginBottom: 10 }}>
+            <div className="blog-index-grid" style={{ marginBottom: 96 }}>
+              {posts.map((p, i) => (
+                <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-index-card">
+                  <div className="blog-index-img-wrap">
+                    {p.coverUrl
+                      ? <img src={`${p.coverUrl}?w=700&auto=format`} alt={p.title} className="blog-index-img" />
+                      : <div className="blog-index-img-empty">R</div>
+                    }
+                    {p.tag && <span className="blog-index-tag">{p.tag}</span>}
+                    {i === 0 && !activeTag && <span className="blog-index-new">Новое</span>}
+                  </div>
+                  <div className="blog-index-info">
+                    <div className="blog-index-meta">
                       {fmt(p.publishedAt)}{p.readTime ? ` · ${p.readTime} мин` : ''}
                     </div>
-                    <h2 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(20px,2vw,26px)', fontWeight: 300, color: 'var(--ink)', letterSpacing: '-.02em', lineHeight: 1.2, marginBottom: 12 }}>
-                      {p.title}
-                    </h2>
-                    {p.excerpt && (
-                      <p style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--ink)', opacity: .55, lineHeight: 1.65 }}>
-                        {p.excerpt}
-                      </p>
-                    )}
-                    <div style={{ fontFamily: 'var(--sans)', fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--accent)', marginTop: 16 }}>
-                      Читать →
-                    </div>
-                  </article>
+                    <h2 className="blog-index-title">{p.title}</h2>
+                    {p.excerpt && <p className="blog-index-excerpt">{p.excerpt}</p>}
+                    <span className="blog-index-read">Читать →</span>
+                  </div>
                 </Link>
               ))}
             </div>
           ) : (
             <p style={{ textAlign: 'center', fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink)', opacity: .4, padding: '80px 0' }}>
-              Статьи скоро появятся
+              Статей по этой теме пока нет
             </p>
           )}
         </div>
