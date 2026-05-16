@@ -4064,7 +4064,13 @@ body::before {
 .featured-track {
   display: flex;
   width: max-content;
+  animation: featuredScroll 28s linear infinite;
   will-change: transform;
+}
+.featured:hover .featured-track { animation-play-state: paused; }
+@keyframes featuredScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 .featured-stat {
   display: flex;
