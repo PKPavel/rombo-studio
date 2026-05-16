@@ -1,173 +1,144 @@
-# ROMBO — чек-лист задач по редизайну сайта
+# ROMBO — чек-лист задач по сайту
 
-**Текущая версия:** Next.js + Sanity CMS (в разработке)
-**Последнее обновление:** 15 мая 2026
+**Стек:** Next.js 16.2.6 + Sanity CMS + Vercel
+**Последнее обновление:** 16 мая 2026
 
 ---
 
 ## ⚡ КАК ВОЗОБНОВИТЬ В НОВОМ ЧАТЕ
 
-В новом чате прикрепи:
-1. Этот чек-лист (`task-checklist.md`)
-2. Оригинал дизайна (`rombo-redesign-v22.html`)
-
-Скажи Claude: «Продолжаем переносить сайт ROMBO на Next.js + Sanity. Header и Hero готовы, продолжаем с архива проектов».
+Прикрепи этот чек-лист и скажи:
+«Продолжаем работу над сайтом ROMBO на Next.js + Sanity. Вот чек-лист, продолжаем.»
 
 ---
 
 ## 🏗️ СТЕК И ИНФРАСТРУКТУРА
 
-- **Фреймворк:** Next.js 16.2.6 (App Router, TypeScript, Tailwind CSS)
-- **CMS:** Sanity (Project ID: `g0p8o4k2`, dataset: `production`)
-- **Хостинг:** Netlify (автодеплой из GitHub при каждом push)
+- **Фреймворк:** Next.js 16.2.6 (App Router, TypeScript, Tailwind)
+- **CMS:** Sanity (Project ID: g0p8o4k2, dataset: production)
+- **Хостинг:** Vercel (автодеплой из GitHub при каждом push)
 - **Репозиторий:** https://github.com/PKPavel/rombo-studio
 - **Продакшн:** https://rombo.pro
-- **Studio (локально):** http://localhost:3000/studio
-- **Studio (продакшн):** https://rombo.pro/studio
-
----
-
-## 📁 СТРУКТУРА ПРОЕКТА
-
-```
-rombo-studio/
-├── app/
-│   ├── components/
-│   │   ├── Header.tsx       ✅ готов
-│   │   └── Hero.tsx         ✅ готов
-│   ├── studio/
-│   │   └── [[...tool]]/
-│   │       └── page.tsx     ✅ Sanity Studio встроена
-│   ├── globals.css          ✅ палитра, шрифты, CSS-переменные
-│   ├── layout.tsx           ✅ готов
-│   └── page.tsx             ✅ собирает компоненты
-├── schemas/
-│   ├── project.ts           ✅ схема проекта
-│   ├── post.ts              ✅ схема блога
-│   └── index.ts             ✅ экспорт схем
-├── sanity.config.ts         ✅ конфиг Sanity
-├── sanity.client.ts         ✅ клиент для запросов
-└── .env.local               ✅ переменные окружения
-```
+- **Sanity Studio:** https://rombo.pro/studio
+- **GitHub токен:** есть (Claude пушит напрямую)
 
 ---
 
 ## ✅ СДЕЛАНО
 
-### Инфраструктура
-- [x] Аккаунты GitHub, Sanity, Netlify — зарегистрированы
-- [x] Node.js, Git, VS Code — установлены на Windows
-- [x] Next.js проект создан (`rombo-studio`)
-- [x] Sanity подключён (`next-sanity`, `sanity`)
-- [x] Схемы CMS созданы: `project` (проект) и `post` (блог)
-- [x] Sanity Studio встроена в Next.js по адресу `/studio`
-- [x] CORS настроен: `localhost:3000`, `rombo.pro`
-- [x] Код отправлен на GitHub
-- [x] Netlify настроен, автодеплой работает
-- [x] Домен `rombo.pro` подключён с HTTPS (Let's Encrypt)
-
-### Компоненты
-- [x] **globals.css** — палитра (`--bg`, `--ink`, `--accent`, `--bronze` и др.), шрифты Fraunces + Inter Tight, базовые стили
-- [x] **Header** — логотип, навигация (01–06), кнопка «Оставить заявку», sticky с blur при скролле, мобильное меню
-- [x] **Hero** — карусель 3 слайда (пока с placeholder-текстом), анимация текста, пагинация, scroll-хинт
-
----
-
-## ⏳ ОСТАЛОСЬ СДЕЛАТЬ (компоненты)
-
-### Приоритет высокий
-- [ ] **Archive** — сетка проектов с фильтрами (тип + характер), данные из Sanity, модальное окно проекта с галереей
-- [ ] **Hero** — заменить placeholder на реальные фото из Sanity (когда будут загружены)
-- [ ] **Founder** — фото Александры, цитата, биография
-- [ ] **Team** — 9 карточек команды (6 реальных + 3 заглушки «Скоро»)
-- [ ] **Services** — тёмная секция, список услуг в две колонки
-- [ ] **Process** — 7 карточек этапов работы (сетка 3 в ряд)
-- [ ] **Pricing** — 4 тарифа + калькулятор площади
-- [ ] **Contact** — форма заявки
-
-### Приоритет средний
-- [ ] **Marquee** — бегущая строка «под ключ»
-- [ ] **Stats** — полоса со статистикой (70+ проектов, 8 лет и т.д.)
-- [ ] **Docs Strip** — скачиваемые PDF-чертежи
-- [ ] **Testimonials** — отзывы клиентов
-- [ ] **Blog** — список статей из Sanity
-- [ ] **FAQ** — аккордеон вопросов
-- [ ] **Featured-in** — логотипы изданий
-- [ ] **Footer** — контакты, соцсети
-
-### Технические задачи
-- [ ] Webhook Sanity → Netlify (автодеплой при публикации контента)
-- [ ] Страницы проектов `/projects/[slug]`
-- [ ] Страницы блога `/blog/[slug]`
-- [ ] SEO: метатеги, og:image
-- [ ] Мобильная адаптация всех секций
-- [ ] Финальное тестирование
+- [x] Vercel + домен rombo.pro (переехали с Netlify — исчерпал кредиты)
+- [x] Sanity Studio на /studio, схема проекта с полями palette/notes/pdfs/pages/tags
+- [x] Все секции главной страницы (Header → Contact + Footer)
+- [x] Страницы проектов /projects/[slug] — работают, фото грузятся
+- [x] Кастомный курсор — работает на всех страницах включая /projects/
+- [x] Scroll-spy (6 точек), reveal-анимации, floating bar (мобильный)
+- [x] SVG логотип из брендовых файлов (с currentColor)
+- [x] Process — 2 главы, горизонтальный скролл со стрелками над треком
+- [x] Deliverables — светлый фон, реальные чертежи ЖК Чёрная речка
+- [x] Archive → Sanity CMS, ISR 60с, тайлы ведут на /projects/[slug]
+- [x] Founder — QR-коды Behance + Instagram
+- [x] ProjectPage — галерея + лайтбокс + палитра (Sanity metadata) + PDF
+- [x] Фавикон создан: icon.svg (ромб на тёмном фоне #1A1614)
+- [x] Проекты в Sanity: ЖК Черная речка + ЖК Ботаника (опубликованы)
+- [x] PDF-карточки: авто-страницы из файла + авто-размер из Sanity + теги из Studio
+- [x] Ссылки в шапке исправлены (/#section — работают с любой страницы)
+- [x] Webhook Sanity → Vercel (автодеплой при публикации)
+- [x] Цветовая палитра — авто из Sanity metadata (обложка + галерея)
+- [x] Карточка «Популярно» в ценах — полная рамка (inset box-shadow)
+- [x] Заголовки секций по центру (Process, Blog, Pricing, Docs)
+- [x] ISR revalidate=60 на страницах проектов, useCdn:false
 
 ---
 
-## ⏳ ЖДЁТ МАТЕРИАЛОВ ОТ ЗАКАЗЧИЦЫ
+## 🎯 СЛЕДУЮЩИЕ ЗАДАЧИ (приоритет)
 
-- [ ] Фото для hero-карусели (5 горизонтальных, высокое разрешение)
-- [ ] Фото всех проектов с Яндекс.Диска (по папкам)
-- [ ] Ч/б фото Анастасии для команды
-- [ ] Реальные отзывы (скрины из мессенджеров)
+1. **DNS / CDN** — перенести домен с Nethouse на reg.ru → подключить Cloudflare
+   - Nethouse блокирует смену NS-серверов (ns1-3.registrant.ru захардкожены)
+   - Нужно: Nethouse → запросить EPP-код → перенести на reg.ru → сменить NS на Cloudflare
+   - Cloudflare NS выданы: `elma.ns.cloudflare.com` + `porter.ns.cloudflare.com`
+   - После: российские пользователи бьют в московский PoP Cloudflare → сайт быстрее без VPN
+2. **Мобильная адаптация** — полный аудит всех секций на телефоне
+3. **SEO** — обновить app/layout.tsx: og:title, og:description, og:image
+4. **Blog → Sanity** — подключить статьи к CMS (сейчас статичные данные)
+5. **Форма заявки** — подключить к реальному бэкенду (email или telegram-бот)
+6. **Страница 404** — красивая заглушка вместо дефолтной Next.js
+
+---
+
+## ⏳ ЖДЁТ МАТЕРИАЛОВ ОТ АЛЕКСАНДРЫ
+
+- [ ] Фото всех проектов → загружать через rombo.pro/studio
+- [ ] Фото команды (Анастасия и другие)
+- [ ] Реальные отзывы клиентов (скрины из мессенджеров)
+- [ ] Заметки Александры к проектам («эту лампу искала три месяца»)
 - [ ] PDF-чертежи для остальных проектов
-- [ ] Новый email студии (сейчас `a@serovadesign.ru`)
-- [ ] Векторный SVG-логотип (сейчас реконструирован вручную)
-- [ ] Заметки Александры к проектам («эту лампу я искала три месяца»)
+- [ ] Новый email студии (сейчас a@serovadesign.ru)
+
+---
+
+## 📁 КЛЮЧЕВЫЕ ФАЙЛЫ
+
+```
+app/
+  page.tsx                    — главная, импортирует все компоненты
+  globals.css                 — все стили
+  layout.tsx                  — метатеги, favicon
+  projects/layout.tsx         — Header + CustomCursor для страниц проектов
+  projects/[slug]/page.tsx    — страница проекта (revalidate=60, авто-PDF-парсинг)
+  api/revalidate/route.ts     — вебхук Sanity → Vercel
+  api/img-proxy/route.ts      — прокси Sanity-изображений для ColorThief
+
+components/
+  Header.tsx          — SVG лого, nav с /#ссылками, работает с любой страницы
+  ScrollSpyCursor.tsx — CustomCursor + ScrollSpy + FloatingBar + RevealObserver
+  Archive.tsx         — server, Sanity fetch, revalidate: 60
+  ArchiveClient.tsx   — client, фильтры по типу, Link → /projects/[slug]
+  ProjectPage.tsx     — client, палитра из Sanity, лайтбокс, PDF карточки
+  Process.tsx         — 2 главы, стрелки над треком, Реализация центрирована
+  Pricing.tsx         — 4 тарифа, карточка «Популярно» с inset box-shadow
+  Blog.tsx            — статичные данные (заглушка, ждёт подключения к Sanity)
+  Contact.tsx         — форма + Footer 4кол + FloatingBar
+
+schemas/project.ts    — поля: num, title, slug, cat, area, city, year,
+                        coverImage, images[], palette[], notes[],
+                        pdfs[]{title, pages, tags, file, description(hidden)}
+                        featured, disabled
+sanity.config.ts      — basePath: '/studio', name: 'default'
+sanity.client.ts      — createClient, urlFor, useCdn: false, PROJECTS_QUERY
+```
 
 ---
 
 ## 🔧 ТЕХНИЧЕСКИЕ ЗАМЕТКИ
 
-### Палитра (CSS-переменные в globals.css)
-- `--bg: #F4EDE0` (тёплый кремовый)
-- `--ink: #1A1614` (кофейный почти-чёрный)
-- `--accent: #C8593F` (терракотовый)
-- `--bronze: #8B6F47`, `--bronze-light: #B89968`
-- `--dark: #1A1614`, `--on-dark: #F4EDE0`
+### CSS-переменные
+--bg: #F4EDE0 · --ink: #1A1614 · --accent: #C8593F · --bronze: #8B6F47
+--serif: Fraunces · --sans: Inter Tight
 
-### Шрифты
-- **Fraunces** (variable serif, opsz 144) — заголовки
-- **Inter Tight** — интерфейс, текст
+### Деплой
+git add . && git commit -m "описание" && git push
+(Claude пушит напрямую через GitHub токен)
 
-### Схема Sanity — проект (schemas/project.ts)
-Поля: `title`, `slug`, `area` (м²), `city`, `year`, `coverImage`, `images[]`, `description`, `style`, `featured` (boolean)
+### Env Vercel
+NEXT_PUBLIC_SANITY_PROJECT_ID = g0p8o4k2
+NEXT_PUBLIC_SANITY_DATASET = production
+NEXT_PUBLIC_SANITY_API_VERSION = 2024-01-01
+SANITY_REVALIDATE_SECRET = rombo2024
 
-### Схема Sanity — блог (schemas/post.ts)
-Поля: `title`, `slug`, `publishedAt`, `coverImage`, `excerpt`, `body` (portable text), `author`
+### Добавить проект в Sanity
+rombo.pro/studio → Проект → New → заполнить поля → загрузить фото → Publish
+После Publish вебхук автоматически обновляет сайт.
 
-### Проекты в архиве (10 штук из v22)
-1. ЖК «Чёрная речка», 40 м² — Квартира · СПб (есть фото + PDF)
-2. ЖК «Ботаника», 57 м² — Квартира · СПб (есть фото + PDF)
-3. ЖК «Омега Хаус» на Карповке — Квартира · СПб
-4. ЖК «Фреш», 59 м² — Квартира · Москва
-5. Квартира на Каширском шоссе — Квартира · Москва
-6. Квартира на Октябрьской набережной, 77 м² — Квартира · СПб
-7. Дом в Нурмиярви, д. Борисово, 180 м² — Загородный дом
-8. Дом в Юсупово Village — Загородный дом · Москва
-9. Дом в Рощино — Загородный дом
-10. СПбГМТУ (Корабелка) — Коммерческий · СПб
+### PDF метаданные в Studio
+- Количество листов: ввести число вручную (или авто-извлечётся из файла)
+- Теги: выбрать чекбоксы (обмеры, демонтаж, мебель, сантехника, электрика...)
+- Размер файла: подтягивается автоматически из Sanity (asset->size)
 
-### Важные детали дизайна из v22
-- Кнопки «Оставить заявку» — border 1px, без заливки, radius 2px
-- Секция Services — тёмный фон (`--dark`)
-- Тарифы: Полный 5000 ₽/м², Расширенный 4000 ₽/м², Базовый 3500 ₽/м², Экспресс 1500 ₽/м²
-- Команда: Александра + Любовь, Светлана, Анастасия (дизайнеры) + Алина, Анастасия-3D, Василий-3D + 3 заглушки
-- Контакты: +7 (904) 558-16-31, адрес: СПб, Инструментальная ул., д. 8
-
-### Как деплоить изменения
-```bash
-git add .
-git commit -m "описание изменений"
-git push
-```
-Netlify подхватит автоматически через ~1 минуту.
-
-### Как избежать проблемы с умными кавычками
-Все файлы компонентов создаются через bash на сервере Claude
-и скачиваются готовыми — не копировать код из чата напрямую.
+### Палитра проекта
+1. Ручная: HEX-цвета в поле «Цветовая палитра» в Studio
+2. Авто: Sanity metadata.palette из обложки + первых 3 фото галереи
+3. Крайний случай: ColorThief через img-proxy
 
 ---
 
-*Чек-лист обновлён 15 мая 2026 после переезда на Next.js + Sanity.*
+*Обновлён 16 мая 2026. Все баги исправлены, сайт работает.*
