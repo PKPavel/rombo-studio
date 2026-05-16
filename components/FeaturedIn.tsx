@@ -12,18 +12,18 @@ const STATS = [
 ]
 
 export default function FeaturedIn() {
+  // 2 копии для бесшовного скролла: анимация translateX(-50%) = ровно 1 набор
   const items = [...STATS, ...STATS]
+
   return (
     <section className="featured reveal">
-      <div className="featured-track-wrap">
-        <div className="featured-track">
-          {items.map((s, i) => (
-            <div key={i} className="featured-stat">
-              <span className="featured-stat-num">{s.num}</span>
-              <span className="featured-stat-label">{s.label}</span>
-            </div>
-          ))}
-        </div>
+      <div className="featured-track">
+        {items.map((s, i) => (
+          <div key={i} className="featured-stat">
+            <span className="featured-stat-num">{s.num}</span>
+            <span className="featured-stat-label">{s.label}</span>
+          </div>
+        ))}
       </div>
     </section>
   )
