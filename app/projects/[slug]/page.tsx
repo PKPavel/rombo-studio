@@ -5,6 +5,32 @@ import ProjectPage from '../../../components/ProjectPage'
 
 export const revalidate = 60 // ISR — обновление каждые 60 сек
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const p: any = await client.fetch(
+    `*[_type == "project" && slug.current == $slug][0] {
+      title, city, area, year, description,
+      "coverUrl": coverImage.asset->url
+    }`,
+    { slug }
+  ).catch(() => null)
+
+  if (!p) return { title: 'Проект не найден' }
+
+  const title = `${p.title}${p.city ? ' · ' + p.city : ''}${p.area ? ' · ' + p.area + ' м²' : ''}`
+  const description = p.description || `Дизайн-проект ${p.title}. Студия ROMBO, Санкт-Петербург.`
+  const images = p.coverUrl ? [{ url: p.coverUrl + '?w=1200&auto=format', width: 1200, height: 630 }] : []
+
+  return {
+    title,
+    description,
+    openGraph: { title, description, images, type: 'article' },
+    twitter: { card: 'summary_large_image', title, description, images: images.map(i => i.url) },
+    alternates: { canonical: `https://rombo.pro/projects/${slug}` },
+  }
+}
+
 export const PROJECT_BY_SLUG_QUERY = `
   *[_type == "project" && slug.current == $slug][0] {
     _id, num, title, "slug": slug.current,

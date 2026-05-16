@@ -1,5 +1,13 @@
+import { client } from '../sanity.client'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
+
+export const revalidate = 60
+
+const HERO_QUERY = `*[_type == "project" && featured == true && defined(coverImage)] | order(num asc) [0...3] {
+  title, city,
+  "coverUrl": coverImage.asset->url
+}`
 import { Marquee, Stats } from '../components/MarqueeStats'
 import Projects from '../components/Projects'
 import Deliverables from '../components/Deliverables'
@@ -15,13 +23,14 @@ import FeaturedIn from '../components/FeaturedIn'
 import FAQ from '../components/FAQ'
 import Contact from '../components/Contact'
 import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver } from '../components/ScrollSpyCursor'
-export default function Home() {
+export default async function Home() {
+  const heroProjects = await client.fetch(HERO_QUERY).catch(() => [])
   return (
     <>
       <CustomCursor />
       <ScrollSpy />
       <Header />
-      <Hero />
+      <Hero projects={heroProjects} />
       <Marquee />
       <Stats />
       <Projects />
