@@ -72,15 +72,15 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             <div style={{
               position: 'absolute', inset: 0,
               background: slide.coverUrl
-                ? 'linear-gradient(to bottom, rgba(20,15,12,0.4) 0%, rgba(20,15,12,0.2) 30%, rgba(20,15,12,0.2) 70%, rgba(20,15,12,0.6) 100%)'
+                ? 'radial-gradient(ellipse 80% 70% at 50% 55%, rgba(10,8,6,0.72) 0%, rgba(10,8,6,0.35) 55%, rgba(10,8,6,0.15) 100%)'
                 : 'linear-gradient(135deg, #2a1f1a 0%, #1a1410 100%)',
             }} />
 
-            <div style={{ position: 'relative', zIndex: 1, maxWidth: 'clamp(640px, 70vw, 1000px)', margin: '0 auto', width: '100%', textAlign: 'center' }}>
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: 'clamp(560px, 60vw, 860px)', margin: '0 auto', width: '100%', textAlign: 'center' }}>
               <p style={{
-                fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.32em',
-                textTransform: 'uppercase', color: 'rgba(244,237,224,0.7)', fontWeight: 500,
-                textShadow: '0 1px 6px rgba(0,0,0,0.5)',
+                fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.4em',
+                textTransform: 'uppercase', color: 'rgba(244,237,224,0.55)', fontWeight: 400,
+                textShadow: '0 1px 8px rgba(0,0,0,0.8)',
                 marginBottom: 32,
                 opacity: isActive ? 1 : 0,
                 transform: isActive ? 'translateY(0)' : 'translateY(12px)',
@@ -92,6 +92,7 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
                 className="h-hero"
                 style={{
                   color: 'var(--on-dark)', whiteSpace: 'pre-line',
+                  textShadow: '0 2px 24px rgba(0,0,0,0.5), 0 1px 6px rgba(0,0,0,0.4)',
                   opacity: isActive ? 1 : 0,
                   transform: isActive ? 'translateY(0)' : 'translateY(20px)',
                   transition: 'opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s',

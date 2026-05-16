@@ -24,7 +24,7 @@
   --sans: 'Inter Tight', system-ui, sans-serif;
 
   /* ── Типографическая шкала ── */
-  --text-hero:    clamp(44px, 7vw, 96px);     /* Hero заголовок     */
+  --text-hero:    clamp(40px, 5.5vw, 80px);   /* Hero заголовок     */
   --text-h1:      clamp(36px, 5.5vw, 72px);   /* Секционные h2      */
   --text-h2:      clamp(26px, 3.5vw, 48px);   /* Подзаголовки       */
   --text-h3:      clamp(20px, 2.5vw, 32px);   /* Карточки, блоки    */
@@ -73,7 +73,7 @@ h1, h2, h3, h4 {
 }
 
 .h-hero {
-  font-size: clamp(44px,7vw,96px);
+  font-size: clamp(40px,5.5vw,80px);
   line-height: 1.05;
   font-weight: 300;
   letter-spacing: -0.02em;
