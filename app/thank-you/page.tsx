@@ -1,10 +1,14 @@
+'use client'
 import Link from 'next/link'
+import { CustomCursor } from '../../components/ScrollSpyCursor'
 
 export const metadata = { title: 'Заявка отправлена | ROMBO', robots: 'noindex, nofollow' }
 
 export default function ThankYou() {
   return (
-    <main style={{
+    <>
+      <CustomCursor />
+      <main style={{
       minHeight: '100svh', display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       background: 'var(--bg)', padding: 'clamp(40px,8vw,80px)',
@@ -39,5 +43,6 @@ export default function ThankYou() {
         </Link>
       </div>
     </main>
+    </>
   )
 }
