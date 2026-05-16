@@ -4,7 +4,7 @@
 import https from 'https'
 import { createClient } from '@sanity/client'
 
-const TOKEN = 'skNsZbjMGoSMNWqr0fpI7Z72g2XP7TAULrrkNRmkZKyDTCSzSLdGa25vMdsCbhnveb74L7bqHqVL7c7aI3X3To9qz1NMjWTN5IJcDY5iTt9Pd1HW8bLZErbWrJNNbqBHOR33LSI3GD7hxCwaZ5VKDDWUaXJ4rjn6hyi5CmaJsVKSWoVQ3X1V'
+const TOKEN = process.env.SANITY_WRITE_TOKEN || ''  // запусти: SANITY_WRITE_TOKEN=... node scripts/seed-posts.mjs
 
 const client = createClient({
   projectId: 'g0p8o4k2',
