@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function renderBody(body: any[]): React.ReactNode {
   if (!body || !Array.isArray(body)) return null
+  let h2count = 0
   return body.map((block, i) => {
     if (block._type !== 'block') return null
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,18 +45,42 @@ function renderBody(body: any[]): React.ReactNode {
     if (!text.trim()) return null
 
     switch (block.style) {
-      case 'h2': return (
-        <h2 key={key} className="blog-post-h2">{text}</h2>
-      )
+      case 'h2': {
+        h2count++
+        const label = `— ${String(h2count).padStart(2, '0')}`
+        return (
+          <h2 key={key} className="blog-post-h2" data-num={label}>{text}</h2>
+        )
+      }
       case 'h3': return (
         <h3 key={key} className="blog-post-h3">{text}</h3>
       )
       case 'blockquote': return (
         <blockquote key={key} className="blog-post-blockquote">{text}</blockquote>
       )
-      default: return (
-        <p key={key} className="blog-post-p">{text}</p>
-      )
+      default: {
+        // Нумерованные списки: "1. текст" → красивый элемент списка
+        const listMatch = text.match(/^(\d+)\.\s+(.+)/)
+        if (listMatch) {
+          return (
+            <div key={key} className="blog-post-list-item">
+              <span className="blog-post-list-num">{listMatch[1]}</span>
+              <span className="blog-post-list-text">{listMatch[2]}</span>
+            </div>
+          )
+        }
+        // Маркированные: "- текст" или "• текст"
+        const bulletMatch = text.match(/^[-•]\s+(.+)/)
+        if (bulletMatch) {
+          return (
+            <div key={key} className="blog-post-bullet">
+              <span className="blog-post-bullet-dot">◆</span>
+              <span>{bulletMatch[1]}</span>
+            </div>
+          )
+        }
+        return <p key={key} className="blog-post-p">{text}</p>
+      }
     }
   })
 }
