@@ -1,8 +1,11 @@
 import Link from 'next/link'
+import { CustomCursor } from './components/ScrollSpyCursor'
 
 export default function NotFound() {
   return (
-    <main style={{
+    <>
+      <CustomCursor />
+      <main style={{
       minHeight: '100svh', display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       background: 'var(--bg)', padding: 'clamp(40px, 8vw, 80px)',
@@ -47,5 +50,6 @@ export default function NotFound() {
         </Link>
       </div>
     </main>
+    </>
   )
 }
