@@ -76,7 +76,7 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
                 : 'linear-gradient(135deg, #2a1f1a 0%, #1a1410 100%)',
             }} />
 
-            <div style={{ position: 'relative', zIndex: 1, maxWidth: 'clamp(560px, 60vw, 860px)', margin: '0 auto', width: '100%', textAlign: 'center' }}>
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: 'clamp(640px, 75vw, 1100px)', margin: '0 auto', width: '100%', textAlign: 'center' }}>
               <p style={{
                 fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.4em',
                 textTransform: 'uppercase', color: 'rgba(244,237,224,0.55)', fontWeight: 400,
