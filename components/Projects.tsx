@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 const PROJECTS = [
   {
@@ -58,10 +58,19 @@ export default function Projects() {
   const trackRef = useRef<HTMLDivElement>(null)
 
   const total = PROJECTS.length
+  const paused = useRef(false)
 
-  function go(dir: number) {
+  const go = useCallback((dir: number) => {
     setCurrent(c => (c + dir + total) % total)
-  }
+  }, [total])
+
+  // Автопрокрутка каждые 3.5 секунды
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!paused.current) go(1)
+    }, 3500)
+    return () => clearInterval(id)
+  }, [go])
 
   // Показываем 3 слайда за раз, начиная с current
   const visible = [0, 1, 2].map(i => PROJECTS[(current + i) % total])
@@ -82,7 +91,7 @@ export default function Projects() {
       </div>
 
       {/* Карусель — полная ширина */}
-      <div className="proj-carousel reveal">
+      <div className="proj-carousel reveal" onMouseEnter={() => { paused.current = true }} onMouseLeave={() => { paused.current = false }}>
         <button className="pc-arrow pc-arrow-prev" onClick={() => go(-1)} aria-label="Назад">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M15 18L9 12L15 6"/>
