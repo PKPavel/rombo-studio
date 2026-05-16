@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 
 // ─── Team — секция «Наша команда» ────────────────────────────────────────────
 // Фото: добавить в public/images/team/
@@ -59,7 +58,7 @@ export default function Team() {
             >
               <div className="team-photo">
                 {member.photo
-                  ? <Image src={member.photo} alt={member.name} fill sizes="200px" style={{objectFit:'cover',objectPosition:'center 20%',transform:'scale(1.32)'}} />
+                  ? <img src={member.photo} alt={member.name} loading="lazy" />
                   : <PersonPlaceholder />
                 }
               </div>
