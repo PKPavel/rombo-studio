@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useRef } from 'react'
 
 const STATS = [
   { num: '70+',  label: 'реализованных проектов' },
@@ -12,13 +13,39 @@ const STATS = [
 ]
 
 export default function FeaturedIn() {
-  // 2 копии для бесшовного скролла: анимация translateX(-50%) = ровно 1 набор
-  const items = [...STATS, ...STATS]
+  const trackRef = useRef<HTMLDivElement>(null)
+  const posRef = useRef(0)
+  const pausedRef = useRef(false)
+  const rafRef = useRef<number>(0)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    // Ширина одного набора (половина трека, т.к. 2 копии)
+    const setWidth = track.scrollWidth / 2
+    const speed = 0.5 // px per frame
+
+    function animate() {
+      if (!pausedRef.current) {
+        posRef.current += speed
+        if (posRef.current >= setWidth) posRef.current = 0
+        if (track) track.style.transform = `translateX(-${posRef.current}px)`
+      }
+      rafRef.current = requestAnimationFrame(animate)
+    }
+
+    rafRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [])
 
   return (
-    <section className="featured reveal">
-      <div className="featured-track">
-        {items.map((s, i) => (
+    <section
+      className="featured"
+      onMouseEnter={() => { pausedRef.current = true }}
+      onMouseLeave={() => { pausedRef.current = false }}
+    >
+      <div ref={trackRef} className="featured-track">
+        {[...STATS, ...STATS].map((s, i) => (
           <div key={i} className="featured-stat">
             <span className="featured-stat-num">{s.num}</span>
             <span className="featured-stat-label">{s.label}</span>

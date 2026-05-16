@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 
 interface SanityProject {
@@ -16,19 +16,24 @@ interface SanityProject {
 
 export default function Projects({ projects }: { projects: SanityProject[] }) {
   const [current, setCurrent] = useState(0)
-  const paused = { current: false }
-
+  const [fading, setFading] = useState(false)
+  const paused = useRef(false)
   const total = projects.length
 
   const go = useCallback((dir: number) => {
-    setCurrent(c => (c + dir + total) % total)
-  }, [total])
+    if (fading || total === 0) return
+    setFading(true)
+    setTimeout(() => {
+      setCurrent(c => (c + dir + total) % total)
+      setFading(false)
+    }, 220)
+  }, [total, fading])
 
   useEffect(() => {
     if (total === 0) return
     const id = setInterval(() => {
       if (!paused.current) go(1)
-    }, 3500)
+    }, 3800)
     return () => clearInterval(id)
   }, [go, total])
 
@@ -67,9 +72,9 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           </svg>
         </button>
 
-        <div className={`pc-track${fading ? " pc-track--fading" : ""}`}>
+        <div className={`pc-track${fading ? ' pc-track--fading' : ''}`}>
           {visible.map((p, i) => (
-            <Link key={`${p.slug}-${i}`} href={`/projects/${p.slug}`} className="pc-slide">
+            <Link key={`${p.slug}-${current}-${i}`} href={`/projects/${p.slug}`} className="pc-slide">
               <div className="pc-slide-img">
                 {p.coverUrl
                   ? <img src={`${p.coverUrl}?w=900&auto=format`} alt={p.title} loading="lazy" />
@@ -80,13 +85,9 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                 <span className="pc-slide-num">{String(p.num || i + 1).padStart(2, '0')}</span>
               </div>
               <div className="pc-slide-meta">
-                <div className="pc-slide-cat">
-                  {[p.cat, p.year].filter(Boolean).join(' · ')}
-                </div>
+                <div className="pc-slide-cat">{[p.cat, p.year].filter(Boolean).join(' · ')}</div>
                 <h3 className="pc-slide-title">{p.title}</h3>
-                <div className="pc-slide-info">
-                  {[p.city, p.area ? `${p.area} м²` : null].filter(Boolean).join(' · ')}
-                </div>
+                <div className="pc-slide-info">{[p.city, p.area ? `${p.area} м²` : null].filter(Boolean).join(' · ')}</div>
               </div>
             </Link>
           ))}
@@ -94,10 +95,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
 
         <div className="pc-controls">
           <div className="pc-progress">
-            <div
-              className="pc-progress-bar"
-              style={{ width: `${((current + 1) / total) * 100}%` }}
-            />
+            <div className="pc-progress-bar" style={{ width: `${((current + 1) / total) * 100}%` }} />
           </div>
           <div className="pc-counter">
             <strong>{String(current + 1).padStart(2, '0')}</strong>

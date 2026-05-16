@@ -4064,9 +4064,8 @@ body::before {
 .featured-track {
   display: flex;
   width: max-content;
-  animation: featuredScroll 30s linear infinite;
+  will-change: transform;
 }
-.featured-track:hover { animation-play-state: paused; }
 .featured-stat {
   display: flex;
   align-items: center;
@@ -4090,10 +4089,7 @@ body::before {
   opacity: .45;
   letter-spacing: .03em;
 }
-@keyframes featuredScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+
 
 
 /* ── Blog index: tag badge overlay ── */
