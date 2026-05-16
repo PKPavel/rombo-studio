@@ -56,8 +56,8 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
               opacity: isActive ? 1 : isPrev ? 0 : 0,
               transition: 'opacity 0.8s ease',
               zIndex: isActive ? 2 : isPrev ? 1 : 0,
-              display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-              padding: 'var(--pad)', paddingBottom: 'clamp(48px, 8vw, 100px)',
+              display: 'flex', flexDirection: 'column', justifyContent: 'center',
+              padding: 'var(--pad)', paddingTop: 'clamp(80px, 12vw, 140px)',
             }}
           >
             {/* Фото проекта как фон */}
@@ -72,11 +72,11 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             <div style={{
               position: 'absolute', inset: 0,
               background: slide.coverUrl
-                ? 'linear-gradient(to top, rgba(20,15,12,0.82) 0%, rgba(20,15,12,0.25) 60%, rgba(20,15,12,0.15) 100%)'
+                ? 'linear-gradient(to bottom, rgba(20,15,12,0.4) 0%, rgba(20,15,12,0.2) 30%, rgba(20,15,12,0.2) 70%, rgba(20,15,12,0.6) 100%)'
                 : 'linear-gradient(135deg, #2a1f1a 0%, #1a1410 100%)',
             }} />
 
-            <div style={{ position: 'relative', zIndex: 1, maxWidth: 'var(--max)', margin: '0 auto', width: '100%' }}>
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: 'clamp(640px, 70vw, 1000px)', margin: '0 auto', width: '100%', textAlign: 'center' }}>
               <p style={{
                 fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.32em',
                 textTransform: 'uppercase', color: 'rgba(244,237,224,0.7)', fontWeight: 500,
@@ -99,7 +99,7 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
               >
                 {slide.title}
               </h1>
-              <div style={{ marginTop: 48, display: 'flex', gap: 12, alignItems: 'center' }}>
+              <div style={{ marginTop: 48, display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'center' }}>
                 <a href="/#contact" className="btn" style={{
                   borderColor: 'rgba(244,237,224,0.4)', color: 'var(--on-dark)',
                   opacity: isActive ? 1 : 0,
