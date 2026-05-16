@@ -33,7 +33,7 @@ export default function Contact() {
         setSent(true)
       } else {
         const json = await res.json().catch(() => ({}))
-        setError(json.error || 'Ошибка отправки. Попробуйте позже.')
+        setError((json.error || 'Ошибка') + (json.detail ? ': ' + json.detail : ''))
       }
     } catch {
       setError('Нет соединения. Попробуйте ещё раз.')
