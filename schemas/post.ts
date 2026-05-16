@@ -47,5 +47,28 @@ export default defineType({
       type: 'string',
       initialValue: 'Александра Серова',
     }),
+    defineField({
+      name: 'tag',
+      title: 'Тег (категория)',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Тренды', value: 'Тренды' },
+          { title: 'Гид', value: 'Гид' },
+          { title: 'Свет', value: 'Свет' },
+          { title: 'Бюджет', value: 'Бюджет' },
+          { title: 'Кейс', value: 'Кейс' },
+          { title: 'Материалы', value: 'Материалы' },
+          { title: 'Советы', value: 'Советы' },
+          { title: 'Цвет', value: 'Цвет' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'readTime',
+      title: 'Время чтения (мин)',
+      type: 'number',
+    }),
   ],
 })

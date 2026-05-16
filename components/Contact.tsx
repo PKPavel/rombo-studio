@@ -1,13 +1,45 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export default function Contact() {
   const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSent(true)
+    setError('')
+    const form = formRef.current!
+    const data = {
+      name:    (form.elements.namedItem('name')    as HTMLInputElement).value.trim(),
+      phone:   (form.elements.namedItem('phone')   as HTMLInputElement).value.trim(),
+      email:   (form.elements.namedItem('email')   as HTMLInputElement).value.trim(),
+      type:    (form.elements.namedItem('type')    as HTMLSelectElement).value,
+      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
+    }
+    if (!data.name) { setError('Введите ваше имя'); return }
+    if (!data.phone || data.phone.length < 10) { setError('Введите корректный номер телефона'); return }
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (res.ok) {
+        setSent(true)
+      } else {
+        const json = await res.json().catch(() => ({}))
+        setError(json.error || 'Ошибка отправки. Попробуйте позже.')
+      }
+    } catch {
+      setError('Нет соединения. Попробуйте ещё раз.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -75,7 +107,7 @@ export default function Contact() {
                 <p>Свяжемся в течение одного рабочего дня.</p>
               </div>
             ) : (
-              <form className="form reveal delay-1" onSubmit={handleSubmit}>
+              <form className="form reveal delay-1" onSubmit={handleSubmit} ref={formRef}>
                 <h3>Оставить заявку</h3>
                 <div className="form-row">
                   <label>Имя</label>
@@ -103,7 +135,12 @@ export default function Contact() {
                   <label>Кратко о задаче</label>
                   <textarea name="message" placeholder="Площадь, сроки, пожелания..." rows={4} />
                 </div>
-                <button type="submit" className="btn btn-primary">Отправить</button>
+                {error && (
+                  <p style={{ color: 'var(--accent)', fontSize: 13, marginBottom: 8 }}>{error}</p>
+                )}
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Отправка...' : 'Отправить'}
+                </button>
                 <p className="form-policy">
                   Нажимая «Отправить», вы соглашаетесь с политикой обработки персональных данных.
                 </p>
