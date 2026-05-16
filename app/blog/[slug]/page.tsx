@@ -10,106 +10,161 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0] {
   body
 }`
 
+const RELATED_QUERY = `*[_type == "post" && slug.current != $slug && tag == $tag] | order(publishedAt desc) [0...3] {
+  "slug": slug.current, title, "tag": coalesce(tag,"Статья"),
+  "coverUrl": coverImage.asset->url, readTime, excerpt
+}`
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p: any = await client.fetch(POST_QUERY, { slug }).catch(() => null)
   if (!p) return { title: 'Статья не найдена' }
   return {
     title: `${p.title} | ROMBO`,
     description: p.excerpt || p.title,
+    alternates: { canonical: `https://rombo.pro/blog/${slug}` },
     openGraph: {
       title: p.title, description: p.excerpt || '',
+      type: 'article',
       images: p.coverUrl ? [{ url: `${p.coverUrl}?w=1200&auto=format` }] : [],
     },
   }
 }
 
-// Рендер Sanity Portable Text без внешних библиотек
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function renderBody(body: any[]): React.ReactNode {
   if (!body || !Array.isArray(body)) return null
   return body.map((block, i) => {
     if (block._type !== 'block') return null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const text = block.children?.map((c: any) => c.text || '').join('') || ''
     const key = block._key || i
+    if (!text.trim()) return null
+
     switch (block.style) {
-      case 'h2': return <h2 key={key} style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(22px,3vw,32px)', fontWeight: 300, letterSpacing: '-.02em', color: 'var(--ink)', margin: '48px 0 20px', lineHeight: 1.2 }}>{text}</h2>
-      case 'h3': return <h3 key={key} style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 300, color: 'var(--ink)', margin: '36px 0 16px', lineHeight: 1.3 }}>{text}</h3>
-      case 'blockquote': return <blockquote key={key} style={{ borderLeft: '3px solid var(--accent)', paddingLeft: 24, margin: '32px 0', fontStyle: 'italic', color: 'var(--ink)', opacity: 0.75, fontSize: '1.05em' }}>{text}</blockquote>
-      default: return text ? <p key={key} style={{ marginBottom: '1.5em', lineHeight: 1.85, color: 'var(--ink)', opacity: 0.8 }}>{text}</p> : null
+      case 'h2': return (
+        <h2 key={key} className="blog-post-h2">{text}</h2>
+      )
+      case 'h3': return (
+        <h3 key={key} className="blog-post-h3">{text}</h3>
+      )
+      case 'blockquote': return (
+        <blockquote key={key} className="blog-post-blockquote">{text}</blockquote>
+      )
+      default: return (
+        <p key={key} className="blog-post-p">{text}</p>
+      )
     }
   })
 }
 
+function fmt(iso: string | null) {
+  if (!iso) return ''
+  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const post: any = await client.fetch(POST_QUERY, { slug }).catch(() => null)
   if (!post) notFound()
 
-  const date = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
-    : ''
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const related: any[] = post.tag
+    ? await client.fetch(RELATED_QUERY, { slug, tag: post.tag }).catch(() => [])
+    : []
 
   return (
     <>
-      {/* Hero */}
-      <div style={{ background: 'var(--bg)', paddingTop: 'calc(76px + 56px)', paddingBottom: 40 }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 clamp(20px,4vw,40px)' }}>
-          <Link href="/#blog" style={{ fontFamily: 'var(--sans)', fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--ink)', opacity: .4, textDecoration: 'none', display: 'inline-block', marginBottom: 28 }}>
+      {/* HERO — полноэкранная обложка с заголовком поверх */}
+      <header className="blog-hero">
+        {post.coverUrl && (
+          <div className="blog-hero-img">
+            <img src={`${post.coverUrl}?w=1600&auto=format`} alt={post.title} />
+          </div>
+        )}
+        <div className={`blog-hero-overlay${!post.coverUrl ? ' blog-hero-overlay--no-img' : ''}`} />
+        <div className="blog-hero-content">
+          <Link href="/blog" className="blog-back">
             ← Журнал
           </Link>
-          {post.tag && (
-            <div style={{ fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 18 }}>
-              — {post.tag}
-            </div>
-          )}
-          <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(30px,5vw,56px)', fontWeight: 300, letterSpacing: '-.025em', color: 'var(--ink)', lineHeight: 1.1, marginBottom: 28 }}>
-            {post.title}
-          </h1>
-          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)', opacity: .4, letterSpacing: '.04em' }}>
-            {date && <span>{date}</span>}
-            {post.readTime && <span>· {post.readTime} мин чтения</span>}
-            {post.author && <span>· {post.author}</span>}
+          {post.tag && <span className="blog-tag">{post.tag}</span>}
+          <h1 className="blog-hero-title">{post.title}</h1>
+          <div className="blog-hero-meta">
+            {fmt(post.publishedAt) && <span>{fmt(post.publishedAt)}</span>}
+            {post.readTime && <><span className="blog-meta-dot">·</span><span>{post.readTime} мин чтения</span></>}
+            {post.author && <><span className="blog-meta-dot">·</span><span>{post.author}</span></>}
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Обложка */}
-      {post.coverUrl && (
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 clamp(20px,4vw,60px) 56px' }}>
-          <img src={`${post.coverUrl}?w=1400&auto=format`} alt={post.title}
-            style={{ width: '100%', maxHeight: 520, objectFit: 'cover', display: 'block', borderRadius: 2 }} />
-        </div>
-      )}
+      {/* ТЕЛО СТАТЬИ */}
+      <main className="blog-main">
+        <article className="blog-article">
 
-      {/* Тело статьи */}
-      <article style={{ maxWidth: 740, margin: '0 auto 100px', padding: '0 clamp(20px,4vw,40px)', fontFamily: 'var(--sans)', fontSize: 'clamp(16px,1.8vw,18px)' }}>
-        {post.excerpt && (
-          <p style={{ fontSize: 'clamp(17px,2.2vw,21px)', lineHeight: 1.7, opacity: .65, marginBottom: 48, fontStyle: 'italic', borderBottom: '1px solid rgba(26,22,20,.08)', paddingBottom: 40 }}>
-            {post.excerpt}
-          </p>
+          {/* Лид — выделенное введение */}
+          {post.excerpt && (
+            <p className="blog-lead">{post.excerpt}</p>
+          )}
+
+          {/* Разделитель */}
+          <div className="blog-divider">
+            <span /><span className="blog-divider-diamond">◆</span><span />
+          </div>
+
+          {/* Тело */}
+          <div className="blog-body">
+            {renderBody(post.body)}
+          </div>
+
+          {/* Автор */}
+          <div className="blog-author">
+            <div className="blog-author-avatar">
+              {(post.author || 'А').charAt(0)}
+            </div>
+            <div>
+              <div className="blog-author-name">{post.author || 'Александра Серова'}</div>
+              <div className="blog-author-role">Руководитель студии ROMBO</div>
+            </div>
+          </div>
+        </article>
+
+        {/* ПОХОЖИЕ СТАТЬИ */}
+        {related.length > 0 && (
+          <section className="blog-related">
+            <div className="blog-related-head">
+              <span className="blog-related-eyebrow">— По теме</span>
+              <h2 className="blog-related-title">Читайте также</h2>
+            </div>
+            <div className="blog-related-grid">
+              {related.map(r => (
+                <Link key={r.slug} href={`/blog/${r.slug}`} className="blog-related-card">
+                  <div className="blog-related-img">
+                    {r.coverUrl
+                      ? <img src={`${r.coverUrl}?w=600&auto=format`} alt={r.title} />
+                      : <div className="blog-related-img-empty">R</div>
+                    }
+                    <span className="blog-related-tag">{r.tag}</span>
+                  </div>
+                  <div className="blog-related-info">
+                    <h3 className="blog-related-name">{r.title}</h3>
+                    {r.readTime && <span className="blog-related-time">{r.readTime} мин</span>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
         )}
-        <div className="blog-body">{renderBody(post.body)}</div>
-      </article>
 
-      {/* CTA */}
-      <div style={{ background: 'var(--ink)', padding: 'clamp(48px,8vh,80px) clamp(20px,4vw,60px)', textAlign: 'center', marginBottom: 0 }}>
-        <div style={{ maxWidth: 560, margin: '0 auto' }}>
-          <p style={{ fontFamily: 'var(--sans)', fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 20 }}>— Готовы к проекту?</p>
-          <h2 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(28px,4vw,48px)', fontWeight: 300, color: 'var(--on-dark)', marginBottom: 24, letterSpacing: '-.02em' }}>Обсудим ваш интерьер</h2>
-          <p style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'var(--on-dark)', opacity: .55, marginBottom: 36, lineHeight: 1.7 }}>Бесплатная консультация с руководителем студии. Перезвоним в течение часа.</p>
-          <Link href="/#contact" style={{ fontFamily: 'var(--sans)', fontSize: 13, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--ink)', background: 'var(--bg)', padding: '16px 36px', borderRadius: 2, textDecoration: 'none', display: 'inline-block' }}>
-            Оставить заявку
-          </Link>
+        {/* CTA */}
+        <div className="blog-cta">
+          <span className="blog-cta-eyebrow">— Готовы к проекту?</span>
+          <h2 className="blog-cta-title">Обсудим ваш интерьер</h2>
+          <p className="blog-cta-sub">Бесплатная консультация с руководителем студии.<br />Перезвоним в течение часа.</p>
+          <Link href="/#contact" className="blog-cta-btn">Оставить заявку</Link>
         </div>
-      </div>
-
-      <div style={{ background: 'var(--bg)', padding: '32px clamp(20px,4vw,60px)' }}>
-        <div style={{ maxWidth: 740, margin: '0 auto' }}>
-          <Link href="/#blog" style={{ fontFamily: 'var(--sans)', fontSize: 13, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink)', textDecoration: 'none', opacity: .4 }}>
-            ← Все статьи
-          </Link>
-        </div>
-      </div>
+      </main>
     </>
   )
 }
