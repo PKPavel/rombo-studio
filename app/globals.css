@@ -2319,7 +2319,7 @@ a.contact-info-value:hover { color: var(--accent); }
 .scrollspy.on-light .ss-dot.active .ss-dot-num { color: var(--accent); }
 .scrollspy.on-light .ss-dot.active .ss-dot-line { background: var(--accent); }
 
-@media (max-width: 1280px) { 
+@media (max-width: 1280px) { .scrollspy { display: none; } }
 /* ============================================================
    ФИНАЛЬНЫЙ ПАТЧ v22 — добавить В САМЫЙ КОНЕЦ globals.css
    ============================================================ */
