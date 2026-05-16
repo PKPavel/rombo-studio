@@ -24,12 +24,13 @@ import Team from '../components/Team'
 import Services from '../components/Services'
 import Process from '../components/Process'
 import Pricing from '../components/Pricing'
+import PriceCalc from '../components/PriceCalc'
 import Testimonials from '../components/Testimonials'
 import Blog from '../components/Blog'
 import FeaturedIn from '../components/FeaturedIn'
 import FAQ from '../components/FAQ'
 import Contact from '../components/Contact'
-import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver } from '../components/ScrollSpyCursor'
+import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver, ScrollTopButton } from '../components/ScrollSpyCursor'
 export default async function Home() {
   const heroProjects = await client.fetch(HERO_QUERY).catch(() => [])
   const carouselProjects = await client.fetch(CAROUSEL_QUERY).catch(() => [])
@@ -39,7 +40,6 @@ export default async function Home() {
       <ScrollSpy />
       <Header />
       <Hero projects={heroProjects} />
-      <Marquee />
       <Stats />
       <Projects projects={carouselProjects} />
       <Deliverables />
@@ -49,12 +49,14 @@ export default async function Home() {
       <Services />
       <Process />
       <Pricing />
+      <PriceCalc />
       <Testimonials />
       <Blog />
       <FeaturedIn />
       <FAQ />
       <Contact />
       <FloatingBar />
+      <ScrollTopButton />
       <RevealObserver />
     </>
   )

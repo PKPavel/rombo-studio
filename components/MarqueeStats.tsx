@@ -12,7 +12,7 @@ export function Marquee() {
 }
 
 const STATS = [
-  { num: '8',   suffix: '+',  label: 'Лет студии' },
+  { num: '10',  suffix: '',   label: 'Лет студии — с 2016' },
   { num: '70',  suffix: '+',  label: 'Завершённых проектов' },
   { num: '12',  suffix: 'K',  label: 'м² спроектировано' },
   { num: '4.9', suffix: '/5', label: 'Рейтинг клиентов' },
