@@ -478,6 +478,7 @@ section { position: relative; }
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  transform: scale(1.18);
   filter: grayscale(15%);
   transition: filter .4s ease;
 }
