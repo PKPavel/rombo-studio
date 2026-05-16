@@ -13,15 +13,13 @@ interface TeamMember {
 }
 
 const TEAM: TeamMember[] = [
-  { name: 'Александра', role: 'Руководитель студии, дизайнер' },
-  { name: 'Любовь',     role: 'Дизайнер интерьеров' },
-  { name: 'Светлана',   role: 'Дизайнер интерьеров' },
-  { name: 'Анастасия',  role: 'Дизайнер интерьеров' },
-  { name: 'Алина',      role: 'Дизайнер интерьеров' },
-  { name: 'Анастасия',  role: '3D-визуализатор' },
-  { name: 'Василий',    role: '3D-визуализатор' },
-  { soon: true, name: 'Скоро', role: 'Специалист' },
-  { soon: true, name: 'Скоро', role: 'Специалист' },
+  { name: 'Александра', role: 'Руководитель студии, дизайнер',  photo: '/images/alexandra.png' },
+  { name: 'Любовь',     role: 'Дизайнер интерьеров',            photo: '/images/team/lyubov.png' },
+  { name: 'Светлана',   role: 'Дизайнер интерьеров',            photo: '/images/team/svetlana.png' },
+  { name: 'Анастасия',  role: 'Дизайнер интерьеров',            photo: '/images/team/anastasia1.png' },
+  { name: 'Алина',      role: 'Дизайнер интерьеров',            photo: '/images/team/alina.png' },
+  { name: 'Анастасия',  role: '3D-визуализатор',                photo: '/images/team/anastasia2.png' },
+  { name: 'Василий',    role: '3D-визуализатор',                photo: '/images/team/vasiliy.png' },
 ]
 
 function PersonPlaceholder() {
