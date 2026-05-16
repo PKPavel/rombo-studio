@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Заявка отправлена | ROMBO', robots: { index: false } }
+export const metadata = { title: 'Заявка отправлена | ROMBO', robots: 'noindex, nofollow' }
 
 export default function ThankYou() {
   return (

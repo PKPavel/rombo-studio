@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -73,7 +72,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             accurateTrackBounce:true
           });
         `}</Script>
-        <SpeedInsights />
         <noscript>
           <div><img src="https://mc.yandex.ru/watch/109246149" style={{position:'absolute',left:'-9999px'}} alt="" /></div>
         </noscript>
