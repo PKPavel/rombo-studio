@@ -16,43 +16,36 @@ interface SanityProject {
 
 export default function Projects({ projects }: { projects: SanityProject[] }) {
   const [current, setCurrent] = useState(0)
-  const [fading, setFading] = useState(false)
+  const [sliding, setSliding] = useState(false)
   const paused = useRef(false)
   const total = projects.length
 
   const go = useCallback((dir: number) => {
-    if (fading || total === 0) return
-    setFading(true)
-    setTimeout(() => {
-      setCurrent(c => (c + dir + total) % total)
-      setFading(false)
-    }, 220)
-  }, [total, fading])
+    if (sliding || total === 0) return
+    setSliding(true)
+    setCurrent(c => (c + dir + total) % total)
+    setTimeout(() => setSliding(false), 600)
+  }, [total, sliding])
 
   useEffect(() => {
     if (total === 0) return
     const id = setInterval(() => {
       if (!paused.current) go(1)
-    }, 3800)
+    }, 4000)
     return () => clearInterval(id)
   }, [go, total])
 
   if (total === 0) return null
 
-  const visible = [0, 1, 2].map(i => projects[(current + i) % total])
+  // Показываем 3 слайда: prev, current, next и ещё 2
+  const slides = [-1, 0, 1, 2, 3].map(offset => projects[(current + offset + total) % total])
 
   return (
     <section id="projects" className="projects">
       <div className="container">
-        <div className="section-head reveal">
-          <div className="section-head-left">
-            <span className="eyebrow">— Избранные работы</span>
-            <h2 className="h-section">Наши проекты</h2>
-          </div>
-          <div className="section-head-right">
-            От лаконичных квартир до загородных резиденций и коммерческих пространств.
-            Листайте карусель или нажмите на проект, чтобы узнать подробнее.
-          </div>
+        <div className="proj-head reveal">
+          <span className="eyebrow">— Избранные работы</span>
+          <h2 className="h-section">Наши проекты</h2>
         </div>
       </div>
 
@@ -61,41 +54,55 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         onMouseEnter={() => { paused.current = true }}
         onMouseLeave={() => { paused.current = false }}
       >
+        {/* Слайдер */}
+        <div className="pc-slider-wrap">
+          <div className={`pc-slider-track${sliding ? ' sliding' : ''}`}>
+            {slides.map((p, i) => (
+              <Link
+                key={`${p.slug}-${current}-${i}`}
+                href={`/projects/${p.slug}`}
+                className="pc-slide"
+              >
+                <div className="pc-slide-img">
+                  {p.coverUrl
+                    ? <img src={`${p.coverUrl}?w=900&auto=format`} alt={p.title} loading="lazy" />
+                    : <div className="pc-slide-empty">R</div>
+                  }
+                  <span className="pc-slide-num">{String(p.num || '01').padStart(2, '0')}</span>
+                </div>
+                <div className="pc-slide-meta">
+                  <div className="pc-slide-cat">{[p.cat, p.year].filter(Boolean).join(' · ')}</div>
+                  <h3 className="pc-slide-title">{p.title}</h3>
+                  <div className="pc-slide-info">{[p.city, p.area ? `${p.area} м²` : null].filter(Boolean).join(' · ')}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Стрелки */}
         <button className="pc-arrow pc-arrow-prev" onClick={() => go(-1)} aria-label="Назад">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M15 18L9 12L15 6"/>
           </svg>
         </button>
         <button className="pc-arrow pc-arrow-next" onClick={() => go(1)} aria-label="Вперёд">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M9 18L15 12L9 6"/>
           </svg>
         </button>
 
-        <div className={`pc-track${fading ? ' pc-track--fading' : ''}`}>
-          {visible.map((p, i) => (
-            <Link key={`${p.slug}-${current}-${i}`} href={`/projects/${p.slug}`} className="pc-slide">
-              <div className="pc-slide-img">
-                {p.coverUrl
-                  ? <img src={`${p.coverUrl}?w=900&auto=format`} alt={p.title} loading="lazy" />
-                  : <div style={{ width: '100%', height: '100%', background: '#2a1f1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontFamily: 'var(--serif)', fontSize: 48, color: 'rgba(244,237,224,.15)' }}>R</span>
-                    </div>
-                }
-                <span className="pc-slide-num">{String(p.num || i + 1).padStart(2, '0')}</span>
-              </div>
-              <div className="pc-slide-meta">
-                <div className="pc-slide-cat">{[p.cat, p.year].filter(Boolean).join(' · ')}</div>
-                <h3 className="pc-slide-title">{p.title}</h3>
-                <div className="pc-slide-info">{[p.city, p.area ? `${p.area} м²` : null].filter(Boolean).join(' · ')}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
+        {/* Прогресс */}
         <div className="pc-controls">
-          <div className="pc-progress">
-            <div className="pc-progress-bar" style={{ width: `${((current + 1) / total) * 100}%` }} />
+          <div className="pc-dots">
+            {projects.map((_, i) => (
+              <button
+                key={i}
+                className={`pc-dot${i === current ? ' active' : ''}`}
+                onClick={() => { if (!sliding) { setSliding(true); setCurrent(i); setTimeout(() => setSliding(false), 600) } }}
+                aria-label={`Слайд ${i + 1}`}
+              />
+            ))}
           </div>
           <div className="pc-counter">
             <strong>{String(current + 1).padStart(2, '0')}</strong>
@@ -105,7 +112,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         </div>
       </div>
 
-      <div className="container" style={{ textAlign: 'center', marginTop: '64px' }}>
+      <div className="container" style={{ textAlign: 'center', marginTop: 56 }}>
         <a href="/#archive" className="btn btn-ghost reveal">Все проекты</a>
       </div>
     </section>

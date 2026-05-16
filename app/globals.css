@@ -1751,23 +1751,47 @@ a.contact-info-value:hover { color: var(--accent); }
   overflow: hidden;
   padding-bottom: 48px;
 }
-.pc-track {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
+/* ── Projects: заголовок по центру ── */
+.proj-head {
+  text-align: center;
+  margin-bottom: clamp(40px, 6vw, 64px);
 }
+
+/* ── Projects: слайдер ── */
+.proj-carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.pc-slider-wrap {
+  overflow: hidden;
+}
+
+/* Трек: 5 слайдов, показываем сдвиг на 1 (current в центре из 3 видимых) */
+.pc-slider-track {
+  display: flex;
+  /* сдвигаем так чтобы показать слайды [1,2,3] из [0,1,2,3,4] */
+  transform: translateX(calc(-100% / 5));
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  will-change: transform;
+}
+/* Когда sliding=false, сброс анимации не нужен — позиция всегда одна */
+
 .pc-slide {
+  flex: 0 0 calc(100% / 3);
   display: block;
   text-decoration: none;
   color: var(--ink);
-  position: relative;
-  overflow: hidden;
-  animation: pcSlideIn 0.45s ease both;
 }
-@keyframes pcSlideIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+
+@media (max-width: 860px) {
+  .pc-slide { flex: 0 0 50%; }
+  .pc-slider-track { transform: translateX(-100% / 5); }
 }
+@media (max-width: 500px) {
+  .pc-slide { flex: 0 0 100%; }
+}
+
 .pc-slide-img {
   aspect-ratio: 3/4;
   overflow: hidden;
@@ -1775,112 +1799,76 @@ a.contact-info-value:hover { color: var(--accent); }
   background: #E8E4DE;
 }
 .pc-slide-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
   transition: transform 1.2s ease;
-  display: block;
 }
-.pc-slide:hover .pc-slide-img img { transform: scale(1.05); }
-
+.pc-slide:hover .pc-slide-img img { transform: scale(1.04); }
+.pc-slide-empty {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 48px; color: rgba(26,22,20,.12);
+  background: #2a1f1a;
+}
 .pc-slide-num {
-  position: absolute;
-  top: 20px; left: 20px;
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: .1em;
-  color: rgba(244,237,224,.6);
+  position: absolute; top: 20px; left: 20px;
+  font-family: var(--sans); font-size: 11px; letter-spacing: .1em;
+  color: rgba(244,237,224,.7);
   background: rgba(26,22,20,.3);
   backdrop-filter: blur(4px);
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 4px 10px; border-radius: 20px;
 }
 .pc-slide-meta {
-  padding: 20px 24px 28px;
+  padding: 18px 24px 26px;
   background: var(--bg);
   text-align: center;
 }
 .pc-slide-cat {
-  font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: .4;
-  margin-bottom: 6px;
+  font-family: var(--sans); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink); opacity: .4; margin-bottom: 6px;
 }
 .pc-slide-title {
-  font-family: var(--serif);
-  font-size: clamp(16px, 1.6vw, 22px);
-  font-weight: 400;
-  letter-spacing: -.01em;
-  color: var(--ink);
-  margin-bottom: 4px;
-  line-height: 1.2;
+  font-family: var(--serif); font-size: clamp(16px,1.6vw,22px);
+  font-weight: 400; letter-spacing: -.01em; color: var(--ink);
+  margin-bottom: 4px; line-height: 1.2;
 }
 .pc-slide-info {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--ink);
-  opacity: .4;
+  font-family: var(--sans); font-size: 12px; color: var(--ink); opacity: .4;
 }
 
-/* Стрелки */
+/* ── Стрелки ── */
 .pc-arrow {
-  position: absolute;
-  top: 35%;
-  z-index: 10;
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 1px solid rgba(26,22,20,.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all .2s;
-  color: var(--ink);
+  position: absolute; top: calc(50% - 60px); transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%; z-index: 10;
+  border: 1px solid rgba(26,22,20,.2);
+  background: rgba(244,237,224,.9);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .2s; color: var(--ink);
 }
 .pc-arrow:hover { background: var(--ink); color: var(--bg); }
-.pc-arrow-prev { left: clamp(12px, 2vw, 32px); }
-.pc-arrow-next { right: clamp(12px, 2vw, 32px); }
+.pc-arrow-prev { left: clamp(12px,2vw,32px); }
+.pc-arrow-next { right: clamp(12px,2vw,32px); }
 
-/* Прогресс-бар */
+/* ── Dots + counter ── */
 .pc-controls {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 0 clamp(20px, 4vw, 60px);
-  margin-top: 24px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; padding: 24px clamp(20px,4vw,60px) 0;
 }
-.pc-progress {
-  flex: 1;
-  height: 1px;
-  background: rgba(26,22,20,.12);
-  position: relative;
-  overflow: hidden;
+.pc-dots { display: flex; gap: 8px; }
+.pc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(26,22,20,.2); border: none; cursor: pointer;
+  transition: all .3s; padding: 0;
 }
-.pc-progress-bar {
-  height: 100%;
-  background: var(--ink);
-  transition: width .4s ease;
-}
+.pc-dot.active { background: var(--ink); width: 24px; border-radius: 3px; }
 .pc-counter {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--ink);
-  opacity: .4;
-  white-space: nowrap;
+  font-family: var(--sans); font-size: 12px;
+  color: var(--ink); opacity: .4; white-space: nowrap;
 }
-.pc-counter strong { opacity: 1; color: var(--ink); }
+.pc-counter strong { opacity: 1; }
 
-@media (max-width: 800px) {
-  .pc-track { grid-template-columns: 1fr 1fr; }
-  .pc-arrow { display: none; }
-}
-@media (max-width: 500px) {
-  .pc-track { grid-template-columns: 1fr; }
-}
+@media (max-width: 800px) { .pc-arrow { display: none; } }
 
 /* ============================================================
    DELIVERABLES — папка с документацией
