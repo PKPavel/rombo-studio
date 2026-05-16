@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 // QR-коды генерируются через qrcode.react или встроенный SVG
 // Сейчас — статичные QR через qr.io API (не требует библиотеки)
@@ -25,11 +26,7 @@ export default function Founder() {
           {/* ── Левая колонка ── */}
           <div className="founder-left">
             <div className="founder-photo">
-              <img
-                src="/images/alexandra.png"
-                alt="Александра Серова — руководитель студии ROMBO"
-                className="founder-photo-img"
-              />
+              <Image src="/images/alexandra.png" alt="Александра Серова" fill sizes="320px" className="founder-photo-img" style={{objectFit:"cover",objectPosition:"center top",transform:"scale(1.18)"}} />
             </div>
 
             <div className="founder-name-block">

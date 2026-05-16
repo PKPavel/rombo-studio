@@ -6,7 +6,7 @@ function ContactSuccess() {
   const [count, setCount] = React.useState(5)
   React.useEffect(() => {
     const t = setInterval(() => setCount(n => {
-      if (n <= 1) { clearInterval(t); window.location.href = '/' }
+      if (n <= 1) { clearInterval(t); window.location.href = '/thank-you' }
       return n - 1
     }), 1000)
     return () => clearInterval(t)
