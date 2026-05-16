@@ -1792,7 +1792,7 @@ a.contact-info-value:hover { color: var(--accent); }
 }
 
 .pc-slide {
-  flex: 0 0 clamp(260px, 28vw, 400px);
+  flex: 0 0 clamp(300px, 34vw, 480px);
   display: block;
   text-decoration: none;
   color: var(--ink);
