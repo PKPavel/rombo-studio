@@ -4,6 +4,12 @@ import Hero from '../components/Hero'
 
 export const revalidate = 60
 
+const CAROUSEL_QUERY = `*[_type == "project" && !disabled] | order(num asc) {
+  num, title, "slug": slug.current,
+  cat, area, city, year,
+  "coverUrl": coverImage.asset->url
+}`
+
 // Берём все проекты с фото — featured сверху, остальные следом
 const HERO_QUERY = `*[_type == "project" && defined(coverImage) && !disabled] | order(featured desc, num asc) [0...5] {
   title, city,
@@ -26,6 +32,7 @@ import Contact from '../components/Contact'
 import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver } from '../components/ScrollSpyCursor'
 export default async function Home() {
   const heroProjects = await client.fetch(HERO_QUERY).catch(() => [])
+  const carouselProjects = await client.fetch(CAROUSEL_QUERY).catch(() => [])
   return (
     <>
       <CustomCursor />
@@ -34,7 +41,7 @@ export default async function Home() {
       <Hero projects={heroProjects} />
       <Marquee />
       <Stats />
-      <Projects />
+      <Projects projects={carouselProjects} />
       <Deliverables />
       <Archive />
       <Founder />
