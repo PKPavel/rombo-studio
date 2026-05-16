@@ -37,7 +37,8 @@ export async function POST(req: NextRequest) {
   if (!res.ok) {
     const err = await res.text()
     console.error('Telegram error:', err)
-    return NextResponse.json({ error: 'Telegram send failed' }, { status: 502 })
+    // Временно возвращаем детали для отладки
+    return NextResponse.json({ error: 'Telegram send failed', detail: err }, { status: 502 })
   }
 
   return NextResponse.json({ ok: true })
