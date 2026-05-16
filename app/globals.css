@@ -4107,14 +4107,14 @@ body::before {
 }
 
 /* ── FeaturedIn → Stats бегущая строка ── */
-.featured { overflow: hidden; border-top: 1px solid rgba(26,22,20,.06); border-bottom: 1px solid rgba(26,22,20,.06); padding: 32px 0; }
-.featured-track-wrap { overflow: hidden; }
-.featured-track { display: flex; gap: 0; animation: featuredScroll 30s linear infinite; width: max-content; }
+.featured { overflow: hidden; border-top: 1px solid rgba(26,22,20,.06); border-bottom: 1px solid rgba(26,22,20,.06); padding: 28px 0; }
+.featured-track-wrap { overflow: hidden; width: 100%; }
+.featured-track { display: flex; gap: 0; animation: featuredScroll 28s linear infinite; width: max-content; will-change: transform; }
 .featured-track:hover { animation-play-state: paused; }
-.featured-stat { display: flex; align-items: center; gap: 16px; padding: 0 48px; border-right: 1px solid rgba(26,22,20,.1); white-space: nowrap; }
-.featured-stat-num { font-family: var(--serif); font-size: clamp(28px,3vw,40px); font-weight: 300; color: var(--ink); letter-spacing: -.02em; }
-.featured-stat-label { font-family: var(--sans); font-size: 13px; color: var(--ink); opacity: .5; letter-spacing: .03em; }
-@keyframes featuredScroll { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+.featured-stat { display: flex; align-items: center; gap: 14px; padding: 0 40px; border-right: 1px solid rgba(26,22,20,.1); white-space: nowrap; flex-shrink: 0; }
+.featured-stat-num { font-family: var(--serif); font-size: clamp(24px,2.5vw,36px); font-weight: 300; color: var(--ink); letter-spacing: -.02em; }
+.featured-stat-label { font-family: var(--sans); font-size: 12px; color: var(--ink); opacity: .45; letter-spacing: .03em; }
+@keyframes featuredScroll { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
 
 /* ── Blog index: tag badge overlay ── */
 .blog-tile-img-wrap { position: relative; }
@@ -4122,3 +4122,7 @@ body::before {
 /* ── Blog post body: параграфы ── */
 .blog-body p { margin-bottom: 1.6em; }
 .blog-body p:last-child { margin-bottom: 0; }
+
+/* Blog index — hover на картинках через CSS (server component) */
+.blog-index-img { transition: transform .6s ease; }
+.blog-index-img:hover { transform: scale(1.04); }

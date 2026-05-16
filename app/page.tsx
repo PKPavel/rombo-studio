@@ -4,7 +4,8 @@ import Hero from '../components/Hero'
 
 export const revalidate = 60
 
-const HERO_QUERY = `*[_type == "project" && featured == true && defined(coverImage)] | order(num asc) [0...3] {
+// Берём все проекты с фото — featured сверху, остальные следом
+const HERO_QUERY = `*[_type == "project" && defined(coverImage) && !disabled] | order(featured desc, num asc) [0...5] {
   title, city,
   "coverUrl": coverImage.asset->url
 }`

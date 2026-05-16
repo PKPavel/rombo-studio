@@ -75,9 +75,7 @@ export default async function BlogIndex() {
                   <article style={{ cursor: 'pointer' }}>
                     <div style={{ aspectRatio: '16/10', overflow: 'hidden', borderRadius: 2, background: '#E8E4DE', marginBottom: 20 }}>
                       {p.coverUrl
-                        ? <img src={`${p.coverUrl}?w=700&auto=format`} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .6s ease' }}
-                            onMouseOver={e => (e.currentTarget.style.transform = 'scale(1.04)')}
-                            onMouseOut={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                        ? <img src={`${p.coverUrl}?w=700&auto=format`} alt={p.title} className="blog-index-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                         : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <span style={{ fontFamily: 'var(--serif)', fontSize: 32, color: 'rgba(26,22,20,.15)' }}>R</span>
                           </div>
