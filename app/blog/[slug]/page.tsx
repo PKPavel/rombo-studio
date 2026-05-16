@@ -1,4 +1,5 @@
 import { client } from '../../../sanity.client'
+import { CustomCursor } from '../../../components/ScrollSpyCursor'
 import { BlogProgress } from '../../../components/BlogProgress'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -103,6 +104,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   return (
     <>
+      <CustomCursor />
       <BlogProgress />
       <script
         type="application/ld+json"
