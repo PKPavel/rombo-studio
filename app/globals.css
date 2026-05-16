@@ -4114,7 +4114,7 @@ body::before {
 .featured-stat { display: flex; align-items: center; gap: 14px; padding: 0 40px; border-right: 1px solid rgba(26,22,20,.1); white-space: nowrap; flex-shrink: 0; }
 .featured-stat-num { font-family: var(--serif); font-size: clamp(24px,2.5vw,36px); font-weight: 300; color: var(--ink); letter-spacing: -.02em; }
 .featured-stat-label { font-family: var(--sans); font-size: 12px; color: var(--ink); opacity: .45; letter-spacing: .03em; }
-@keyframes featuredScroll { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+@keyframes featuredScroll { 0% { transform: translateX(0) } 100% { transform: translateX(-33.333%) } }
 
 /* ── Blog index: tag badge overlay ── */
 .blog-tile-img-wrap { position: relative; }

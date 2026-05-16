@@ -79,7 +79,8 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             <div style={{ position: 'relative', zIndex: 1, maxWidth: 'var(--max)', margin: '0 auto', width: '100%' }}>
               <p style={{
                 fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.32em',
-                textTransform: 'uppercase', color: 'var(--bronze-light)', fontWeight: 500,
+                textTransform: 'uppercase', color: 'rgba(244,237,224,0.7)', fontWeight: 500,
+                textShadow: '0 1px 6px rgba(0,0,0,0.5)',
                 marginBottom: 32,
                 opacity: isActive ? 1 : 0,
                 transform: isActive ? 'translateY(0)' : 'translateY(12px)',
