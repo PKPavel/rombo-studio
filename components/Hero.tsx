@@ -61,10 +61,14 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             }}
           >
             {/* Фото проекта как фон */}
+            {slide.coverUrl && isActive && (
+              <img src={`${slide.coverUrl}?w=1200&auto=format&q=80`} alt="" fetchPriority="high" style={{ display:'none' }} />
+            )}
             {slide.coverUrl && (
               <div style={{
                 position: 'absolute', inset: 0,
-                backgroundImage: `url(${slide.coverUrl}?w=1600&auto=format)`,
+                backgroundImage: `url(${slide.coverUrl}?w=1200&auto=format&q=80)`,
+                backgroundSize: 'cover', backgroundPosition: 'center',
                 backgroundSize: 'cover', backgroundPosition: 'center',
               }} />
             )}

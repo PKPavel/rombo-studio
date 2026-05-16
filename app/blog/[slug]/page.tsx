@@ -130,7 +130,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <header className="blog-hero">
         {post.coverUrl && (
           <div className="blog-hero-img">
-            <img src={`${post.coverUrl}?w=1600&auto=format`} alt={post.title} />
+            <img src={`${post.coverUrl}?w=1200&auto=format&q=80`} alt={post.title} />
           </div>
         )}
         <div className={`blog-hero-overlay${!post.coverUrl ? ' blog-hero-overlay--no-img' : ''}`} />
@@ -191,7 +191,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 <Link key={r.slug} href={`/blog/${r.slug}`} className="blog-related-card">
                   <div className="blog-related-img">
                     {r.coverUrl
-                      ? <img src={`${r.coverUrl}?w=600&auto=format`} alt={r.title} />
+                      ? <img src={`${r.coverUrl}?w=500&auto=format&q=80`} alt={r.title} />
                       : <div className="blog-related-img-empty">R</div>
                     }
                     <span className="blog-related-tag">{r.tag}</span>

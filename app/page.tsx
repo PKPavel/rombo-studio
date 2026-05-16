@@ -2,7 +2,7 @@ import { client } from '../sanity.client'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const CAROUSEL_QUERY = `*[_type == "project" && !disabled] | order(num asc) {
   num, title, "slug": slug.current,

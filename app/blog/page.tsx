@@ -99,7 +99,7 @@ export default async function BlogIndex({
                 <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-index-card">
                   <div className="blog-index-img-wrap">
                     {p.coverUrl
-                      ? <img src={`${p.coverUrl}?w=700&auto=format`} alt={p.title} className="blog-index-img" />
+                      ? <img src={`${p.coverUrl}?w=500&auto=format&q=80&q=80`} alt={p.title} className="blog-index-img" />
                       : <div className="blog-index-img-empty">R</div>
                     }
                     {p.tag && <span className="blog-index-tag">{p.tag}</span>}

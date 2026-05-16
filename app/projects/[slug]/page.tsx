@@ -3,7 +3,7 @@ import { client } from '../../../sanity.client'
 import { notFound } from 'next/navigation'
 import ProjectPage from '../../../components/ProjectPage'
 
-export const revalidate = 60 // ISR — обновление каждые 60 сек
+export const revalidate = 3600 // ISR — обновление каждые 60 сек
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
