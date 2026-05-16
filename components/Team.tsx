@@ -8,18 +8,19 @@
 interface TeamMember {
   name: string
   role: string
-  photo?: string   // путь к фото, напр. '/images/team/lyubov.jpg'
+  photo?: string
+  pos?: string    // object-position CSS
   soon?: boolean   // заглушка «Скоро»
 }
 
 const TEAM: TeamMember[] = [
-  { name: 'Александра', role: 'Руководитель студии, дизайнер',  photo: '/images/alexandra.png' },
-  { name: 'Любовь',     role: 'Дизайнер интерьеров',            photo: '/images/team/lyubov.png' },
-  { name: 'Светлана',   role: 'Дизайнер интерьеров',            photo: '/images/team/svetlana.png' },
-  { name: 'Анастасия',  role: 'Дизайнер интерьеров',            photo: '/images/team/anastasia1.png' },
-  { name: 'Алина',      role: 'Дизайнер интерьеров',            photo: '/images/team/alina.png' },
-  { name: 'Анастасия',  role: '3D-визуализатор',                photo: '/images/team/anastasia2.png' },
-  { name: 'Василий',    role: '3D-визуализатор',                photo: '/images/team/vasiliy.png' },
+  { name: 'Александра', role: 'Руководитель студии, дизайнер',  photo: '/images/alexandra.png',        pos: 'center 15%' },
+  { name: 'Любовь',     role: 'Дизайнер интерьеров',            photo: '/images/team/lyubov.png',      pos: 'center 10%' },
+  { name: 'Светлана',   role: 'Дизайнер интерьеров',            photo: '/images/team/svetlana.png',    pos: 'center 15%' },
+  { name: 'Анастасия',  role: 'Дизайнер интерьеров',            photo: '/images/team/anastasia1.png',  pos: 'center 10%' },
+  { name: 'Алина',      role: 'Дизайнер интерьеров',            photo: '/images/team/alina.png',       pos: 'center 20%' },
+  { name: 'Анастасия',  role: '3D-визуализатор',                photo: '/images/team/anastasia2.png',  pos: 'center 15%' },
+  { name: 'Василий',    role: '3D-визуализатор',                photo: '/images/team/vasiliy.png',     pos: 'center 20%' },
 ]
 
 function PersonPlaceholder() {
@@ -58,7 +59,7 @@ export default function Team() {
             >
               <div className="team-photo">
                 {member.photo
-                  ? <img src={member.photo} alt={member.name} loading="lazy" />
+                  ? <img src={member.photo} alt={member.name} loading="lazy" style={{ objectPosition: member.pos || 'center top' }} />
                   : <PersonPlaceholder />
                 }
               </div>
