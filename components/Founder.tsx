@@ -25,12 +25,11 @@ export default function Founder() {
           {/* ── Левая колонка ── */}
           <div className="founder-left">
             <div className="founder-photo">
-              <div className="founder-photo-placeholder">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                  <circle cx="32" cy="24" r="14" stroke="#B0AAA3" strokeWidth="1.5" />
-                  <path d="M8 60c0-13.255 10.745-24 24-24s24 10.745 24 24" stroke="#B0AAA3" strokeWidth="1.5" />
-                </svg>
-              </div>
+              <img
+                src="/images/alexandra.png"
+                alt="Александра Серова — руководитель студии ROMBO"
+                className="founder-photo-img"
+              />
             </div>
 
             <div className="founder-name-block">
