@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import { client } from '../../sanity.client'
-import { CustomCursor } from '../../components/ScrollSpyCursor'
-import Header from '../../components/Header'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 interface Post {
   slug: string; title: string; publishedAt: string | null
@@ -45,10 +43,7 @@ export default async function BlogIndex({
     : allPosts
 
   return (
-    <>
-      <CustomCursor />
-      <Header />
-      <main style={{ background: 'var(--bg)', minHeight: '100svh', paddingTop: 'calc(76px + 48px)' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100svh', paddingTop: 'calc(76px + 48px)' }}>
         <div style={{ maxWidth: 'var(--max)', margin: '0 auto', padding: '0 clamp(20px,4vw,60px)' }}>
 
           {/* Шапка */}
@@ -122,7 +117,6 @@ export default async function BlogIndex({
             </p>
           )}
         </div>
-      </main>
-    </>
+    </main>
   )
 }
