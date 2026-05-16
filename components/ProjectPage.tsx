@@ -251,7 +251,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               {project.pdfs.map((pdf, i) => {
                 const meta = buildPdfMeta(pdf)
                 return (
-                  <a key={i} href={pdf.url || '#contact'} download={!!pdf.url} className="proj-doc-card">
+                  <a key={i} href={pdf.url || '#contact'} target={pdf.url ? "_blank" : undefined} rel="noopener noreferrer" className="proj-doc-card">
                     <PdfIcon />
                     <div className="proj-doc-info">
                       <div className="proj-doc-title">{pdf.title}</div>
