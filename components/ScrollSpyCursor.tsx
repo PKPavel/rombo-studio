@@ -129,9 +129,6 @@ export function FloatingBar() {
   )
 }
 
-// ── Scroll-to-top кнопка ─────────────────────────────────────────────────────
-export { ScrollTopButton } from './ScrollTopButton'
-
 // ── Reveal-анимации при скролле ───────────────────────────────────────────
 export function RevealObserver() {
   useEffect(() => {
