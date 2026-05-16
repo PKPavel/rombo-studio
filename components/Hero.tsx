@@ -140,17 +140,7 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
         ))}
       </div>
 
-      {/* Scroll hint */}
-      <div style={{
-        position: 'absolute', bottom: 'clamp(24px, 4vw, 48px)', left: 'var(--pad)',
-        zIndex: 10, display: 'flex', alignItems: 'center', gap: 10,
-        opacity: 0.45,
-      }}>
-        <div style={{ width: 1, height: 40, background: 'var(--on-dark)' }} />
-        <span style={{ fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.15em', color: 'var(--on-dark)', textTransform: 'uppercase' }}>
-          Scroll
-        </span>
-      </div>
+
     </section>
   )
 }
