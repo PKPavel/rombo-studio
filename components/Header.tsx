@@ -23,6 +23,7 @@ const NAV = [
   { label: 'Студия',  href: '/#founder' },
   { label: 'Услуги',  href: '/#services' },
   { label: 'Цены',    href: '/#pricing' },
+  { label: 'Блог',     href: '/blog' },
   { label: 'Контакты', href: '/#contact' },
 ]
 

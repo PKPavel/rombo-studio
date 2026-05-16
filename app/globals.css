@@ -4105,3 +4105,20 @@ body::before {
   cursor: not-allowed;
   pointer-events: none;
 }
+
+/* ── FeaturedIn → Stats бегущая строка ── */
+.featured { overflow: hidden; border-top: 1px solid rgba(26,22,20,.06); border-bottom: 1px solid rgba(26,22,20,.06); padding: 32px 0; }
+.featured-track-wrap { overflow: hidden; }
+.featured-track { display: flex; gap: 0; animation: featuredScroll 30s linear infinite; width: max-content; }
+.featured-track:hover { animation-play-state: paused; }
+.featured-stat { display: flex; align-items: center; gap: 16px; padding: 0 48px; border-right: 1px solid rgba(26,22,20,.1); white-space: nowrap; }
+.featured-stat-num { font-family: var(--serif); font-size: clamp(28px,3vw,40px); font-weight: 300; color: var(--ink); letter-spacing: -.02em; }
+.featured-stat-label { font-family: var(--sans); font-size: 13px; color: var(--ink); opacity: .5; letter-spacing: .03em; }
+@keyframes featuredScroll { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+/* ── Blog index: tag badge overlay ── */
+.blog-tile-img-wrap { position: relative; }
+
+/* ── Blog post body: параграфы ── */
+.blog-body p { margin-bottom: 1.6em; }
+.blog-body p:last-child { margin-bottom: 0; }

@@ -88,7 +88,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             {post.excerpt}
           </p>
         )}
-        {renderBody(post.body)}
+        <div className="blog-body">{renderBody(post.body)}</div>
       </article>
 
       {/* CTA */}

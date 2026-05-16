@@ -155,7 +155,7 @@ export default function Contact() {
         <div className="container">
           <div className="footer-grid">
             <div className="footer-brand">
-              <a href="#hero" className="logo logo-footer" aria-label="ROMBO">
+              <a href="/#hero" className="logo logo-footer" aria-label="ROMBO">
                 <svg className="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="90 418 883 244" fill="currentColor">
                   <g><g>
                     <path d="M466.81,528.75h-20.58c-3.27,0-5.93,2.65-5.93,5.93v22.54h-19.54v-94.26c0-1.89,1.53-3.42,3.42-3.42h46.81c20.93,0,38.24,13.82,38.24,34.61,0,13.67-8.93,25.12-21.07,30.84l24.56,32.23h-24.28l-21.63-28.47Zm4.19-51.21h-24.77c-3.27,0-5.93,2.65-5.93,5.93v27h30.7c10.75,0,18.7-7.12,18.7-16.33s-7.81-16.61-18.7-16.61Z"/>
@@ -176,21 +176,21 @@ export default function Contact() {
             <div className="footer-col">
               <h4>Студия</h4>
               <ul>
-                <li><a href="#founder">О студии</a></li>
-                <li><a href="#projects">Проекты</a></li>
-                <li><a href="#archive">Архив работ</a></li>
-                <li><a href="#blog">Журнал</a></li>
+                <li><a href="/#founder">О студии</a></li>
+                <li><a href="/#projects">Проекты</a></li>
+                <li><a href="/#archive">Архив работ</a></li>
+                <li><a href="/blog">Журнал</a></li>
               </ul>
             </div>
 
             <div className="footer-col">
               <h4>Услуги</h4>
               <ul>
-                <li><a href="#services">Дизайн-проект</a></li>
-                <li><a href="#services">3D-визуализация</a></li>
-                <li><a href="#services">Рабочие чертежи</a></li>
-                <li><a href="#services">Комплектация</a></li>
-                <li><a href="#services">Авторский надзор</a></li>
+                <li><a href="/#services">Дизайн-проект</a></li>
+                <li><a href="/#services">3D-визуализация</a></li>
+                <li><a href="/#services">Рабочие чертежи</a></li>
+                <li><a href="/#services">Комплектация</a></li>
+                <li><a href="/#services">Авторский надзор</a></li>
               </ul>
             </div>
 

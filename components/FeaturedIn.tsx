@@ -1,35 +1,26 @@
 'use client'
 
-const PUBLICATIONS = [
-  { name: 'AD', em: 'Russia' },
-  { name: 'ELLE', em: 'Decoration' },
-  { name: 'Interior', em: '+Design' },
-  { name: 'Salon', em: '' },
-  { name: 'My', em: 'Decor' },
-  { name: 'House', em: '&Home' },
+const STATS = [
+  { num: '70+',  label: 'реализованных проектов' },
+  { num: '8',    label: 'лет на рынке' },
+  { num: '40+',  label: 'городов присутствия' },
+  { num: '100%', label: 'сданных в срок проектов' },
+  { num: '4.9',  label: 'средняя оценка клиентов' },
+  { num: '15+',  label: 'дизайнеров в команде' },
 ]
 
 export default function FeaturedIn() {
-  // Дублируем для бесконечной прокрутки
-  const items = [...PUBLICATIONS, ...PUBLICATIONS]
-
+  const items = [...STATS, ...STATS]
   return (
     <section className="featured reveal">
-      <div className="container">
-        <div className="featured-row">
-          <span className="featured-label">— Публикации</span>
-          <div className="featured-marquee">
-            <div className="featured-track">
-              {items.map((p, i) => (
-                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '36px' }}>
-                  <span className="featured-name">
-                    {p.name}{p.em && <em>{p.em}</em>}
-                  </span>
-                  <span className="featured-sep">·</span>
-                </span>
-              ))}
+      <div className="featured-track-wrap">
+        <div className="featured-track">
+          {items.map((s, i) => (
+            <div key={i} className="featured-stat">
+              <span className="featured-stat-num">{s.num}</span>
+              <span className="featured-stat-label">{s.label}</span>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
