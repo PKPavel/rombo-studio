@@ -4108,13 +4108,13 @@ body::before {
 
 /* ── FeaturedIn → Stats бегущая строка ── */
 .featured { overflow: hidden; border-top: 1px solid rgba(26,22,20,.06); border-bottom: 1px solid rgba(26,22,20,.06); padding: 28px 0; }
-.featured-track-wrap { overflow: hidden; width: 100%; }
-.featured-track { display: flex; gap: 0; animation: featuredScroll 28s linear infinite; width: max-content; will-change: transform; }
+.featured-track-wrap { overflow: hidden; }
+.featured-track { display: flex; animation: featuredScroll 32s linear infinite; }
 .featured-track:hover { animation-play-state: paused; }
-.featured-stat { display: flex; align-items: center; gap: 14px; padding: 0 40px; border-right: 1px solid rgba(26,22,20,.1); white-space: nowrap; flex-shrink: 0; }
+.featured-stat { display: flex; align-items: center; gap: 16px; padding: 0 48px; border-right: 1px solid rgba(26,22,20,.1); white-space: nowrap; flex-shrink: 0; min-width: max-content; }
 .featured-stat-num { font-family: var(--serif); font-size: clamp(24px,2.5vw,36px); font-weight: 300; color: var(--ink); letter-spacing: -.02em; }
 .featured-stat-label { font-family: var(--sans); font-size: 12px; color: var(--ink); opacity: .45; letter-spacing: .03em; }
-@keyframes featuredScroll { 0% { transform: translateX(0) } 100% { transform: translateX(-33.333%) } }
+@keyframes featuredScroll { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
 
 /* ── Blog index: tag badge overlay ── */
 .blog-tile-img-wrap { position: relative; }
