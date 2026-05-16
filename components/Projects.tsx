@@ -67,7 +67,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           </svg>
         </button>
 
-        <div className="pc-track">
+        <div className={`pc-track${fading ? " pc-track--fading" : ""}`}>
           {visible.map((p, i) => (
             <Link key={`${p.slug}-${i}`} href={`/projects/${p.slug}`} className="pc-slide">
               <div className="pc-slide-img">
