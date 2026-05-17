@@ -69,7 +69,6 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
                 position: 'absolute', inset: 0,
                 backgroundImage: `url(${slide.coverUrl}?w=1200&auto=format&q=80)`,
                 backgroundSize: 'cover', backgroundPosition: 'center',
-                backgroundSize: 'cover', backgroundPosition: 'center',
               }} />
             )}
             {/* Градиент поверх фото */}

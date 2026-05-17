@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CustomCursor } from './components/ScrollSpyCursor'
+import { CustomCursor } from '../components/ScrollSpyCursor'
 
 export default function NotFound() {
   return (
