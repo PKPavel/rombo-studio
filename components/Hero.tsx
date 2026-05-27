@@ -37,6 +37,7 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
   const [current, setCurrent] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
   const [animating, setAnimating] = useState(false)
+  const [paused, setPaused] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const goTo = (idx: number) => {
@@ -50,12 +51,21 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
   useEffect(() => {
     // Уважаем системную настройку «уменьшить движение» — не крутим автокарусель
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    // Пауза при наведении/фокусе, чтобы не уводить контент из-под пользователя
+    if (paused) return
     timerRef.current = setTimeout(() => goTo((current + 1) % slides.length), 5000)
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
-  }, [current, animating])
+  }, [current, animating, paused])
 
   return (
-    <section id="hero" style={{ position: 'relative', height: '100svh', minHeight: 600, overflow: 'hidden', background: 'var(--dark)' }}>
+    <section
+      id="hero"
+      style={{ position: 'relative', height: '100svh', minHeight: 600, overflow: 'hidden', background: 'var(--dark)' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
       {slides.map((slide, idx) => {
         const isActive = idx === current
         const isPrev = idx === prev

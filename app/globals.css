@@ -4503,3 +4503,15 @@ body::before {
   .calc-types { grid-template-columns: 1fr; }
   .calc-widget { padding: 24px 20px; }
 }
+
+/* ── Доступность: видимый фокус для клавиатурной навигации ── */
+/* Курсор скрыт глобально (cursor: none), поэтому явный фокус-ринг обязателен */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+a:focus-visible,
+button:focus-visible {
+  outline-offset: 4px;
+}

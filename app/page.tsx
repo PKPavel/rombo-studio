@@ -15,7 +15,7 @@ const HERO_QUERY = `*[_type == "project" && defined(coverImage) && !disabled] | 
   title, city,
   "coverUrl": coverImage.asset->url
 }`
-import { Marquee, Stats } from '../components/MarqueeStats'
+import { Stats } from '../components/MarqueeStats'
 import Projects from '../components/Projects'
 import Deliverables from '../components/Deliverables'
 import Archive from '../components/Archive'
@@ -24,10 +24,8 @@ import Team from '../components/Team'
 import Services from '../components/Services'
 import Process from '../components/Process'
 import Pricing from '../components/Pricing'
-import PriceCalc from '../components/PriceCalc'
 import Testimonials from '../components/Testimonials'
 import Blog from '../components/Blog'
-import FeaturedIn from '../components/FeaturedIn'
 import FAQ from '../components/FAQ'
 import Contact from '../components/Contact'
 import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver } from '../components/ScrollSpyCursor'
@@ -52,10 +50,8 @@ export default async function Home() {
       <Services />
       <Process />
       <Pricing />
-      <PriceCalc />
       <Testimonials />
       <Blog />
-      <FeaturedIn />
       <FAQ />
       <Contact />
       <FloatingBar />

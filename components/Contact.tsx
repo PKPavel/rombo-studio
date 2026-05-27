@@ -238,12 +238,6 @@ export default function Contact() {
           </div>
         </div>
       </footer>
-
-      {/* Floating bar — мобильная плашка */}
-      <div className="float-bar">
-        <a href="tel:+79045581631" className="fb-call">Позвонить</a>
-        <a href="https://t.me/+79045581631" target="_blank" rel="noopener">Telegram</a>
-      </div>
     </>
   )
 }
