@@ -3779,50 +3779,6 @@ body::before {
   pointer-events: none;
 }
 
-/* ── FeaturedIn → Stats бегущая строка ── */
-.featured {
-  overflow: hidden;
-  padding: 28px 0;
-  border-top: 1px solid rgba(26,22,20,.06);
-  border-bottom: 1px solid rgba(26,22,20,.06);
-}
-.featured-track {
-  display: flex;
-  width: max-content;
-  animation: featuredScroll 28s linear infinite;
-  will-change: transform;
-}
-.featured:hover .featured-track { animation-play-state: paused; }
-@keyframes featuredScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.featured-stat {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 0 56px;
-  border-right: 1px solid rgba(26,22,20,.1);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.featured-stat-num {
-  font-family: var(--serif);
-  font-size: clamp(24px,2.5vw,36px);
-  font-weight: 300;
-  color: var(--ink);
-  letter-spacing: -.02em;
-}
-.featured-stat-label {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--ink);
-  opacity: .45;
-  letter-spacing: .03em;
-}
-
-
-
 /* ── Blog index: tag badge overlay ── */
 .blog-tile-img-wrap { position: relative; }
 
