@@ -37,7 +37,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -54,8 +53,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               addressCountry: 'RU',
             },
             priceRange: '₽₽₽',
-            openingHours: 'Mo-Fr 10:00-19:00',
-            sameAs: ['https://www.behance.net/rombo_studio'],
+            openingHours: 'Mo-Fr 10:00-20:00',
+            sameAs: [
+              'https://www.behance.net/serovadesign',
+              'https://www.instagram.com/serova_design',
+            ],
           })}}
         />
       </head>

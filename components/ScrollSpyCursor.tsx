@@ -14,21 +14,21 @@ export function CustomCursor() {
       el.style.top = e.clientY + 'px'
     }
 
-    const addHover = () => el.classList.add('hover')
-    const removeHover = () => el.classList.remove('hover')
-
-    document.addEventListener('mousemove', move)
-    document.addEventListener('mouseover', (e) => {
+    const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement
       if (t.closest('a, button, [role="button"], input, select, textarea')) {
-        addHover()
+        el.classList.add('hover')
       } else {
-        removeHover()
+        el.classList.remove('hover')
       }
-    })
+    }
+
+    document.addEventListener('mousemove', move)
+    document.addEventListener('mouseover', onOver)
 
     return () => {
       document.removeEventListener('mousemove', move)
+      document.removeEventListener('mouseover', onOver)
       el.remove()
     }
   }, [])

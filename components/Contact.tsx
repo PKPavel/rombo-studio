@@ -42,6 +42,7 @@ export default function Contact() {
       email:   (form.elements.namedItem('email')   as HTMLInputElement).value.trim(),
       type:    (form.elements.namedItem('type')    as HTMLSelectElement).value,
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
+      company: (form.elements.namedItem('company') as HTMLInputElement).value,
     }
     if (!data.name) { setError('Введите ваше имя'); return }
     if (!data.phone || data.phone.length < 10) { setError('Введите корректный номер телефона'); return }
@@ -126,6 +127,15 @@ export default function Contact() {
             ) : (
               <form className="form reveal delay-1" onSubmit={handleSubmit} ref={formRef}>
                 <h3>Оставить заявку</h3>
+                {/* Honeypot — скрыто от людей, ловит ботов */}
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                />
                 <div className="form-row">
                   <label>Имя</label>
                   <input type="text" name="name" required placeholder="Как к вам обращаться" />

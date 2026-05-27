@@ -33,8 +33,10 @@ import Contact from '../components/Contact'
 import { ScrollSpy, CustomCursor, FloatingBar, RevealObserver } from '../components/ScrollSpyCursor'
 import { ScrollTopButton } from '../components/ScrollTopButton'
 export default async function Home() {
-  const heroProjects = await client.fetch(HERO_QUERY).catch(() => [])
-  const carouselProjects = await client.fetch(CAROUSEL_QUERY).catch(() => [])
+  const [heroProjects, carouselProjects] = await Promise.all([
+    client.fetch(HERO_QUERY).catch(() => []),
+    client.fetch(CAROUSEL_QUERY).catch(() => []),
+  ])
   return (
     <>
       <CustomCursor />

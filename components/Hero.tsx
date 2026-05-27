@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { preload } from 'react-dom'
 
 interface HeroSlide {
   id: number
@@ -25,6 +26,14 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
       }))
     : DEFAULT_SLIDES
 
+  // Préload фона первого слайда — это LCP-элемент главного экрана
+  if (slides[0]?.coverUrl) {
+    preload(`${slides[0].coverUrl}?w=1200&auto=format&q=80`, {
+      as: 'image',
+      fetchPriority: 'high',
+    })
+  }
+
   const [current, setCurrent] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
   const [animating, setAnimating] = useState(false)
@@ -39,6 +48,8 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
   }
 
   useEffect(() => {
+    // Уважаем системную настройку «уменьшить движение» — не крутим автокарусель
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
     timerRef.current = setTimeout(() => goTo((current + 1) % slides.length), 5000)
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [current, animating])
@@ -61,9 +72,6 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             }}
           >
             {/* Фото проекта как фон */}
-            {slide.coverUrl && isActive && (
-              <img src={`${slide.coverUrl}?w=1200&auto=format&q=80`} alt="" fetchPriority="high" style={{ display:'none' }} />
-            )}
             {slide.coverUrl && (
               <div style={{
                 position: 'absolute', inset: 0,
