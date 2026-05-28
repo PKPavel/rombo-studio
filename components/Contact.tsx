@@ -42,6 +42,7 @@ export default function Contact() {
       email:   (form.elements.namedItem('email')   as HTMLInputElement).value.trim(),
       type:    (form.elements.namedItem('type')    as HTMLSelectElement).value,
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
+      company: (form.elements.namedItem('company') as HTMLInputElement).value,
     }
     if (!data.name) { setError('Введите ваше имя'); return }
     if (!data.phone || data.phone.length < 10) { setError('Введите корректный номер телефона'); return }
@@ -126,6 +127,15 @@ export default function Contact() {
             ) : (
               <form className="form reveal delay-1" onSubmit={handleSubmit} ref={formRef}>
                 <h3>Оставить заявку</h3>
+                {/* Honeypot — скрыто от людей, ловит ботов */}
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                />
                 <div className="form-row">
                   <label>Имя</label>
                   <input type="text" name="name" required placeholder="Как к вам обращаться" />
@@ -187,7 +197,7 @@ export default function Contact() {
                   </g>
                 </svg>
               </a>
-              <p>Студия интерьерного дизайна в Санкт-Петербурге. Авторские проекты под ключ для жилых и коммерческих пространств с 2018 года.</p>
+              <p>Студия интерьерного дизайна в Санкт-Петербурге. Авторские проекты под ключ для жилых и коммерческих пространств с 2016 года.</p>
             </div>
 
             <div className="footer-col">
@@ -223,17 +233,11 @@ export default function Contact() {
           </div>
 
           <div className="footer-bot">
-            <span>© ROMBO, 2018—2026 · Все права защищены</span>
+            <span>© ROMBO, 2016—2026 · Все права защищены</span>
             <span>Студия авторского дизайна интерьеров</span>
           </div>
         </div>
       </footer>
-
-      {/* Floating bar — мобильная плашка */}
-      <div className="float-bar">
-        <a href="tel:+79045581631" className="fb-call">Позвонить</a>
-        <a href="https://t.me/+79045581631" target="_blank" rel="noopener">Telegram</a>
-      </div>
     </>
   )
 }

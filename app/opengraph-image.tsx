@@ -101,7 +101,7 @@ export default async function Image() {
           paddingTop: 28,
         }}>
           <div style={{ display: 'flex', gap: 40 }}>
-            {['70+ проектов', 'с 2018 года', 'Санкт-Петербург'].map((item) => (
+            {['70+ проектов', 'с 2016 года', 'Санкт-Петербург'].map((item) => (
               <div key={item} style={{
                 fontFamily: 'sans-serif',
                 fontSize: 13,

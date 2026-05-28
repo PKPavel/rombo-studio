@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { preload } from 'react-dom'
 
 interface HeroSlide {
   id: number
@@ -11,7 +12,7 @@ interface HeroSlide {
 
 const DEFAULT_SLIDES: HeroSlide[] = [
   { id: 1, title: 'Создаём дома,\nв которые\nхочется\nвозвращаться', sub: 'Дизайн-студия ROMBO · Санкт-Петербург', coverUrl: null },
-  { id: 2, title: 'Каждый проект —\nэто история\nконкретного\nчеловека', sub: 'Интерьеры с характером · с 2018 года', coverUrl: null },
+  { id: 2, title: 'Каждый проект —\nэто история\nконкретного\nчеловека', sub: 'Интерьеры с характером · с 2016 года', coverUrl: null },
   { id: 3, title: 'От концепции\nдо авторского\nнадзора\nпод ключ', sub: '70+ реализованных проектов', coverUrl: null },
 ]
 
@@ -25,9 +26,18 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
       }))
     : DEFAULT_SLIDES
 
+  // Préload фона первого слайда — это LCP-элемент главного экрана
+  if (slides[0]?.coverUrl) {
+    preload(`${slides[0].coverUrl}?w=1200&auto=format&q=80`, {
+      as: 'image',
+      fetchPriority: 'high',
+    })
+  }
+
   const [current, setCurrent] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
   const [animating, setAnimating] = useState(false)
+  const [paused, setPaused] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const goTo = (idx: number) => {
@@ -39,12 +49,23 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
   }
 
   useEffect(() => {
+    // Уважаем системную настройку «уменьшить движение» — не крутим автокарусель
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    // Пауза при наведении/фокусе, чтобы не уводить контент из-под пользователя
+    if (paused) return
     timerRef.current = setTimeout(() => goTo((current + 1) % slides.length), 5000)
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
-  }, [current, animating])
+  }, [current, animating, paused])
 
   return (
-    <section id="hero" style={{ position: 'relative', height: '100svh', minHeight: 600, overflow: 'hidden', background: 'var(--dark)' }}>
+    <section
+      id="hero"
+      style={{ position: 'relative', height: '100svh', minHeight: 600, overflow: 'hidden', background: 'var(--dark)' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
       {slides.map((slide, idx) => {
         const isActive = idx === current
         const isPrev = idx === prev
@@ -61,9 +82,6 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             }}
           >
             {/* Фото проекта как фон */}
-            {slide.coverUrl && isActive && (
-              <img src={`${slide.coverUrl}?w=1200&auto=format&q=80`} alt="" fetchPriority="high" style={{ display:'none' }} />
-            )}
             {slide.coverUrl && (
               <div style={{
                 position: 'absolute', inset: 0,
