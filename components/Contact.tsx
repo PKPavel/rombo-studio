@@ -2,6 +2,17 @@
 
 import React, { useState, useRef } from 'react'
 
+function formatPhone(input: string): string {
+  const digits = input.replace(/\D/g, '').replace(/^[78]/, '').slice(0, 10)
+  if (digits.length === 0) return ''
+  let out = '+7'
+  if (digits.length > 0) out += ' (' + digits.slice(0, 3)
+  if (digits.length >= 4) out += ') ' + digits.slice(3, 6)
+  if (digits.length >= 7) out += '-' + digits.slice(6, 8)
+  if (digits.length >= 9) out += '-' + digits.slice(8, 10)
+  return out
+}
+
 function ContactSuccess() {
   const [count, setCount] = React.useState(5)
   React.useEffect(() => {
@@ -45,7 +56,7 @@ export default function Contact() {
       company: (form.elements.namedItem('company') as HTMLInputElement).value,
     }
     if (!data.name) { setError('Введите ваше имя'); return }
-    if (!data.phone || data.phone.length < 10) { setError('Введите корректный номер телефона'); return }
+    if (!data.phone || data.phone.replace(/\D/g, '').length < 10) { setError('Введите корректный номер телефона'); return }
 
     setLoading(true)
     try {
@@ -142,7 +153,14 @@ export default function Contact() {
                 </div>
                 <div className="form-row">
                   <label>Телефон</label>
-                  <input type="tel" name="phone" required placeholder="+7" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    placeholder="+7 (___) ___-__-__"
+                    inputMode="tel"
+                    onInput={(e) => { e.currentTarget.value = formatPhone(e.currentTarget.value) }}
+                  />
                 </div>
                 <div className="form-row">
                   <label>Почта <span>— по желанию</span></label>
