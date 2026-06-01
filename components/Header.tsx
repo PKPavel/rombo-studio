@@ -19,11 +19,13 @@ function RomboLogo() {
 
 const NAV = [
   { label: 'Главная',  href: '/#hero' },
-  { label: 'Проекты', href: '/#projects' },
-  { label: 'Студия',  href: '/#founder' },
-  { label: 'Услуги',  href: '/#services' },
-  { label: 'Цены',    href: '/#pricing' },
+  { label: 'Проекты',  href: '/#projects' },
+  { label: 'Архив',    href: '/#archive' },
+  { label: 'Студия',   href: '/#founder' },
+  { label: 'Услуги',   href: '/#services' },
+  { label: 'Цены',     href: '/#pricing' },
   { label: 'Блог',     href: '/blog' },
+  { label: 'FAQ',      href: '/#faq' },
   { label: 'Контакты', href: '/#contact' },
 ]
 

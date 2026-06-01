@@ -40,10 +40,14 @@ export function CustomCursor() {
 const SECTIONS = [
   { id: 'hero',     num: '01', label: 'Главная' },
   { id: 'projects', num: '02', label: 'Проекты' },
-  { id: 'founder',  num: '03', label: 'Студия' },
-  { id: 'services', num: '04', label: 'Услуги' },
-  { id: 'pricing',  num: '05', label: 'Цены' },
-  { id: 'contact',  num: '06', label: 'Контакты' },
+  { id: 'archive',  num: '03', label: 'Архив' },
+  { id: 'founder',  num: '04', label: 'Студия' },
+  { id: 'services', num: '05', label: 'Услуги' },
+  { id: 'process',  num: '06', label: 'Этапы' },
+  { id: 'pricing',  num: '07', label: 'Цены' },
+  { id: 'blog',     num: '08', label: 'Журнал' },
+  { id: 'faq',      num: '09', label: 'FAQ' },
+  { id: 'contact',  num: '10', label: 'Контакты' },
 ]
 
 const DARK_SECTIONS = new Set(['hero', 'services', 'contact'])
