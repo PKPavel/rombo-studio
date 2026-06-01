@@ -2479,7 +2479,9 @@ body::before {
   filter: invert(1);
 }
 .cursor.hover { width: 40px; height: 40px; }
-@media (hover: none), (max-width: 1024px) {
+/* Кастомный курсор отключаем только на тач-устройствах (нет hover),
+   а не по ширине окна — узкий десктоп — это всё ещё мышь */
+@media (hover: none) {
   html:not(.studio-page) { cursor: auto; }
   .cursor { display: none !important; }
 }
