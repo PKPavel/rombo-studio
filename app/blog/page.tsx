@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { client } from '../../sanity.client'
 import { CustomCursor } from '../../components/ScrollSpyCursor'
 import Header from '../../components/Header'
@@ -99,7 +100,14 @@ export default async function BlogIndex({
                 <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-index-card">
                   <div className="blog-index-img-wrap">
                     {p.coverUrl
-                      ? <img src={`${p.coverUrl}?w=500&auto=format&q=80&q=80`} alt={p.title} className="blog-index-img" />
+                      ? <Image
+                          src={p.coverUrl}
+                          alt={p.title}
+                          fill
+                          sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                          className="blog-index-img"
+                          style={{ objectFit: 'cover' }}
+                        />
                       : <div className="blog-index-img-empty">R</div>
                     }
                     {p.tag && <span className="blog-index-tag">{p.tag}</span>}

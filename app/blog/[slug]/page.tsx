@@ -3,6 +3,7 @@ import { CustomCursor } from '../../../components/ScrollSpyCursor'
 import { BlogProgress } from '../../../components/BlogProgress'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 60
 
@@ -132,7 +133,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <header className="blog-hero">
         {post.coverUrl && (
           <div className="blog-hero-img">
-            <img src={`${post.coverUrl}?w=1200&auto=format&q=80`} alt={post.title} />
+            <Image
+              src={post.coverUrl}
+              alt={post.title}
+              fill
+              priority
+              sizes="100vw"
+              style={{ objectFit: 'cover' }}
+            />
           </div>
         )}
         <div className={`blog-hero-overlay${!post.coverUrl ? ' blog-hero-overlay--no-img' : ''}`} />
@@ -193,7 +201,13 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 <Link key={r.slug} href={`/blog/${r.slug}`} className="blog-related-card">
                   <div className="blog-related-img">
                     {r.coverUrl
-                      ? <img src={`${r.coverUrl}?w=500&auto=format&q=80`} alt={r.title} />
+                      ? <Image
+                          src={r.coverUrl}
+                          alt={r.title}
+                          fill
+                          sizes="(max-width: 700px) 100vw, 33vw"
+                          style={{ objectFit: 'cover' }}
+                        />
                       : <div className="blog-related-img-empty">R</div>
                     }
                     <span className="blog-related-tag">{r.tag}</span>
