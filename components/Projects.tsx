@@ -3,7 +3,6 @@
 import { useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import sanityImageLoader from '../lib/sanity-image-loader'
 
 interface SanityProject {
   slug: string
@@ -78,7 +77,6 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
               <div className="pc-slide-img">
                 {p.coverUrl
                   ? <Image
-                      loader={sanityImageLoader}
                       src={p.coverUrl}
                       alt={p.title}
                       fill

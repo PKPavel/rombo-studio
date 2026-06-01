@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import sanityImageLoader from '../lib/sanity-image-loader'
 import type { SanityProject } from './Archive'
 
 type ProjectWithImage = SanityProject & { coverUrl: string | null }
@@ -96,7 +95,6 @@ export default function ArchiveClient({ projects }: { projects: ProjectWithImage
                     <div className="arch-tile-img">
                       {p.coverUrl
                         ? <Image
-                            loader={sanityImageLoader}
                             src={p.coverUrl}
                             alt={p.title}
                             fill

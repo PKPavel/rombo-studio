@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import sanityImageLoader from '../lib/sanity-image-loader'
 
 interface HeroSlide {
   id: number
@@ -80,7 +79,6 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
             {/* Фото проекта как фон */}
             {slide.coverUrl && (
               <Image
-                loader={sanityImageLoader}
                 src={slide.coverUrl}
                 alt=""
                 fill
