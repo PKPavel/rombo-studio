@@ -4,6 +4,7 @@ import { BlogProgress } from '../../../components/BlogProgress'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { jsonLd } from '../../../lib/json-ld'
 
 export const revalidate = 60
 
@@ -109,7 +110,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <BlogProgress />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        dangerouslySetInnerHTML={{ __html: jsonLd({
           '@context': 'https://schema.org',
           '@type': 'Article',
           headline: post.title,
