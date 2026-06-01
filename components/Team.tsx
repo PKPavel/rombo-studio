@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 // ─── Team — секция «Наша команда» ────────────────────────────────────────────
 // Фото: добавить в public/images/team/
 // Формат: квадратное ч/б, имя файла = slug (lyubov.jpg, svetlana.jpg и т.д.)
@@ -59,7 +61,13 @@ export default function Team() {
             >
               <div className="team-photo">
                 {member.photo
-                  ? <img src={member.photo} alt={member.name} loading="lazy" style={{ objectPosition: member.pos || 'center top' }} />
+                  ? <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 220px"
+                      style={{ objectFit: 'cover', objectPosition: member.pos || 'center top' }}
+                    />
                   : <PersonPlaceholder />
                 }
               </div>

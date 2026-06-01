@@ -2,6 +2,8 @@
 
 import { useRef, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import sanityImageLoader from '../lib/sanity-image-loader'
 
 interface SanityProject {
   slug: string
@@ -75,7 +77,14 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
             >
               <div className="pc-slide-img">
                 {p.coverUrl
-                  ? <img src={`${p.coverUrl}?w=500&auto=format&q=80&q=80`} alt={p.title} loading="lazy" />
+                  ? <Image
+                      loader={sanityImageLoader}
+                      src={p.coverUrl}
+                      alt={p.title}
+                      fill
+                      sizes="(max-width: 600px) 80vw, (max-width: 900px) 50vw, 33vw"
+                      style={{ objectFit: 'cover' }}
+                    />
                   : <div className="pc-slide-empty">R</div>
                 }
                 <span className="pc-slide-num">{String(p.num || '').padStart(2, '0')}</span>

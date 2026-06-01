@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { client } from '../sanity.client'
+import sanityImageLoader from '../lib/sanity-image-loader'
 
 export const revalidate = 60
 
@@ -55,7 +57,14 @@ export default async function Blog() {
               <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-tile">
                 <div className="blog-tile-img">
                   {p.coverUrl
-                    ? <img src={`${p.coverUrl}?w=800&auto=format`} alt={p.title} loading="lazy" />
+                    ? <Image
+                        loader={sanityImageLoader}
+                        src={p.coverUrl}
+                        alt={p.title}
+                        fill
+                        sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                        style={{ objectFit: 'cover' }}
+                      />
                     : <div style={{ background: '#E8E4DE', width: '100%', height: '100%' }} />
                   }
                   {p.tag && <span className="blog-tile-tag">{p.tag}</span>}

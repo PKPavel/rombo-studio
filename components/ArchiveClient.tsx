@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import sanityImageLoader from '../lib/sanity-image-loader'
 import type { SanityProject } from './Archive'
 
 type ProjectWithImage = SanityProject & { coverUrl: string | null }
@@ -93,7 +95,14 @@ export default function ArchiveClient({ projects }: { projects: ProjectWithImage
                   <Link key={p._id} href={`/projects/${p.slug}`} className="arch-tile">
                     <div className="arch-tile-img">
                       {p.coverUrl
-                        ? <img src={p.coverUrl} alt={p.title} loading="lazy" />
+                        ? <Image
+                            loader={sanityImageLoader}
+                            src={p.coverUrl}
+                            alt={p.title}
+                            fill
+                            sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                            style={{ objectFit: 'cover' }}
+                          />
                         : <PlaceholderImg />
                       }
                     </div>

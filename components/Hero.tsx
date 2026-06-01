@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { preload } from 'react-dom'
+import Image from 'next/image'
+import sanityImageLoader from '../lib/sanity-image-loader'
 
 interface HeroSlide {
   id: number
@@ -28,14 +29,6 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
         coverUrl: p.coverUrl,
       }))
     : DEFAULT_SLIDES
-
-  // Préload фона первого слайда — это LCP-элемент главного экрана
-  if (slides[0]?.coverUrl) {
-    preload(`${slides[0].coverUrl}?w=1200&auto=format&q=80`, {
-      as: 'image',
-      fetchPriority: 'high',
-    })
-  }
 
   const [current, setCurrent] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
@@ -86,11 +79,15 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
           >
             {/* Фото проекта как фон */}
             {slide.coverUrl && (
-              <div style={{
-                position: 'absolute', inset: 0,
-                backgroundImage: `url(${slide.coverUrl}?w=1200&auto=format&q=80)`,
-                backgroundSize: 'cover', backgroundPosition: 'center',
-              }} />
+              <Image
+                loader={sanityImageLoader}
+                src={slide.coverUrl}
+                alt=""
+                fill
+                priority={idx === 0}
+                sizes="100vw"
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+              />
             )}
             {/* Градиент поверх фото */}
             <div style={{

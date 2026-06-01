@@ -240,6 +240,7 @@ section { position: relative; }
   pointer-events: none;
 }
 .arch-tile-img {
+  position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
@@ -4352,59 +4353,19 @@ body::before {
 /* ═══════════════════════════════════════
    КАЛЬКУЛЯТОР СТОИМОСТИ
    ═══════════════════════════════════════ */
-.calc-section { padding: clamp(64px,10vw,120px) 0; background: var(--bg); }
 .calc-head { text-align: center; margin-bottom: 56px; }
 .calc-sub { font-family: var(--sans); font-size: 16px; color: var(--ink); opacity: .5; max-width: 480px; margin: 16px auto 0; line-height: 1.7; }
 
-.calc-widget {
-  max-width: 800px; margin: 0 auto;
-  background: rgba(26,22,20,.03);
-  border: 1px solid rgba(26,22,20,.08);
-  border-radius: 4px;
-  padding: clamp(32px,5vw,56px);
-  display: flex; flex-direction: column; gap: 40px;
-}
-
-.calc-block { display: flex; flex-direction: column; gap: 14px; }
 .calc-label {
   font-family: var(--sans); font-size: 12px; font-weight: 600;
   letter-spacing: .1em; text-transform: uppercase; color: var(--ink); opacity: .6;
   display: flex; justify-content: space-between; align-items: center;
-}
-.calc-val {
-  font-family: var(--serif); font-size: 24px; font-weight: 300;
-  color: var(--ink); letter-spacing: -.02em; opacity: 1;
 }
 
 .calc-slider {
   width: 100%; height: 4px; cursor: pointer;
   accent-color: var(--ink);
 }
-
-.calc-range-labels {
-  display: flex; justify-content: space-between;
-  font-family: var(--sans); font-size: 12px; color: var(--ink); opacity: .35;
-}
-
-.calc-types { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-.calc-type-btn {
-  background: var(--bg); border: 1px solid rgba(26,22,20,.15);
-  border-radius: 2px; padding: 14px 16px; cursor: pointer;
-  text-align: left; transition: all .2s; display: flex; flex-direction: column; gap: 4px;
-}
-.calc-type-btn.active {
-  border-color: var(--ink); background: var(--ink);
-}
-.calc-type-name {
-  font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink);
-  display: block;
-}
-.calc-type-btn.active .calc-type-name { color: var(--on-dark); }
-.calc-type-desc {
-  font-family: var(--sans); font-size: 11px; color: var(--ink); opacity: .45;
-  display: block; line-height: 1.4;
-}
-.calc-type-btn.active .calc-type-desc { color: rgba(244,237,224,.55); opacity: 1; }
 
 .calc-result {
   text-align: center; padding-top: 32px;
@@ -4414,22 +4375,7 @@ body::before {
   font-family: var(--sans); font-size: 11px; letter-spacing: .2em;
   text-transform: uppercase; color: var(--ink); opacity: .4; margin-bottom: 12px;
 }
-.calc-result-price {
-  font-family: var(--serif); font-size: clamp(40px,6vw,72px);
-  font-weight: 300; color: var(--ink); letter-spacing: -.03em; line-height: 1;
-  margin-bottom: 12px;
-}
-.calc-result-price span { font-size: 0.5em; opacity: .5; }
-.calc-result-note {
-  font-family: var(--sans); font-size: 13px; color: var(--ink);
-  opacity: .45; line-height: 1.7; margin-bottom: 28px;
-}
 .calc-cta { margin: 0 auto; }
-
-@media (max-width: 600px) {
-  .calc-types { grid-template-columns: 1fr; }
-  .calc-widget { padding: 24px 20px; }
-}
 
 /* ── Доступность: видимый фокус для клавиатурной навигации ── */
 /* Курсор скрыт глобально (cursor: none), поэтому явный фокус-ринг обязателен */

@@ -1,16 +1,17 @@
 'use client'
 
-// QR-коды генерируются через qrcode.react или встроенный SVG
-// Сейчас — статичные QR через qr.io API (не требует библиотеки)
+import Image from 'next/image'
 
+// QR-коды генерируются через qr.io API (внешний сервис) — отдаём как есть, без next/image оптимизации
 function QRCode({ url, size = 120 }: { url: string; size?: number }) {
   const encoded = encodeURIComponent(url)
   return (
-    <img
+    <Image
       src={`https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encoded}&margin=8&color=1A1614&bgcolor=F4EDE0`}
       alt={url}
       width={size}
       height={size}
+      unoptimized
       loading="lazy"
     />
   )
@@ -25,10 +26,13 @@ export default function Founder() {
           {/* ── Левая колонка ── */}
           <div className="founder-left">
             <div className="founder-photo">
-              <img
+              <Image
                 src="/images/alexandra.png"
                 alt="Александра Серова — руководитель студии ROMBO"
                 className="founder-photo-img"
+                fill
+                sizes="(max-width: 700px) 60vw, 320px"
+                style={{ objectFit: 'cover' }}
               />
             </div>
 
