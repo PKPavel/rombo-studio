@@ -1559,34 +1559,9 @@ a.contact-info-value:hover { color: var(--accent); }
 }
 
 /* ── Кнопки (глобальные стили если не заданы) ── */
-.btn {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 12px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: 14px 28px;
-  border-radius: 2px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all .2s;
-  text-align: center;
-}
-.btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #F4EDE0;
-}
-.btn-primary:hover { background: #b54e36; border-color: #b54e36; }
-.btn-ghost {
-  background: transparent;
-  border-color: currentColor;
-  color: currentColor;
-}
-.btn-ghost:hover { background: currentColor; color: var(--bg); }
 /* ============================================================
    FIXES — добавить в конец globals.css
+   (исходное определение .btn убрано — полностью перекрыто секцией ниже)
    ============================================================ */
 
 /* Логотип — размер и пропорции */
@@ -1645,11 +1620,7 @@ a.contact-info-value:hover { color: var(--accent); }
   height: var(--header-h);
   transition: background .4s ease, backdrop-filter .4s ease;
 }
-.header.scrolled {
-  background: rgba(244, 237, 224, .88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+/* .header.scrolled с background/backdrop полностью перекрыт более поздним блоком с !important */
 .logo { display: flex; align-items: center; text-decoration: none; color: var(--ink); flex-shrink: 0; }
 .logo-svg { height: 28px; width: auto; }
 .nav { display: flex; gap: clamp(16px, 2.5vw, 36px); margin: 0 auto; }
@@ -4470,4 +4441,10 @@ body::before {
 a:focus-visible,
 button:focus-visible {
   outline-offset: 4px;
+}
+
+/* Уважаем системную «уменьшить движение» — возвращаем нативный курсор */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.studio-page) { cursor: auto; }
+  .cursor { display: none !important; }
 }

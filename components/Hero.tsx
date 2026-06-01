@@ -21,7 +21,10 @@ export default function Hero({ projects }: { projects?: { coverUrl: string | nul
     ? projects.slice(0, 3).map((p, i) => ({
         id: i + 1,
         title: DEFAULT_SLIDES[i]?.title ?? DEFAULT_SLIDES[0].title,
-        sub: DEFAULT_SLIDES[i]?.sub ?? DEFAULT_SLIDES[0].sub,
+        // Подпись связана с показанным проектом, а не хардкод
+        sub: [p.title, p.city].filter(Boolean).join(' · ')
+             || DEFAULT_SLIDES[i]?.sub
+             || DEFAULT_SLIDES[0].sub,
         coverUrl: p.coverUrl,
       }))
     : DEFAULT_SLIDES
