@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { jsonLd } from '../lib/json-ld'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          dangerouslySetInnerHTML={{ __html: jsonLd({
             '@context': 'https://schema.org',
             '@type': 'InteriorDesigner',
             name: 'ROMBO',

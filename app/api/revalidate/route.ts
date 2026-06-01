@@ -14,16 +14,34 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const docType = body?._type
+    const slug: string | undefined = body?.slug?.current ?? body?.slug
 
-    // Перегенерируем главную (архив) и все страницы проектов
-    revalidatePath('/', 'page')
-    revalidatePath('/projects/[slug]', 'page')
+    const revalidated: string[] = []
+    const touch = (path: string, type: 'page' | 'layout' = 'page') => {
+      revalidatePath(path, type)
+      revalidated.push(path)
+    }
 
-    console.log(`Revalidated for doc type: ${docType}`)
+    // Главную обновляем всегда (на ней витрина проектов)
+    touch('/')
+
+    if (docType === 'post') {
+      touch('/blog')
+      touch('/blog/[slug]', 'page')
+      if (slug) touch(`/blog/${slug}`)
+    } else if (docType === 'project') {
+      touch('/projects')
+      touch('/projects/[slug]', 'page')
+      if (slug) touch(`/projects/${slug}`)
+    }
+    // Прочие типы документов не имеют публичных страниц — ограничиваемся главной
+
+    console.log(`Revalidated for doc type: ${docType}`, revalidated)
 
     return NextResponse.json({
       revalidated: true,
       type: docType,
+      paths: revalidated,
       timestamp: new Date().toISOString(),
     })
   } catch (e) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import NextImage from 'next/image'
 
 interface ProjectData {
@@ -111,31 +111,69 @@ function AutoPalette({ imageUrl }: { imageUrl: string }) {
 // ── Lightbox ──────────────────────────────────────────────────────────────
 function Lightbox({ images, index, onClose }: { images: string[]; index: number; onClose: () => void }) {
   const [cur, setCur] = useState(index)
+  // dir: направление последней смены кадра (1 — вперёд, -1 — назад, 0 — открытие без слайда)
+  const [dir, setDir] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+
+  // onClose может менять идентичность между рендерами родителя — держим в ref,
+  // чтобы keydown-эффект не пересоздавался (иначе scroll-lock перезахватится).
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
+  const go = useCallback((delta: number) => {
+    setDir(delta)
+    setCur(i => (i + delta + images.length) % images.length)
+  }, [images.length])
+
+  // Клавиатура
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowLeft') setCur(i => (i - 1 + images.length) % images.length)
-      if (e.key === 'ArrowRight') setCur(i => (i + 1) % images.length)
+      if (e.key === 'Escape') onCloseRef.current()
+      if (e.key === 'ArrowLeft') go(-1)
+      if (e.key === 'ArrowRight') go(1)
     }
     window.addEventListener('keydown', fn)
     return () => window.removeEventListener('keydown', fn)
-  }, [images.length, onClose])
+  }, [go])
+
+  // Блокировка прокрутки фона — отдельный эффект, выполняется ровно раз за открытие
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prevOverflow }
+  }, [])
+
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1)  // свайп влево → следующий
+    touchStartX.current = null
+  }
 
   return (
     <div className="lightbox-overlay" onClick={onClose}>
-      <button className="lightbox-close" onClick={onClose}>×</button>
-      <button className="lightbox-prev" onClick={e => { e.stopPropagation(); setCur(i => (i - 1 + images.length) % images.length) }}>←</button>
-      <div className="lightbox-img-wrap" onClick={e => e.stopPropagation()}>
+      <button className="lightbox-close" onClick={onClose} aria-label="Закрыть">×</button>
+      <button className="lightbox-prev" onClick={e => { e.stopPropagation(); go(-1) }} aria-label="Предыдущее фото">←</button>
+      <div
+        className="lightbox-img-wrap"
+        onClick={e => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <NextImage
+          // key + анимация: каждый кадр въезжает с нужной стороны
+          // (dir === 0 — первое открытие: без слайда, только fade оверлея)
+          key={cur}
           src={images[cur]}
           alt=""
           fill
           sizes="90vw"
-          className="lightbox-img"
+          className={`lightbox-img${dir > 0 ? ' from-right' : dir < 0 ? ' from-left' : ''}`}
           style={{ objectFit: 'contain' }}
         />
       </div>
-      <button className="lightbox-next" onClick={e => { e.stopPropagation(); setCur(i => (i + 1) % images.length) }}>→</button>
+      <button className="lightbox-next" onClick={e => { e.stopPropagation(); go(1) }} aria-label="Следующее фото">→</button>
       <div className="lightbox-counter">{cur + 1} / {images.length}</div>
     </div>
   )
@@ -258,7 +296,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                 <div key={i} className="proj-gallery-hero-item" onClick={() => setLightboxIdx(i)}>
                   <NextImage
                     src={url}
-                    alt=""
+                    alt={`${project.title} — интерьер, фото ${i + 1}`}
                     fill
                     priority={i === 0}
                     sizes="100vw"
@@ -281,7 +319,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                 >
                   <NextImage
                     src={item.url}
-                    alt=""
+                    alt={`${project.title} — интерьер, фото ${item.idx + 1}`}
                     fill
                     sizes="(max-width: 900px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     style={{ objectFit: 'cover' }}
