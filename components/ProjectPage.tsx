@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import NextImage from 'next/image'
 
 interface ProjectData {
   num?: string
@@ -125,7 +126,14 @@ function Lightbox({ images, index, onClose }: { images: string[]; index: number;
       <button className="lightbox-close" onClick={onClose}>×</button>
       <button className="lightbox-prev" onClick={e => { e.stopPropagation(); setCur(i => (i - 1 + images.length) % images.length) }}>←</button>
       <div className="lightbox-img-wrap" onClick={e => e.stopPropagation()}>
-        <img src={images[cur]} alt="" className="lightbox-img" />
+        <NextImage
+          src={images[cur]}
+          alt=""
+          fill
+          sizes="90vw"
+          className="lightbox-img"
+          style={{ objectFit: 'contain' }}
+        />
       </div>
       <button className="lightbox-next" onClick={e => { e.stopPropagation(); setCur(i => (i + 1) % images.length) }}>→</button>
       <div className="lightbox-counter">{cur + 1} / {images.length}</div>
@@ -171,7 +179,14 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
       {project.coverUrl && (
         <div className="proj-page-hero">
-          <img src={project.coverUrl} alt={project.title} />
+          <NextImage
+            src={project.coverUrl}
+            alt={project.title}
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: 'cover' }}
+          />
         </div>
       )}
 
@@ -213,11 +228,18 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
           <div className="proj-gallery-grid">
             {items.map((item, i) => item.type === 'image' ? (
               <div key={i} className="proj-gallery-item" onClick={() => setLightboxIdx(item.idx)}>
-                <img src={item.url} alt="" loading="lazy" />
+                <NextImage
+                  src={item.url}
+                  alt=""
+                  fill
+                  sizes="(max-width: 900px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  style={{ objectFit: 'cover' }}
+                />
                 <div className="proj-gallery-zoom">↗</div>
               </div>
             ) : (
               <div key={i} className="proj-gallery-note">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 {item.imageUrl && <img src={item.imageUrl} alt="" loading="lazy" />}
                 <blockquote className="proj-note-text">
                   <span className="proj-note-icon">✎</span>

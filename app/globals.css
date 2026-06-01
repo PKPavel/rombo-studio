@@ -2479,7 +2479,10 @@ body::before {
   filter: invert(1);
 }
 .cursor.hover { width: 40px; height: 40px; }
-@media (hover: none), (max-width: 1024px) { .cursor { display: none !important; } }
+@media (hover: none), (max-width: 1024px) {
+  html:not(.studio-page) { cursor: auto; }
+  .cursor { display: none !important; }
+}
 
 /* ── Скрыть фильтр Характер ── */
 .arch-filters-character { display: none !important; }
@@ -2960,6 +2963,7 @@ body::before {
 
 /* ── Hero ── */
 .proj-page-hero {
+  position: relative;
   width: 100%;
   aspect-ratio: 16/9;
   overflow: hidden;
@@ -3221,8 +3225,9 @@ body::before {
   justify-content: center;
 }
 .lightbox-img-wrap {
-  max-width: 90vw;
-  max-height: 90vh;
+  position: relative;
+  width: 90vw;
+  height: 90vh;
 }
 .lightbox-img {
   max-width: 90vw;
