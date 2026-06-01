@@ -157,14 +157,39 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
   const allImages = project.imageUrls || []
   const notes = project.notes || []
 
-  // Чередуем фото и заметки: каждые 3 фото — 1 заметка
-  const items: Array<{ type: 'image'; url: string; idx: number } | { type: 'note'; text: string; imageUrl: string | null }> = []
+  // Гибридная галерея: первые 2 фото — герои на всю ширину,
+  // остальное — журнальная сетка с чередующимся ритмом.
+  // При <5 фото герои — это всё, без журнала.
+  const heroCount = allImages.length >= 5 ? 2 : allImages.length
+  const heroImages = allImages.slice(0, heroCount)
+  const restImages = allImages.slice(heroCount)
+
+  // В журнальной части заметки чередуем по той же логике (каждые 3 фото)
+  type MagItem =
+    | { type: 'image'; url: string; idx: number; magPos: number }
+    | { type: 'note'; text: string; imageUrl: string | null }
+
+  const magazineItems: MagItem[] = []
   let ni = 0
-  allImages.forEach((url, i) => {
-    items.push({ type: 'image', url, idx: i })
-    if ((i + 1) % 3 === 0 && ni < notes.length) { items.push({ type: 'note', ...notes[ni] }); ni++ }
+  let magPos = 0
+  restImages.forEach((url, i) => {
+    magazineItems.push({ type: 'image', url, idx: i + heroCount, magPos })
+    magPos++
+    if ((i + 1) % 3 === 0 && ni < notes.length) { magazineItems.push({ type: 'note', ...notes[ni] }); ni++ }
   })
-  while (ni < notes.length) { items.push({ type: 'note', ...notes[ni] }); ni++ }
+  while (ni < notes.length) { magazineItems.push({ type: 'note', ...notes[ni] }); ni++ }
+
+  // Класс ритма для журнального грида: 6-элементный цикл по позиции среди ФОТО
+  // (заметки не считаются — у них своя ширина).
+  // 0: feature (на всю ширину, 16:9)
+  // 1,2,3: триплет portrait-плиток (по трети, 3:4)
+  // 4,5: пара half-плиток (по половине, 4:3)
+  function magClass(pos: number): string {
+    const mod = pos % 6
+    if (mod === 0) return 'is-feature'
+    if (mod === 1 || mod === 2 || mod === 3) return 'is-portrait'
+    return ''
+  }
 
   return (
     <>
@@ -225,30 +250,57 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
           <div className="proj-page-container">
             <span className="proj-gallery-eyebrow">— Галерея интерьеров</span>
           </div>
-          <div className="proj-gallery-grid">
-            {items.map((item, i) => item.type === 'image' ? (
-              <div key={i} className="proj-gallery-item" onClick={() => setLightboxIdx(item.idx)}>
-                <NextImage
-                  src={item.url}
-                  alt=""
-                  fill
-                  sizes="(max-width: 900px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                  style={{ objectFit: 'cover' }}
-                />
-                <div className="proj-gallery-zoom">↗</div>
-              </div>
-            ) : (
-              <div key={i} className="proj-gallery-note">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {item.imageUrl && <img src={item.imageUrl} alt="" loading="lazy" />}
-                <blockquote className="proj-note-text">
-                  <span className="proj-note-icon">✎</span>
-                  {item.text}
-                  <cite>— Александра Серова</cite>
-                </blockquote>
-              </div>
-            ))}
-          </div>
+
+          {/* Герои — крупные фото на всю ширину */}
+          {heroImages.length > 0 && (
+            <div className="proj-gallery-hero">
+              {heroImages.map((url, i) => (
+                <div key={i} className="proj-gallery-hero-item" onClick={() => setLightboxIdx(i)}>
+                  <NextImage
+                    src={url}
+                    alt=""
+                    fill
+                    priority={i === 0}
+                    sizes="100vw"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div className="proj-gallery-zoom">↗</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Журнальная сетка — остальное с переменным ритмом */}
+          {magazineItems.length > 0 && (
+            <div className="proj-gallery-magazine">
+              {magazineItems.map((item, i) => item.type === 'image' ? (
+                <div
+                  key={i}
+                  className={`proj-gallery-item ${magClass(item.magPos)}`}
+                  onClick={() => setLightboxIdx(item.idx)}
+                >
+                  <NextImage
+                    src={item.url}
+                    alt=""
+                    fill
+                    sizes="(max-width: 900px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div className="proj-gallery-zoom">↗</div>
+                </div>
+              ) : (
+                <div key={i} className="proj-gallery-note">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {item.imageUrl && <img src={item.imageUrl} alt="" loading="lazy" />}
+                  <blockquote className="proj-note-text">
+                    <span className="proj-note-icon">✎</span>
+                    {item.text}
+                    <cite>— Александра Серова</cite>
+                  </blockquote>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
