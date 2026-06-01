@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 // Deliverables — светлая версия с реальными чертежами ЖК «Чёрная речка»
 
 const PDF_ICON = (
@@ -61,24 +63,30 @@ export default function Deliverables() {
           {/* Правая — реальные чертежи в стопке */}
           <div className="deliverables-visual" aria-hidden="true">
             <div className="doc-preview p1">
-              <img
+              <Image
                 src="/images/docs/doc-title.jpg"
                 alt="Титульный лист — ЖК Чёрная речка"
-                loading="lazy"
+                width={800}
+                height={1131}
+                sizes="(max-width: 900px) 80vw, 400px"
               />
             </div>
             <div className="doc-preview p2">
-              <img
+              <Image
                 src="/images/docs/doc-floor.jpg"
                 alt="План напольных покрытий"
-                loading="lazy"
+                width={800}
+                height={1131}
+                sizes="(max-width: 900px) 80vw, 400px"
               />
             </div>
             <div className="doc-preview p3">
-              <img
+              <Image
                 src="/images/docs/doc-walls.jpg"
                 alt="План возводимых стен"
-                loading="lazy"
+                width={800}
+                height={1131}
+                sizes="(max-width: 900px) 80vw, 400px"
               />
             </div>
           </div>
