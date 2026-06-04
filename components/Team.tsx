@@ -1,21 +1,19 @@
-'use client'
-
 import Image from 'next/image'
+import { client } from '../sanity.client'
 
 // ─── Team — секция «Наша команда» ────────────────────────────────────────────
-// Фото: добавить в public/images/team/
-// Формат: квадратное ч/б, имя файла = slug (lyubov.jpg, svetlana.jpg и т.д.)
-// Когда появится фото — добавить поле photo: '/images/team/имя.jpg'
+// Источник данных — Sanity (документы «Команда»). Пока команда не заведена в
+// Studio, секция показывает запасной (захардкоженный) состав ниже.
 
 interface TeamMember {
   name: string
   role: string
-  photo?: string
+  photo?: string  // URL (Sanity CDN) или путь к локальному файлу
   pos?: string    // object-position CSS
-  soon?: boolean   // заглушка «Скоро»
 }
 
-const TEAM: TeamMember[] = [
+// Запасной состав — используется, если в Sanity ещё нет участников
+const FALLBACK_TEAM: TeamMember[] = [
   { name: 'Александра', role: 'Руководитель студии, дизайнер',  photo: '/images/alexandra.png',        pos: 'center 15%' },
   { name: 'Любовь',     role: 'Дизайнер интерьеров',            photo: '/images/team/lyubov.png',      pos: 'center 10%' },
   { name: 'Светлана',   role: 'Дизайнер интерьеров',            photo: '/images/team/svetlana.png',    pos: 'center 15%' },
@@ -24,6 +22,11 @@ const TEAM: TeamMember[] = [
   { name: 'Анастасия',  role: '3D-визуализатор',                photo: '/images/team/anastasia2.png',  pos: 'center 15%' },
   { name: 'Василий',    role: '3D-визуализатор',                photo: '/images/team/vasiliy.png',     pos: 'center 20%' },
 ]
+
+const TEAM_QUERY = `*[_type == "teamMember" && !disabled] | order(order asc) {
+  name, role, objectPosition,
+  "photo": photo.asset->url
+}`
 
 function PersonPlaceholder() {
   return (
@@ -37,7 +40,13 @@ function PersonPlaceholder() {
   )
 }
 
-export default function Team() {
+export default async function Team() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fromCms: any[] = await client.fetch(TEAM_QUERY).catch(() => [])
+  const team: TeamMember[] = fromCms.length > 0
+    ? fromCms.map(m => ({ name: m.name, role: m.role, photo: m.photo || undefined, pos: m.objectPosition || undefined }))
+    : FALLBACK_TEAM
+
   return (
     <section id="team" className="team">
       <div className="container">
@@ -54,11 +63,8 @@ export default function Team() {
 
         {/* Grid */}
         <div className="team-grid reveal">
-          {TEAM.map((member, i) => (
-            <div
-              key={i}
-              className={`team-card${member.soon ? ' team-card--soon' : ''}`}
-            >
+          {team.map((member, i) => (
+            <div key={i} className="team-card">
               <div className="team-photo">
                 {member.photo
                   ? <Image
