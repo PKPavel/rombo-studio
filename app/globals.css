@@ -43,6 +43,9 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Учитываем фиксированный хедер (76px) — без этого якорные ссылки
+     прокручивают секцию под хедер, и кажется, что клик не сработал. */
+  scroll-padding-top: 84px;
 }
 
 body {
@@ -2275,6 +2278,8 @@ a.contact-info-value:hover { color: var(--accent); }
 
 .ss-dot.active .ss-dot-num { opacity: 1; color: var(--accent); }
 .ss-dot.active .ss-dot-line { width: 28px; height: 2px; background: var(--accent); opacity: 1; }
+/* Подпись активной секции видна всегда — иначе по одним номерам неясно, где ты */
+.ss-dot.active .ss-dot-label { opacity: 1; transform: translateY(-50%) translateX(0); }
 
 /* Светлый фон */
 .scrollspy.on-light .ss-dot-num,

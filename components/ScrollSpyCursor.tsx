@@ -38,15 +38,15 @@ export function CustomCursor() {
 
 // ─── Scroll-spy ───────────────────────────────────────────────────────────────
 const SECTIONS = [
-  { id: 'hero',     num: '01', label: 'Главная' },
-  { id: 'projects', num: '02', label: 'Проекты' },
-  { id: 'archive',  num: '03', label: 'Архив' },
-  { id: 'founder',  num: '04', label: 'Студия' },
-  { id: 'services', num: '05', label: 'Услуги' },
-  { id: 'process',  num: '06', label: 'Этапы' },
-  { id: 'pricing',  num: '07', label: 'Цены' },
-  { id: 'blog',     num: '08', label: 'Журнал' },
-  { id: 'faq',      num: '09', label: 'FAQ' },
+  { id: 'hero',     num: '1',  label: 'Главная' },
+  { id: 'projects', num: '2',  label: 'Проекты' },
+  { id: 'archive',  num: '3',  label: 'Архив' },
+  { id: 'founder',  num: '4',  label: 'Студия' },
+  { id: 'services', num: '5',  label: 'Услуги' },
+  { id: 'process',  num: '6',  label: 'Этапы' },
+  { id: 'pricing',  num: '7',  label: 'Цены' },
+  { id: 'blog',     num: '8',  label: 'Журнал' },
+  { id: 'faq',      num: '9',  label: 'FAQ' },
   { id: 'contact',  num: '10', label: 'Контакты' },
 ]
 
