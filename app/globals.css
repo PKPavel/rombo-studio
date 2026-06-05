@@ -1032,12 +1032,18 @@ section { position: relative; }
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2px;
   margin-bottom: 80px;
   border: 1px solid rgba(26, 22, 20, .1);
   border-radius: 3px;
   overflow: hidden;
+}
+/* Сетка 3×2 на десктопе — у крайних справа нет правой границы,
+   у второго ряда — линия сверху. Мобильные брейкпоинты ниже сами разбираются. */
+@media (min-width: 901px) {
+  .pricing-grid > .tier:nth-child(3n) { border-right: none; }
+  .pricing-grid > .tier:nth-child(n+4) { border-top: 1px solid rgba(26,22,20,.1); }
 }
 
 .tier {
