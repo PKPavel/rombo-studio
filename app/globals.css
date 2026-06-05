@@ -2213,6 +2213,9 @@ a.contact-info-value:hover { color: var(--accent); }
   gap: 0;
   padding: 0 0 0 18px;
   pointer-events: auto;
+  /* isolation создаёт стек-контекст, чтобы mix-blend-mode у дочерних
+     элементов был стабильным в любых браузерах */
+  isolation: isolate;
 }
 .scrollspy::before {
   content: '';
@@ -2242,7 +2245,7 @@ a.contact-info-value:hover { color: var(--accent); }
   font-weight: 500;
   color: #ffffff;
   mix-blend-mode: difference;
-  opacity: .7;
+  opacity: 1;
   width: 22px;
   display: inline-block;
   transition: opacity .35s, color .35s;
@@ -2253,7 +2256,7 @@ a.contact-info-value:hover { color: var(--accent); }
   height: 1px;
   background: #ffffff;
   mix-blend-mode: difference;
-  opacity: .55;
+  opacity: 1;
   margin-left: 6px;
   transition: width .4s cubic-bezier(.2,.7,.2,1), opacity .35s, background .35s, height .25s;
 }

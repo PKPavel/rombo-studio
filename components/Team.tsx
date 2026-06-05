@@ -25,7 +25,8 @@ const FALLBACK_TEAM: TeamMember[] = [
 
 const TEAM_QUERY = `*[_type == "teamMember" && !disabled] | order(order asc) {
   name, role, objectPosition,
-  "photo": photo.asset->url
+  "photo": photo.asset->url,
+  "hotspot": photo.hotspot
 }`
 
 function PersonPlaceholder() {
@@ -44,7 +45,19 @@ export default async function Team() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fromCms: any[] = await client.fetch(TEAM_QUERY).catch(() => [])
   const team: TeamMember[] = fromCms.length > 0
-    ? fromCms.map(m => ({ name: m.name, role: m.role, photo: m.photo || undefined, pos: m.objectPosition || undefined }))
+    ? fromCms.map(m => {
+        // Приоритет: ручной objectPosition → Sanity hotspot (клик по лицу в Studio) → центрирование с упором в верх кадра
+        const hotspot = m.hotspot
+        const fromHotspot = hotspot
+          ? `${(hotspot.x * 100).toFixed(1)}% ${(hotspot.y * 100).toFixed(1)}%`
+          : undefined
+        return {
+          name: m.name,
+          role: m.role,
+          photo: m.photo || undefined,
+          pos: m.objectPosition || fromHotspot || 'center 30%',
+        }
+      })
     : FALLBACK_TEAM
 
   return (
@@ -72,7 +85,7 @@ export default async function Team() {
                       alt={member.name}
                       fill
                       sizes="(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 220px"
-                      style={{ objectFit: 'cover', objectPosition: member.pos || 'center top' }}
+                      style={{ objectFit: 'cover', objectPosition: member.pos || 'center 30%' }}
                     />
                   : <PersonPlaceholder />
                 }
