@@ -50,21 +50,14 @@ const SECTIONS = [
   { id: 'contact',  num: '10', label: 'Контакты' },
 ]
 
-const DARK_SECTIONS = new Set(['hero', 'services', 'contact'])
-
 export function ScrollSpy() {
   const [active, setActive] = useState('hero')
-  const [onLight, setOnLight] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id
-            setActive(id)
-            setOnLight(!DARK_SECTIONS.has(id))
-          }
+          if (entry.isIntersecting) setActive(entry.target.id)
         })
       },
       { rootMargin: '-40% 0px -40% 0px', threshold: 0 }
@@ -77,10 +70,7 @@ export function ScrollSpy() {
   }, [])
 
   return (
-    <nav
-      className={`scrollspy${onLight ? ' on-light' : ''}`}
-      aria-label="Навигация по странице"
-    >
+    <nav className="scrollspy" aria-label="Навигация по странице">
       {SECTIONS.map(s => (
         <a
           key={s.id}
