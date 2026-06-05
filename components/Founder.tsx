@@ -1,23 +1,23 @@
-'use client'
-
 import Image from 'next/image'
+import { client } from '../sanity.client'
 
-// QR-коды генерируются через qr.io API (внешний сервис) — отдаём как есть, без next/image оптимизации
-function QRCode({ url, size = 120 }: { url: string; size?: number }) {
-  const encoded = encodeURIComponent(url)
-  return (
-    <Image
-      src={`https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encoded}&margin=8&color=1A1614&bgcolor=F4EDE0`}
-      alt={url}
-      width={size}
-      height={size}
-      unoptimized
-      loading="lazy"
-    />
-  )
-}
+// Берём руководителя из «Команды» — первая запись по полю order
+// (чтобы фото в Founder и в Team было гарантированно одно и то же).
+const FOUNDER_QUERY = `*[_type == "teamMember" && !disabled] | order(order asc) [0] {
+  name,
+  "photo": photo.asset->url,
+  "hotspot": photo.hotspot
+}`
 
-export default function Founder() {
+export default async function Founder() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cmsFounder: any = await client.fetch(FOUNDER_QUERY).catch(() => null)
+  const photoUrl: string = cmsFounder?.photo || '/images/alexandra.png'
+  const hotspot = cmsFounder?.hotspot
+  const objectPosition = hotspot
+    ? `${(hotspot.x * 100).toFixed(1)}% ${(hotspot.y * 100).toFixed(1)}%`
+    : 'center 30%'
+
   return (
     <section id="founder" className="founder">
       <div className="container">
@@ -27,12 +27,12 @@ export default function Founder() {
           <div className="founder-left">
             <div className="founder-photo">
               <Image
-                src="/images/alexandra.png"
+                src={photoUrl}
                 alt="Александра Серова — руководитель студии ROMBO"
                 className="founder-photo-img"
                 fill
-                sizes="(max-width: 700px) 60vw, 320px"
-                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 700px) 80vw, (max-width: 1100px) 40vw, 460px"
+                style={{ objectFit: 'cover', objectPosition }}
               />
             </div>
 
@@ -41,26 +41,6 @@ export default function Founder() {
               <p className="founder-role">
                 Дизайнер интерьеров и&nbsp;руководитель студии дизайна «ROMBO»
               </p>
-            </div>
-
-            {/* QR-коды как в v22 */}
-            <div className="founder-qr">
-              <div className="qr-block">
-                <a href="https://www.behance.net/serovadesign" target="_blank" rel="noopener" className="qr-link">
-                  <div className="qr-code">
-                    <QRCode url="https://www.behance.net/serovadesign" size={100} />
-                  </div>
-                  <span className="qr-label">Behance</span>
-                </a>
-              </div>
-              <div className="qr-block">
-                <a href="https://www.instagram.com/serova_design" target="_blank" rel="noopener" className="qr-link">
-                  <div className="qr-code">
-                    <QRCode url="https://www.instagram.com/serova_design" size={100} />
-                  </div>
-                  <span className="qr-label">Instagram</span>
-                </a>
-              </div>
             </div>
 
             <ul className="founder-contacts">
