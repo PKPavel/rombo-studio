@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             openingHours: 'Mo-Fr 10:00-20:00',
             sameAs: [
               'https://www.behance.net/serovadesign',
-              'https://www.instagram.com/serova_design',
+              'https://www.instagram.com/rombo_interior.design.studio',
             ],
           })}}
         />

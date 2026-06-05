@@ -127,7 +127,7 @@ export default function Contact() {
               </div>
               <div className="contact-socials">
                 <a href="https://www.behance.net/serovadesign" target="_blank" rel="noopener">Behance</a>
-                <a href="https://www.instagram.com/serova_design" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://www.instagram.com/rombo_interior.design.studio?utm_source=qr" target="_blank" rel="noopener">Instagram</a>
                 <a href="https://t.me/+79045581631" target="_blank" rel="noopener">Telegram</a>
               </div>
             </div>
