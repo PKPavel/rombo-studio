@@ -2232,13 +2232,17 @@ a.contact-info-value:hover { color: var(--accent); }
   text-decoration: none;
   cursor: pointer;
 }
+/* mix-blend-mode: difference — номера/линии автоматически инвертируют цвет
+   фона под собой, поэтому видны и на светлых, и на тёмных секциях без
+   ручной классификации section ID. */
 .ss-dot-num {
   font-family: var(--sans);
   font-size: 12px;
   letter-spacing: .08em;
   font-weight: 500;
-  color: #F4EDE0;
-  opacity: .35;
+  color: #ffffff;
+  mix-blend-mode: difference;
+  opacity: .7;
   width: 22px;
   display: inline-block;
   transition: opacity .35s, color .35s;
@@ -2247,8 +2251,9 @@ a.contact-info-value:hover { color: var(--accent); }
   display: inline-block;
   width: 12px;
   height: 1px;
-  background: #F4EDE0;
-  opacity: .3;
+  background: #ffffff;
+  mix-blend-mode: difference;
+  opacity: .55;
   margin-left: 6px;
   transition: width .4s cubic-bezier(.2,.7,.2,1), opacity .35s, background .35s, height .25s;
 }
@@ -2276,18 +2281,21 @@ a.contact-info-value:hover { color: var(--accent); }
 .ss-dot:hover .ss-dot-line { width: 24px; opacity: .8; }
 .ss-dot:hover .ss-dot-label { opacity: 1; transform: translateY(-50%) translateX(0); }
 
-.ss-dot.active .ss-dot-num { opacity: 1; color: var(--accent); }
-.ss-dot.active .ss-dot-line { width: 28px; height: 2px; background: var(--accent); opacity: 1; }
+/* Активная точка — без blend-mode, цвет акцента поверх всего */
+.ss-dot.active .ss-dot-num {
+  opacity: 1;
+  color: var(--accent);
+  mix-blend-mode: normal;
+}
+.ss-dot.active .ss-dot-line {
+  width: 28px;
+  height: 2px;
+  background: var(--accent);
+  opacity: 1;
+  mix-blend-mode: normal;
+}
 /* Подпись активной секции видна всегда — иначе по одним номерам неясно, где ты */
 .ss-dot.active .ss-dot-label { opacity: 1; transform: translateY(-50%) translateX(0); }
-
-/* Светлый фон */
-.scrollspy.on-light .ss-dot-num,
-.scrollspy.on-light .ss-dot-label { color: var(--ink); }
-.scrollspy.on-light .ss-dot-label { background: rgba(244,237,224,.92); color: var(--ink); }
-.scrollspy.on-light .ss-dot-line { background: var(--ink); }
-.scrollspy.on-light .ss-dot.active .ss-dot-num { color: var(--accent); }
-.scrollspy.on-light .ss-dot.active .ss-dot-line { background: var(--accent); }
 
 @media (max-width: 1280px) { .scrollspy { display: none; } }
 /* ============================================================
