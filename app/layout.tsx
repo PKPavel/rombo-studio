@@ -56,7 +56,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             priceRange: '₽₽₽',
             openingHours: 'Mo-Fr 10:00-20:00',
             sameAs: [
-              'https://www.behance.net/serovadesign',
               'https://www.instagram.com/rombo_interior.design.studio',
             ],
           })}}
