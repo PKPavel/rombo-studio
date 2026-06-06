@@ -18,6 +18,8 @@ interface SanityProject {
 // Базовая скорость в пикселях на кадр (~60fps). Множитель меняет её на лету.
 const BASE_SPEED = 0.6
 const SPEED_OPTIONS = [1, 2, 3] as const
+// Порог в пикселях, за которым считаем, что пользователь тянет, а не кликает
+const DRAG_THRESHOLD = 5
 
 export default function Projects({ projects }: { projects: SanityProject[] }) {
   const trackRef = useRef<HTMLDivElement>(null)
@@ -27,6 +29,18 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   // Множитель скорости в ref — анимационный цикл читает мгновенно, без перезапуска эффекта
   const speedRef = useRef(1)
   const [speed, setSpeed] = useState(1)
+  // Состояние перетаскивания (mouse/touch). Всё в ref'ах, чтобы не пересоздавать обработчики.
+  const setWidthRef = useRef(0)
+  const dragStartXRef = useRef(0)
+  const dragStartYRef = useRef(0)
+  const dragStartPosRef = useRef(0)
+  // null — направление ещё не определено; horizontal — захватили; vertical — отдали странице
+  const dragAxisRef = useRef<null | 'horizontal' | 'vertical'>(null)
+  const dragMovedRef = useRef(false)
+  // Подавление клика после drag — иначе тянем мышью и случайно открываем проект
+  const suppressClickRef = useRef(false)
+  // Состояние ховера — чтобы после drag сохранить паузу, если мышь всё ещё над лентой
+  const hoverRef = useRef(false)
 
   useEffect(() => { speedRef.current = speed }, [speed])
 
@@ -38,11 +52,12 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
     const id = requestAnimationFrame(() => {
       const setWidth = track.scrollWidth / 2
       if (setWidth === 0) return
+      setWidthRef.current = setWidth
 
       function tick() {
         if (!pausedRef.current) {
           posRef.current += BASE_SPEED * speedRef.current
-          if (posRef.current >= setWidth) posRef.current = 0
+          if (posRef.current >= setWidth) posRef.current -= setWidth
           if (track) track.style.transform = `translateX(-${posRef.current}px)`
         }
         rafRef.current = requestAnimationFrame(tick)
@@ -58,6 +73,73 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   // 2 копии для бесшовного цикла
   const slides = [...projects, ...projects]
 
+  // ── Перетаскивание (мышь + сенсор) ──────────────────────────────────────────
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // На каждый pointerdown — обнуляем состояние, направление определим в первом move
+    dragAxisRef.current = null
+    dragMovedRef.current = false
+    dragStartXRef.current = e.clientX
+    dragStartYRef.current = e.clientY
+    dragStartPosRef.current = posRef.current
+  }
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const axis = dragAxisRef.current
+    if (axis === 'vertical') return  // отдали странице, ничего не делаем
+
+    const dx = dragStartXRef.current - e.clientX
+    const dy = e.clientY - dragStartYRef.current
+    const absX = Math.abs(dx)
+    const absY = Math.abs(dy)
+
+    // Направление ещё не определено
+    if (axis === null) {
+      if (absX < DRAG_THRESHOLD && absY < DRAG_THRESHOLD) return
+      if (absY > absX) {
+        // Вертикальный жест — отдаём странице, дальше не реагируем
+        dragAxisRef.current = 'vertical'
+        return
+      }
+      // Горизонтальный жест — захватываем pointer, начинаем drag
+      dragAxisRef.current = 'horizontal'
+      pausedRef.current = true
+      try { e.currentTarget.setPointerCapture(e.pointerId) } catch { /* ignore */ }
+    }
+
+    // axis === 'horizontal'
+    const track = trackRef.current
+    const setWidth = setWidthRef.current
+    if (!track || setWidth === 0) return
+
+    if (absX > DRAG_THRESHOLD) dragMovedRef.current = true
+
+    // Кольцевой модуль: pos всегда в [0, setWidth)
+    let next = (dragStartPosRef.current + dx) % setWidth
+    if (next < 0) next += setWidth
+    posRef.current = next
+    track.style.transform = `translateX(-${next}px)`
+  }
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragAxisRef.current === 'horizontal') {
+      // Резюмим авто-скролл только если мышь не над лентой (ховер удержит паузу)
+      pausedRef.current = hoverRef.current
+      if (dragMovedRef.current) suppressClickRef.current = true
+      try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
+    }
+    dragAxisRef.current = null
+  }
+
+  // Гасит клик по ссылке проекта, если только что был drag — на capture,
+  // чтобы Link не успел навигировать
+  const onClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (suppressClickRef.current) {
+      e.preventDefault()
+      e.stopPropagation()
+      suppressClickRef.current = false
+    }
+  }
+
   return (
     <section id="projects" className="projects">
       <div className="container">
@@ -66,15 +148,37 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           <h2 className="proj-h2">Наши проекты</h2>
           <p className="proj-sub">
             От лаконичных квартир до загородных резиденций.<br/>
-            Наведите на проект — нажмите, чтобы перейти.
+            Листайте свайпом или мышью, наведите — для паузы.
           </p>
+        </div>
+
+        {/* Переключатель скорости — над каруселью, ближе к фото */}
+        <div className="proj-speed proj-speed--top" role="group" aria-label="Скорость прокрутки">
+          <span className="proj-speed-label">Скорость</span>
+          {SPEED_OPTIONS.map(opt => (
+            <button
+              key={opt}
+              type="button"
+              className={`proj-speed-btn${speed === opt ? ' active' : ''}`}
+              onClick={() => setSpeed(opt)}
+              aria-pressed={speed === opt}
+              aria-label={`${opt}×`}
+            >
+              {opt}×
+            </button>
+          ))}
         </div>
       </div>
 
       <div
         className="proj-carousel"
-        onMouseEnter={() => { pausedRef.current = true }}
-        onMouseLeave={() => { pausedRef.current = false }}
+        onMouseEnter={() => { hoverRef.current = true; if (dragAxisRef.current !== 'horizontal') pausedRef.current = true }}
+        onMouseLeave={() => { hoverRef.current = false; if (dragAxisRef.current !== 'horizontal') pausedRef.current = false }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onClickCapture={onClickCapture}
       >
         <div ref={trackRef} className="pc-track-flow">
           {slides.map((p, i) => (
@@ -82,6 +186,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
               key={`${p.slug}-${i}`}
               href={`/projects/${p.slug}`}
               className="pc-slide"
+              draggable={false}
             >
               <div className="pc-slide-img">
                 {p.coverUrl
@@ -91,6 +196,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                       fill
                       sizes="(max-width: 600px) 80vw, (max-width: 900px) 50vw, 33vw"
                       style={{ objectFit: 'cover' }}
+                      draggable={false}
                     />
                   : <div className="pc-slide-empty">R</div>
                 }
@@ -104,23 +210,6 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
             </Link>
           ))}
         </div>
-      </div>
-
-      {/* Переключатель скорости карусели */}
-      <div className="proj-speed" role="group" aria-label="Скорость прокрутки">
-        <span className="proj-speed-label">Скорость</span>
-        {SPEED_OPTIONS.map(opt => (
-          <button
-            key={opt}
-            type="button"
-            className={`proj-speed-btn${speed === opt ? ' active' : ''}`}
-            onClick={() => setSpeed(opt)}
-            aria-pressed={speed === opt}
-            aria-label={`${opt}×`}
-          >
-            {opt}×
-          </button>
-        ))}
       </div>
 
       <div className="container" style={{ textAlign: 'center', marginTop: 32 }}>

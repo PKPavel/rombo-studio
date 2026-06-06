@@ -1766,7 +1766,14 @@ a.contact-info-value:hover { color: var(--accent); }
 }
 
 /* ── Projects carousel: непрерывное движение ── */
-.proj-carousel { overflow: hidden; cursor: pointer; }
+.proj-carousel {
+  overflow: hidden;
+  cursor: grab;
+  /* На тач-устройствах: вертикальный pan отдаём странице, горизонтальный — ловим сами */
+  touch-action: pan-y;
+  user-select: none;
+}
+.proj-carousel:active { cursor: grabbing; }
 
 .pc-track-flow {
   display: flex;
@@ -4505,6 +4512,11 @@ button:focus-visible {
   gap: 8px;
   margin-top: 28px;
   font-family: var(--sans);
+}
+/* Над каруселью — без верхнего отступа, с небольшим запасом снизу */
+.proj-speed--top {
+  margin-top: 4px;
+  margin-bottom: 24px;
 }
 .proj-speed-label {
   font-size: 11px;
