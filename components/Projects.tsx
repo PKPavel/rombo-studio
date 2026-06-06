@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -15,11 +15,20 @@ interface SanityProject {
   coverUrl: string | null
 }
 
+// Базовая скорость в пикселях на кадр (~60fps). Множитель меняет её на лету.
+const BASE_SPEED = 0.6
+const SPEED_OPTIONS = [1, 2, 3] as const
+
 export default function Projects({ projects }: { projects: SanityProject[] }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const posRef   = useRef(0)
   const pausedRef = useRef(false)
   const rafRef   = useRef(0)
+  // Множитель скорости в ref — анимационный цикл читает мгновенно, без перезапуска эффекта
+  const speedRef = useRef(1)
+  const [speed, setSpeed] = useState(1)
+
+  useEffect(() => { speedRef.current = speed }, [speed])
 
   useEffect(() => {
     const track = trackRef.current
@@ -32,7 +41,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
 
       function tick() {
         if (!pausedRef.current) {
-          posRef.current += 0.45
+          posRef.current += BASE_SPEED * speedRef.current
           if (posRef.current >= setWidth) posRef.current = 0
           if (track) track.style.transform = `translateX(-${posRef.current}px)`
         }
@@ -97,7 +106,24 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         </div>
       </div>
 
-      <div className="container" style={{ textAlign: 'center', marginTop: 48 }}>
+      {/* Переключатель скорости карусели */}
+      <div className="proj-speed" role="group" aria-label="Скорость прокрутки">
+        <span className="proj-speed-label">Скорость</span>
+        {SPEED_OPTIONS.map(opt => (
+          <button
+            key={opt}
+            type="button"
+            className={`proj-speed-btn${speed === opt ? ' active' : ''}`}
+            onClick={() => setSpeed(opt)}
+            aria-pressed={speed === opt}
+            aria-label={`${opt}×`}
+          >
+            {opt}×
+          </button>
+        ))}
+      </div>
+
+      <div className="container" style={{ textAlign: 'center', marginTop: 32 }}>
         <a href="/#archive" className="btn btn-ghost reveal">Смотреть все проекты</a>
       </div>
     </section>
