@@ -36,6 +36,9 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   const dragStartPosRef = useRef(0)
   // null — направление ещё не определено; horizontal — захватили; vertical — отдали странице
   const dragAxisRef = useRef<null | 'horizontal' | 'vertical'>(null)
+  // Жёсткий флаг «кнопка/палец сейчас зажаты». Главный гейт для onPointerMove —
+  // надёжнее, чем e.buttons (на некоторых драйверах/браузерах оно «залипает»).
+  const pointerDownRef = useRef(false)
   const dragMovedRef = useRef(false)
   // Подавление клика после drag — иначе тянем мышью и случайно открываем проект
   const suppressClickRef = useRef(false)
@@ -77,6 +80,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     // Только основная кнопка: левая мышь, палец, перо. Игнорим правый/средний клик.
     if (e.button !== 0) return
+    pointerDownRef.current = true
     // На каждый pointerdown — обнуляем состояние, направление определим в первом move
     dragAxisRef.current = null
     dragMovedRef.current = false
@@ -86,10 +90,9 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Только при активно нажатой кнопке/пальце на экране. Без этого мышь
-    // на десктопе двигалась бы по карусели и тянула её без нажатия —
-    // pointermove у мыши сыпется на каждом движении, даже без кнопок.
-    if (e.buttons === 0) return
+    // Drag живёт только между pointerdown и pointerup/cancel. Один прямой гейт —
+    // ни мышиный hover, ни поздние move-события после release не трогают ленту.
+    if (!pointerDownRef.current) return
 
     const axis = dragAxisRef.current
     if (axis === 'vertical') return  // отдали странице, ничего не делаем
@@ -135,6 +138,15 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
       try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
     }
     dragAxisRef.current = null
+    pointerDownRef.current = false
+  }
+
+  // Если потеряли capture не по нашей воле (alt-tab, системный жест) —
+  // приводим всё в исходное, иначе pointerDownRef «застрянет» в true.
+  const onLostPointerCapture = () => {
+    if (dragAxisRef.current === 'horizontal') pausedRef.current = hoverRef.current
+    dragAxisRef.current = null
+    pointerDownRef.current = false
   }
 
   // Гасит клик по ссылке проекта, если только что был drag — на capture,
@@ -185,6 +197,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
+        onLostPointerCapture={onLostPointerCapture}
         onClickCapture={onClickCapture}
       >
         <div ref={trackRef} className="pc-track-flow">
