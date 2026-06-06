@@ -75,6 +75,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
 
   // ── Перетаскивание (мышь + сенсор) ──────────────────────────────────────────
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Только основная кнопка: левая мышь, палец, перо. Игнорим правый/средний клик.
+    if (e.button !== 0) return
     // На каждый pointerdown — обнуляем состояние, направление определим в первом move
     dragAxisRef.current = null
     dragMovedRef.current = false
@@ -84,6 +86,11 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Только при активно нажатой кнопке/пальце на экране. Без этого мышь
+    // на десктопе двигалась бы по карусели и тянула её без нажатия —
+    // pointermove у мыши сыпется на каждом движении, даже без кнопок.
+    if (e.buttons === 0) return
+
     const axis = dragAxisRef.current
     if (axis === 'vertical') return  // отдали странице, ничего не делаем
 
