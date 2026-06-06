@@ -6,8 +6,8 @@ import { useState } from 'react'
 
 const TIERS = [
   {
-    tag: '— Базовое',
-    name: 'Планировочное решение',
+    tag: '— Планировочное решение',
+    name: 'Планировка',
     price: '750',
     unit: '₽ за м²',
     feats: [
@@ -20,8 +20,8 @@ const TIERS = [
     primary: false,
   },
   {
-    tag: '— Быстрый старт',
-    name: 'Экспресс-проект',
+    tag: '— Экспресс-проект',
+    name: 'Экспресс',
     price: '1 500',
     unit: '₽ за м²',
     feats: [
@@ -35,8 +35,8 @@ const TIERS = [
     primary: false,
   },
   {
-    tag: '— Без визуализации',
-    name: 'Проект с коллажами',
+    tag: '— Проект с коллажами (без 3D)',
+    name: 'Базовый',
     price: '3 500',
     unit: '₽ за м²',
     feats: [
@@ -49,8 +49,8 @@ const TIERS = [
     primary: false,
   },
   {
-    tag: '— Оптимальный',
-    name: 'Усечённый проект с 3D',
+    tag: '— Усечённый проект с 3D',
+    name: 'Расширенный',
     price: '4 000',
     unit: '₽ за м²',
     feats: [
@@ -64,8 +64,8 @@ const TIERS = [
     popular: true,
   },
   {
-    tag: '— Максимум деталей',
-    name: 'Полный дизайн-проект с 3D',
+    tag: '— Полный дизайн-проект с 3D',
+    name: 'Полный',
     price: '5 000',
     unit: '₽ за м²',
     feats: [
@@ -96,11 +96,11 @@ const TIERS = [
 // ─── Форматы для калькулятора ─────────────────────────────────────────────────
 
 const FORMATS = [
-  { name: 'Планировочное', price: 750,  desc: '3 варианта + монтаж стен' },
-  { name: 'Экспресс',      price: 1500, desc: 'Чертежи и 2 коллажа' },
-  { name: 'Коллажи',       price: 3500, desc: 'Коллажи + полный комплект чертежей' },
-  { name: 'Усечённый 3D',  price: 4000, desc: '3D ключевых помещений', default: true },
-  { name: 'Полный 3D',     price: 5000, desc: '3D всех жилых помещений' },
+  { name: 'Планировка',  price: 750,  desc: '3 варианта + монтаж стен' },
+  { name: 'Экспресс',    price: 1500, desc: 'Чертежи и 2 коллажа' },
+  { name: 'Базовый',     price: 3500, desc: 'Коллажи + полный комплект чертежей' },
+  { name: 'Расширенный', price: 4000, desc: '3D ключевых помещений', default: true },
+  { name: 'Полный',      price: 5000, desc: '3D всех жилых помещений' },
 ]
 
 function formatNum(n: number) {
@@ -112,7 +112,7 @@ function formatNum(n: number) {
 function Calculator() {
   const [area, setArea] = useState(95)
   const [formatPrice, setFormatPrice] = useState(4000)
-  const [formatName, setFormatName] = useState('Усечённый 3D')
+  const [formatName, setFormatName] = useState('Расширенный')
   const [supervision, setSupervision] = useState(false)
 
   const base = area * formatPrice
